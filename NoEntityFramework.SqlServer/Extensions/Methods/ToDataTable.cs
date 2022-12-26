@@ -20,8 +20,9 @@ namespace NoEntityFramework.SqlServer
                 using var sqlDataAdapter = sqlServerQueryable.ConnectionFactory.CreateDataAdapter();
                 sqlDataAdapter.SelectCommand = sqlServerQueryable.SqlCommand;
                 sqlDataAdapter.Fill(dataTable);
-                sqlServerQueryable.SqlCommand
-                    .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
+                if (sqlServerQueryable.ParameterModel != null)
+                    sqlServerQueryable.SqlCommand
+                        .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
                 sqlServerQueryable.Logger.LogInfo(sqlServerQueryable.SqlCommand, sqlConnection);
             }
             catch (Exception ex)
@@ -44,8 +45,9 @@ namespace NoEntityFramework.SqlServer
                 using var sqlDataAdapter = sqlServerQueryable.ConnectionFactory.CreateDataAdapter();
                 sqlDataAdapter.SelectCommand = sqlServerQueryable.SqlCommand;
                 sqlDataAdapter.Fill(dataTable);
-                sqlServerQueryable.SqlCommand
-                    .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
+                if (sqlServerQueryable.ParameterModel != null)
+                    sqlServerQueryable.SqlCommand
+                        .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
                 sqlServerQueryable.Logger.LogInfo(sqlServerQueryable.SqlCommand, sqlConnection);
             }
             catch (Exception ex)

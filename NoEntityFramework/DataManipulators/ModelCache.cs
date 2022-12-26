@@ -9,19 +9,19 @@ namespace NoEntityFramework.DataManipulators
 {
     public class ModelCache
     {
-        private static readonly ConcurrentDictionary<Type, List<PropertyInfo>> _outputModelCache = new ConcurrentDictionary<Type, List<PropertyInfo>>();
+        private static readonly ConcurrentDictionary<Type, List<PropertyInfo>> OutputModelCache = new ConcurrentDictionary<Type, List<PropertyInfo>>();
 
         public static IList<PropertyInfo> GetProperties(Type type)
         {
-            if (!_outputModelCache.TryGetValue(type, out List<PropertyInfo> list))
-            {
-                list = new List<PropertyInfo>(
-                    type.GetProperties()
+            if (OutputModelCache.TryGetValue(type, out var list))
+                return list;
+
+            list = new List<PropertyInfo>(
+                type.GetProperties()
                     .Where(s => s.CanWrite)
                     .Where(s => !s.GetCustomAttributes<IgnoredAttribute>().Any())
-                    );
-                _outputModelCache.TryAdd(type, list);
-            }
+            );
+            OutputModelCache.TryAdd(type, list);
 
             return list;
         }

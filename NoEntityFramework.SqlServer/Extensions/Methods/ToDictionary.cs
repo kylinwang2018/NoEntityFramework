@@ -14,7 +14,7 @@ namespace NoEntityFramework.SqlServer
             try
             {
                 using var sqlConnection = sqlServerQueryable.SqlConnection;
-                sqlConnection?.Open();
+                sqlConnection.Open();
                 sqlServerQueryable.SqlCommand.Connection = sqlConnection;
                 using var sqlDataReader = sqlServerQueryable.SqlCommand.ExecuteReader();
 
@@ -26,8 +26,9 @@ namespace NoEntityFramework.SqlServer
                     dictionary.Add((T)sqlDataReader[keyColumnIndex], (U)sqlDataReader[valueColumnIndex]);
                 }
 
-                sqlServerQueryable.SqlCommand
-                    .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
+                if (sqlServerQueryable.ParameterModel != null)
+                    sqlServerQueryable.SqlCommand
+                        .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
                 sqlServerQueryable.Logger.LogInfo(sqlServerQueryable.SqlCommand, sqlConnection);
             }
             catch (Exception ex)
@@ -50,7 +51,7 @@ namespace NoEntityFramework.SqlServer
             try
             {
                 using var sqlConnection = sqlServerQueryable.SqlConnection;
-                sqlConnection?.Open();
+                sqlConnection.Open();
                 sqlServerQueryable.SqlCommand.Connection = sqlConnection;
                 using var sqlDataReader = sqlServerQueryable.SqlCommand.ExecuteReader();
 
@@ -62,8 +63,9 @@ namespace NoEntityFramework.SqlServer
                     dictionary.Add(sqlDataReader[keyColumnIndex].ToString(), sqlDataReader[valueColumnIndex].ToString());
                 }
 
-                sqlServerQueryable.SqlCommand
-                    .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
+                if (sqlServerQueryable.ParameterModel != null)
+                    sqlServerQueryable.SqlCommand
+                        .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
                 sqlServerQueryable.Logger.LogInfo(sqlServerQueryable.SqlCommand, sqlConnection);
             }
             catch (Exception ex)
@@ -98,8 +100,9 @@ namespace NoEntityFramework.SqlServer
                     dictionary.Add((T)sqlDataReader[keyColumnIndex], (U)sqlDataReader[valueColumnIndex]);
                 }
 
-                sqlServerQueryable.SqlCommand
-                    .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
+                if (sqlServerQueryable.ParameterModel != null)
+                    sqlServerQueryable.SqlCommand
+                        .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
                 sqlServerQueryable.Logger.LogInfo(sqlServerQueryable.SqlCommand, sqlConnection);
             }
             catch (Exception ex)
@@ -134,8 +137,9 @@ namespace NoEntityFramework.SqlServer
                     dictionary.Add(sqlDataReader[keyColumnIndex].ToString(), sqlDataReader[valueColumnIndex].ToString());
                 }
 
-                sqlServerQueryable.SqlCommand
-                    .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
+                if (sqlServerQueryable.ParameterModel != null)
+                    sqlServerQueryable.SqlCommand
+                        .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
                 sqlServerQueryable.Logger.LogInfo(sqlServerQueryable.SqlCommand, sqlConnection);
             }
             catch (Exception ex)
