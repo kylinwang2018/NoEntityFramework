@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 
-namespace NoEntityFramework.SqlServer.Extensions.Methods
+namespace NoEntityFramework.SqlServer
 {
     public static class ToReader
     {

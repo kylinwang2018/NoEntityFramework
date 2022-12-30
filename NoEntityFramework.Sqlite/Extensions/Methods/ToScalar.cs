@@ -1,14 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
 
-namespace NoEntityFramework.SqlServer
+namespace NoEntityFramework.Sqlite
 {
     public static class ToScalar
     {
-        public static T As<T>(this ISqlServerQueryable query)
+        public static T As<T>(this ISqliteQueryable query)
             where T : struct
         {
             try
@@ -38,7 +35,7 @@ namespace NoEntityFramework.SqlServer
             }
         }
 
-        public static async Task<T> AsAsync<T>(this ISqlServerQueryable query)
+        public static async Task<T> AsAsync<T>(this ISqliteQueryable query)
             where T : struct
         {
             try

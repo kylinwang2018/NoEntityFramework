@@ -1,15 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
 
-namespace NoEntityFramework.SqlServer
+namespace NoEntityFramework.Sqlite
 {
-    public static class ToScalar
+    public static class ExecuteNonQuery
     {
-        public static T As<T>(this ISqlServerQueryable query)
-            where T : struct
+        public static int Execute(this ISqliteQueryable query)
         {
             try
             {
@@ -19,7 +15,7 @@ namespace NoEntityFramework.SqlServer
                 using var sqlTransaction = sqlConnection.BeginTransaction();
                 query.SqlCommand.Connection = sqlConnection;
                 query.SqlCommand.Transaction = sqlTransaction;
-                var result = query.SqlCommand.ExecuteScalar();
+                var result = query.SqlCommand.ExecuteNonQuery();
                 sqlTransaction.Commit();
 
                 if (query.ParameterModel != null)
@@ -27,9 +23,7 @@ namespace NoEntityFramework.SqlServer
                         .CopyParameterValueToModels(query.ParameterModel);
                 query.Logger.LogInfo(query.SqlCommand, sqlConnection);
 
-                if (result == null)
-                    return default;
-                return (T)result;
+                return result;
             }
             catch (Exception ex)
             {
@@ -38,8 +32,7 @@ namespace NoEntityFramework.SqlServer
             }
         }
 
-        public static async Task<T> AsAsync<T>(this ISqlServerQueryable query)
-            where T : struct
+        public static async Task<int> ExecuteAsync(this ISqliteQueryable query)
         {
             try
             {
@@ -49,7 +42,7 @@ namespace NoEntityFramework.SqlServer
                 await using var sqlTransaction = sqlConnection.BeginTransaction();
                 query.SqlCommand.Connection = sqlConnection;
                 query.SqlCommand.Transaction = sqlTransaction;
-                var result = await query.SqlCommand.ExecuteScalarAsync();
+                var result = await query.SqlCommand.ExecuteNonQueryAsync();
                 sqlTransaction.Commit();
 
                 if (query.ParameterModel != null)
@@ -57,9 +50,7 @@ namespace NoEntityFramework.SqlServer
                         .CopyParameterValueToModels(query.ParameterModel);
                 query.Logger.LogInfo(query.SqlCommand, sqlConnection);
 
-                if (result == null)
-                    return default;
-                return (T)result;
+                return result;
             }
             catch (Exception ex)
             {

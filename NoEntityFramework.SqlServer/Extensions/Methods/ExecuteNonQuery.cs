@@ -4,7 +4,7 @@ using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NoEntityFramework.SqlServer.Extensions.Methods
+namespace NoEntityFramework.SqlServer
 {
     public static class ExecuteNonQuery
     {

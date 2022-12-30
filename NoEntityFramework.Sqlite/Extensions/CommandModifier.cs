@@ -1,10 +1,10 @@
 ﻿using System.Data;
 
-namespace NoEntityFramework.SqlServer
+namespace NoEntityFramework.Sqlite
 {
     public static class CommandModifier
     {
-        public static ISqlServerQueryable IsStoredProcedureCommand(this ISqlServerQueryable query)
+        public static ISqliteQueryable IsStoredProcedureCommand(this ISqliteQueryable query)
         {
             query.SqlCommand.CommandType = CommandType.StoredProcedure;
             return query;

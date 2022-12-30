@@ -1,71 +1,59 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using System.Data;
 using System.Threading.Tasks;
 
-namespace NoEntityFramework.SqlServer
+namespace NoEntityFramework.Sqlite
 {
-    public static class ToScalar
+    public static class ToDataSet
     {
-        public static T As<T>(this ISqlServerQueryable query)
-            where T : struct
+        public static DataSet AsDataSet(
+            this ISqliteQueryable query)
         {
+            var dataTable = new DataSet();
             try
             {
                 using var sqlConnection = query.SqlConnection;
                 sqlConnection.Open();
                 query.SqlCommand.Connection = sqlConnection;
-                using var sqlTransaction = sqlConnection.BeginTransaction();
-                query.SqlCommand.Connection = sqlConnection;
-                query.SqlCommand.Transaction = sqlTransaction;
-                var result = query.SqlCommand.ExecuteScalar();
-                sqlTransaction.Commit();
-
+                using var sqlDataAdapter = query.ConnectionFactory.CreateDataAdapter();
+                sqlDataAdapter.SelectCommand = query.SqlCommand;
+                sqlDataAdapter.Fill(dataTable);
                 if (query.ParameterModel != null)
                     query.SqlCommand
                         .CopyParameterValueToModels(query.ParameterModel);
                 query.Logger.LogInfo(query.SqlCommand, sqlConnection);
-
-                if (result == null)
-                    return default;
-                return (T)result;
             }
             catch (Exception ex)
             {
                 query.Logger.LogError(query.SqlCommand, ex);
                 throw;
             }
+            return dataTable;
         }
 
-        public static async Task<T> AsAsync<T>(this ISqlServerQueryable query)
-            where T : struct
+        public static async Task<DataSet> AsDataSetAsync(
+            this ISqliteQueryable query)
         {
+            var dataTable = new DataSet();
             try
             {
                 await using var sqlConnection = query.SqlConnection;
                 await sqlConnection.OpenAsync();
                 query.SqlCommand.Connection = sqlConnection;
-                await using var sqlTransaction = sqlConnection.BeginTransaction();
-                query.SqlCommand.Connection = sqlConnection;
-                query.SqlCommand.Transaction = sqlTransaction;
-                var result = await query.SqlCommand.ExecuteScalarAsync();
-                sqlTransaction.Commit();
-
+                using var sqlDataAdapter = query.ConnectionFactory.CreateDataAdapter();
+                sqlDataAdapter.SelectCommand = query.SqlCommand;
+                sqlDataAdapter.Fill(dataTable);
                 if (query.ParameterModel != null)
                     query.SqlCommand
                         .CopyParameterValueToModels(query.ParameterModel);
                 query.Logger.LogInfo(query.SqlCommand, sqlConnection);
-
-                if (result == null)
-                    return default;
-                return (T)result;
             }
             catch (Exception ex)
             {
                 query.Logger.LogError(query.SqlCommand, ex);
                 throw;
             }
+            return dataTable;
         }
     }
 }

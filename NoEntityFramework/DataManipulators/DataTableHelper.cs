@@ -558,18 +558,9 @@ namespace NoEntityFramework.DataManipulators
         {
             try
             {
-                Type typeFromHandle = typeof(T);
-                List<PropertyInfo> value;
-                lock (ModelCache._outputModelCache)
-                {
-                    if (!ModelCache._outputModelCache.TryGetValue(typeFromHandle, out value))
-                    {
-                        value = new List<PropertyInfo>(typeFromHandle.GetProperties());
-                        value.RemoveAll((PropertyInfo item) => !item.CanWrite);
-                        ModelCache._outputModelCache.Add(typeFromHandle, value);
-                    }
-                }
-
+                var typeFromHandle = typeof(T);
+                var value = ModelCache.GetProperties(typeFromHandle);
+                
                 List<T> list = new List<T>(dt.Rows.Count);
                 foreach (DataRow row in dt.Rows)
                 {
@@ -608,17 +599,7 @@ namespace NoEntityFramework.DataManipulators
             try
             {
                 Type typeFromHandle = typeof(T);
-                List<PropertyInfo> value;
-                lock (ModelCache._outputModelCache)
-                {
-                    if (!ModelCache._outputModelCache.TryGetValue(typeFromHandle, out value))
-                    {
-                        value = new List<PropertyInfo>(typeFromHandle.GetProperties());
-                        value.RemoveAll((PropertyInfo item) => !item.CanWrite);
-                        ModelCache._outputModelCache.Add(typeFromHandle, value);
-                    }
-                }
-
+                var value = ModelCache.GetProperties(typeFromHandle);
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     DataRow dataRow = dt.Rows[0];
@@ -657,16 +638,7 @@ namespace NoEntityFramework.DataManipulators
             try
             {
                 Type typeFromHandle = typeof(T);
-                List<PropertyInfo> value;
-                lock (ModelCache._outputModelCache)
-                {
-                    if (!ModelCache._outputModelCache.TryGetValue(typeFromHandle, out value))
-                    {
-                        value = new List<PropertyInfo>(typeFromHandle.GetProperties());
-                        value.RemoveAll((PropertyInfo item) => !item.CanWrite);
-                        ModelCache._outputModelCache.Add(typeFromHandle, value);
-                    }
-                }
+                var value = ModelCache.GetProperties(typeFromHandle);
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
@@ -711,16 +683,7 @@ namespace NoEntityFramework.DataManipulators
             try
             {
                 Type typeFromHandle = typeof(T);
-                List<PropertyInfo> value;
-                lock (ModelCache._outputModelCache)
-                {
-                    if (!ModelCache._outputModelCache.TryGetValue(typeFromHandle, out value))
-                    {
-                        value = new List<PropertyInfo>(typeFromHandle.GetProperties());
-                        value.RemoveAll((PropertyInfo item) => !item.CanWrite);
-                        ModelCache._outputModelCache.Add(typeFromHandle, value);
-                    }
-                }
+                var value = ModelCache.GetProperties(typeFromHandle);
 
                 if (row == null)
                 {
@@ -759,16 +722,7 @@ namespace NoEntityFramework.DataManipulators
             try
             {
                 Type typeFromHandle = typeof(T);
-                List<PropertyInfo> value;
-                lock (ModelCache._outputModelCache)
-                {
-                    if (!ModelCache._outputModelCache.TryGetValue(typeFromHandle, out value))
-                    {
-                        value = new List<PropertyInfo>(typeFromHandle.GetProperties());
-                        value.RemoveAll((PropertyInfo item) => !item.CanWrite);
-                        ModelCache._outputModelCache.Add(typeFromHandle, value);
-                    }
-                }
+                var value = ModelCache.GetProperties(typeFromHandle);
 
                 if (row == null)
                 {
