@@ -1,10 +1,8 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace NoEntityFramework.SqlServer.Infrastructure
+namespace NoEntityFramework.SqlServer
 {
     internal class SqlServerLogger<TDbContext> : ISqlServerLogger<TDbContext>
         where TDbContext : class, ISqlServerDbContext
@@ -22,22 +20,18 @@ namespace NoEntityFramework.SqlServer.Infrastructure
 
         public void LogCritical(SqlCommand sqlCommand, Exception exception, string? message = null)
         {
-            _logger.LogCritical("{customMessage}\n\tCommand:\n\t{Command}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
+            _logger.LogCritical(exception, "{customMessage}\n\tCommand:\n\t{Command}",
                 message?? string.Empty,
-                sqlCommand.CommandText,
-                exception.Message,
-                exception.StackTrace
+                sqlCommand.CommandText
                 );
         }
 
         public void LogError(SqlCommand sqlCommand, Exception exception, string? message = null)
         {
-            _logger.LogError("{customMessage}\n\tCommand:\n\t{Command}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
+            _logger.LogError(exception, "{customMessage}\n\tCommand:\n\t{Command}",
                 message ?? string.Empty,
-                sqlCommand.CommandText,
-                exception.Message,
-                exception.StackTrace
-                );
+                sqlCommand.CommandText
+            );
         }
 
         public void LogInfo(SqlCommand sqlCommand, SqlConnection connection, string? message = null)
@@ -63,12 +57,9 @@ namespace NoEntityFramework.SqlServer.Infrastructure
 
         public void LogWaring(SqlCommand sqlCommand, Exception exception, string? message = null)
         {
-            _logger.LogWarning("{customMessage}\n\tCommand:\n\t{Command}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
+            _logger.LogWarning(exception, "{customMessage}\n\tCommand:\n\t{Command}", 
                 message ?? string.Empty,
-                sqlCommand.CommandText,
-                exception.Message,
-                exception.StackTrace
-                );
+                sqlCommand.CommandText);
         }
     }
 }

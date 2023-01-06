@@ -17,16 +17,16 @@ namespace NoEntityFramework.SqlServer
 
         public SqlConnectionFactory(IOptionsMonitor<TOption> options)
         {
-            var _options = options.Get(typeof(TDbContext).ToString());
-            _sqlConnectionString = _options.ConnectionString;
-            _statisticsEnabled = _options.EnableStatistics;
-            _commandTimeout = _options.DbCommandTimeout;
+            var sqlOptions = options.Get(typeof(TDbContext).ToString());
+            _sqlConnectionString = sqlOptions.ConnectionString;
+            _statisticsEnabled = sqlOptions.EnableStatistics;
+            _commandTimeout = sqlOptions.DbCommandTimeout;
             _sqlRetryProvider = SqlConfigurableRetryFactory
                 .CreateExponentialRetryProvider(new SqlRetryLogicOption()
                 {
-                    NumberOfTries = _options.NumberOfTries,
-                    DeltaTime = TimeSpan.FromSeconds(_options.DeltaTime),
-                    MaxTimeInterval = TimeSpan.FromSeconds(_options.MaxTimeInterval)
+                    NumberOfTries = sqlOptions.NumberOfTries,
+                    DeltaTime = TimeSpan.FromSeconds(sqlOptions.DeltaTime),
+                    MaxTimeInterval = TimeSpan.FromSeconds(sqlOptions.MaxTimeInterval)
                 });
         }
 

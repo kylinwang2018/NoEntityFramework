@@ -1,9 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace NoEntityFramework.SqlServer.Infrastructure
+namespace NoEntityFramework.SqlServer
 {
     public interface ISqlServerLogger
     {
@@ -13,6 +11,10 @@ namespace NoEntityFramework.SqlServer.Infrastructure
         void LogCritical(SqlCommand sqlCommand, Exception exception, string? message = null);
     }
 
+    /// <summary>
+    ///     A logger for logging purpose.
+    /// </summary>
+    /// <typeparam name="TDbContext">The type of the database context used</typeparam>
     public interface ISqlServerLogger<out TDbContext> : ISqlServerLogger
         where TDbContext : class, ISqlServerDbContext
     {

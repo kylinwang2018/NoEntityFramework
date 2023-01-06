@@ -1,13 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NoEntityFramework.SqlServer
 {
+    /// <summary>
+    ///     Execute a non-query command.
+    /// </summary>
     public static class ExecuteNonQuery
     {
+        /// <summary>
+        ///     Execute a non-query command.
+        /// </summary>
+        /// <param name="query">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
         public static int Execute(this ISqlServerQueryable query)
         {
             try
@@ -35,6 +40,11 @@ namespace NoEntityFramework.SqlServer
             }
         }
 
+        /// <summary>
+        ///     Execute a non-query command.
+        /// </summary>
+        /// <param name="query">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
         public static async Task<int> ExecuteAsync(this ISqlServerQueryable query)
         {
             try

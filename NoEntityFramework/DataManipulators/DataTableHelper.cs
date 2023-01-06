@@ -14,9 +14,9 @@ namespace NoEntityFramework.DataManipulators
     {
         public static string[][] DataTableTo2dArray(DataTable dt)
         {
-            if (dt == null || dt.Rows.Count == 0)
+            if (dt.Rows.Count == 0)
             {
-                return null;
+                return Array.Empty<string[]>();
             }
 
             var array = new string[dt.Rows.Count][];
@@ -24,7 +24,7 @@ namespace NoEntityFramework.DataManipulators
             foreach (DataRow row in dt.Rows)
             {
                 array[num] = new string[dt.Columns.Count];
-                for (int i = 0; i < dt.Columns.Count; i++)
+                for (var i = 0; i < dt.Columns.Count; i++)
                 {
                     array[num][i] = row[i].ToString();
                 }
@@ -37,9 +37,9 @@ namespace NoEntityFramework.DataManipulators
 
         public static string[][] DataTableTo2dArray(DataTable dt, string dateFormat)
         {
-            if (dt == null || dt.Rows.Count == 0)
+            if (dt.Rows.Count == 0)
             {
-                return null;
+                return Array.Empty<string[]>();
             }
 
             var array = new string[dt.Rows.Count][];
@@ -50,9 +50,9 @@ namespace NoEntityFramework.DataManipulators
                 array[num] = new string[dt.Columns.Count];
                 if (num == 0)
                 {
-                    for (int i = 0; i < dt.Columns.Count; i++)
+                    for (var i = 0; i < dt.Columns.Count; i++)
                     {
-                        if (row[i].GetType() == typeof(DateTime))
+                        if (row[i] is DateTime)
                         {
                             array2[i] = true;
                             array[num][i] = ((DateTime)row[i]).ToString(dateFormat);
@@ -65,7 +65,7 @@ namespace NoEntityFramework.DataManipulators
                 }
                 else
                 {
-                    for (int j = 0; j < dt.Columns.Count; j++)
+                    for (var j = 0; j < dt.Columns.Count; j++)
                     {
                         if (array2[j])
                         {
@@ -91,9 +91,9 @@ namespace NoEntityFramework.DataManipulators
 
         public static string[][] DataTableTo2dArray(DataTable dt, IEnumerable<int> keepOnlyColumns, bool removeDuplicates)
         {
-            if (dt == null || dt.Rows.Count == 0)
+            if (dt.Rows.Count == 0)
             {
-                return null;
+                return Array.Empty<string[]>();
             }
 
             var array = new string[dt.Rows.Count][];
@@ -101,12 +101,12 @@ namespace NoEntityFramework.DataManipulators
             int num2;
             if (removeDuplicates)
             {
-                OrderedSet<int> orderedSet = new OrderedSet<int>(keepOnlyColumns);
+                var orderedSet = new OrderedSet<int>(keepOnlyColumns);
                 foreach (DataRow row in dt.Rows)
                 {
                     array[num] = new string[orderedSet.Count()];
                     num2 = 0;
-                    foreach (int item in orderedSet)
+                    foreach (var item in orderedSet)
                     {
                         array[num][num2] = row[item].ToString();
                         num2++;
@@ -121,7 +121,7 @@ namespace NoEntityFramework.DataManipulators
                 {
                     array[num] = new string[keepOnlyColumns.Count()];
                     num2 = 0;
-                    foreach (int keepOnlyColumn in keepOnlyColumns)
+                    foreach (var keepOnlyColumn in keepOnlyColumns)
                     {
                         array[num][num2] = row2[keepOnlyColumn].ToString();
                         num2++;
@@ -141,27 +141,27 @@ namespace NoEntityFramework.DataManipulators
 
         public static string[][] DataTableTo2dArray(DataTable dt, string dateFormat, IEnumerable<int> keepOnlyColumns, bool removeDuplicates)
         {
-            if (dt == null || dt.Rows.Count == 0)
+            if (dt.Rows.Count == 0)
             {
-                return null;
+                return Array.Empty<string[]>();
             }
 
             var array = new string[dt.Rows.Count][];
-            int num = 0;
+            var num = 0;
             int num2;
             if (removeDuplicates)
             {
-                OrderedSet<int> orderedSet = new OrderedSet<int>(keepOnlyColumns);
-                bool[] array2 = new bool[orderedSet.Count];
+                var orderedSet = new OrderedSet<int>(keepOnlyColumns);
+                var array2 = new bool[orderedSet.Count];
                 foreach (DataRow row in dt.Rows)
                 {
                     array[num] = new string[orderedSet.Count];
                     num2 = 0;
                     if (num == 0)
                     {
-                        foreach (int item in orderedSet)
+                        foreach (var item in orderedSet)
                         {
-                            if (row[item].GetType() == typeof(DateTime))
+                            if (row[item] is DateTime)
                             {
                                 array2[num2] = true;
                                 array[num][num2] = ((DateTime)row[item]).ToString(dateFormat);
@@ -176,7 +176,7 @@ namespace NoEntityFramework.DataManipulators
                     }
                     else
                     {
-                        foreach (int item2 in orderedSet)
+                        foreach (var item2 in orderedSet)
                         {
                             if (array2[num2])
                             {
@@ -196,16 +196,16 @@ namespace NoEntityFramework.DataManipulators
             }
             else
             {
-                bool[] array3 = new bool[keepOnlyColumns.Count()];
+                var array3 = new bool[keepOnlyColumns.Count()];
                 foreach (DataRow row2 in dt.Rows)
                 {
                     array[num] = new string[keepOnlyColumns.Count()];
                     num2 = 0;
                     if (num == 0)
                     {
-                        foreach (int keepOnlyColumn in keepOnlyColumns)
+                        foreach (var keepOnlyColumn in keepOnlyColumns)
                         {
-                            if (row2[keepOnlyColumn].GetType() == typeof(DateTime))
+                            if (row2[keepOnlyColumn] is DateTime)
                             {
                                 array3[num2] = true;
                                 array[num][num2] = ((DateTime)row2[keepOnlyColumn]).ToString(dateFormat);
@@ -220,7 +220,7 @@ namespace NoEntityFramework.DataManipulators
                     }
                     else
                     {
-                        foreach (int keepOnlyColumn2 in keepOnlyColumns)
+                        foreach (var keepOnlyColumn2 in keepOnlyColumns)
                         {
                             if (array3[num2])
                             {
@@ -244,9 +244,9 @@ namespace NoEntityFramework.DataManipulators
 
         public static string DataTableToHTMLTableString(DataTable data)
         {
-            string[] array = new string[data.Rows.Count];
-            string[] array2 = new string[data.Columns.Count];
-            long num = 0L;
+            var array = new string[data.Rows.Count];
+            var array2 = new string[data.Columns.Count];
+            var num = 0L;
             foreach (DataColumn column in data.Columns)
             {
                 array2[num++] = HttpUtility.HtmlEncode(column.ColumnName);
@@ -261,19 +261,19 @@ namespace NoEntityFramework.DataManipulators
             return "<table><thead><tr><th>" + string.Join("</th><th>", array2) + "</th></tr></thead><tbody>" + string.Join("", array) + "</tbody></table>";
         }
 
-        public static string DataTableToHTMLTableString(DataTable data, string dateFormat)
+        public static string DataTableToHTMLTableString(DataTable data, string? dateFormat)
         {
             return DataTableToHTMLTableString(data, dateFormat, null);
         }
 
-        public static string DataTableToHTMLTableString(DataTable data, string dateFormat, string tableClass)
+        public static string DataTableToHTMLTableString(DataTable data, string? dateFormat, string? tableClass)
         {
-            string[] array = new string[data.Rows.Count];
-            string[] array2 = new string[data.Columns.Count];
+            var array = new string[data.Rows.Count];
+            var array2 = new string[data.Columns.Count];
             if (dateFormat != null)
             {
-                bool[] dateTimeColumn = new bool[data.Columns.Count];
-                long num = 0L;
+                var dateTimeColumn = new bool[data.Columns.Count];
+                var num = 0L;
                 foreach (DataColumn column in data.Columns)
                 {
                     array2[num] = HttpUtility.HtmlEncode(column.ColumnName);
@@ -289,7 +289,7 @@ namespace NoEntityFramework.DataManipulators
             }
             else
             {
-                long num2 = 0L;
+                var num2 = 0L;
                 foreach (DataColumn column2 in data.Columns)
                 {
                     array2[num2++] = HttpUtility.HtmlEncode(column2.ColumnName);
@@ -307,16 +307,14 @@ namespace NoEntityFramework.DataManipulators
 
         public static List<List<string>> DataTableToListListString(DataTable dt)
         {
-            if (dt == null || dt.Rows.Count == 0)
-            {
-                return null;
-            }
-
             var list = new List<List<string>>(dt.Rows.Count);
+            if (dt.Rows.Count == 0)
+                return list;
+
             foreach (DataRow row in dt.Rows)
             {
-                List<string> list2 = new List<string>(dt.Columns.Count);
-                for (int i = 0; i < dt.Columns.Count; i++)
+                var list2 = new List<string>(dt.Columns.Count);
+                for (var i = 0; i < dt.Columns.Count; i++)
                 {
                     list2.Add(row[i].ToString());
                 }
@@ -329,22 +327,20 @@ namespace NoEntityFramework.DataManipulators
 
         public static List<List<string>> DataTableToListListString(DataTable dt, string dateFormat)
         {
-            if (dt == null || dt.Rows.Count == 0)
-            {
-                return null;
-            }
-
             var list = new List<List<string>>(dt.Rows.Count);
-            bool[] array = new bool[dt.Columns.Count];
-            int num = 0;
+            if (dt.Rows.Count == 0)
+                return list;
+
+            var array = new bool[dt.Columns.Count];
+            var num = 0;
             foreach (DataRow row in dt.Rows)
             {
-                List<string> list2 = new List<string>(dt.Columns.Count);
+                var list2 = new List<string>(dt.Columns.Count);
                 if (num == 0)
                 {
-                    for (int i = 0; i < dt.Columns.Count; i++)
+                    for (var i = 0; i < dt.Columns.Count; i++)
                     {
-                        if (row[i].GetType() == typeof(DateTime))
+                        if (row[i] is DateTime)
                         {
                             array[i] = true;
                             list2.Add(((DateTime)row[i]).ToString(dateFormat));
@@ -357,16 +353,9 @@ namespace NoEntityFramework.DataManipulators
                 }
                 else
                 {
-                    for (int j = 0; j < dt.Columns.Count; j++)
+                    for (var j = 0; j < dt.Columns.Count; j++)
                     {
-                        if (array[j])
-                        {
-                            list2.Add(((DateTime)row[j]).ToString(dateFormat));
-                        }
-                        else
-                        {
-                            list2.Add(row[j].ToString());
-                        }
+                        list2.Add(array[j] ? ((DateTime)row[j]).ToString(dateFormat) : row[j].ToString());
                     }
                 }
 
@@ -384,22 +373,17 @@ namespace NoEntityFramework.DataManipulators
 
         public static List<List<string>> DataTableToListListString(DataTable dt, IEnumerable<int> keepOnlyColumns, bool removeDuplicates)
         {
-            if (dt == null || dt.Rows.Count == 0)
-            {
-                return null;
-            }
-
             var list = new List<List<string>>(dt.Rows.Count);
+            if (dt.Rows.Count == 0)
+                return list;
+
             if (removeDuplicates)
             {
-                OrderedSet<int> orderedSet = new OrderedSet<int>(keepOnlyColumns);
+                var orderedSet = new OrderedSet<int>(keepOnlyColumns);
                 foreach (DataRow row in dt.Rows)
                 {
-                    List<string> list2 = new List<string>(orderedSet.Count());
-                    foreach (int item in orderedSet)
-                    {
-                        list2.Add(row[item].ToString());
-                    }
+                    var list2 = new List<string>(orderedSet.Count());
+                    list2.AddRange(orderedSet.Select(item => row[item].ToString()));
 
                     list.Add(list2);
                 }
@@ -408,11 +392,8 @@ namespace NoEntityFramework.DataManipulators
             {
                 foreach (DataRow row2 in dt.Rows)
                 {
-                    List<string> list3 = new List<string>(keepOnlyColumns.Count());
-                    foreach (int keepOnlyColumn in keepOnlyColumns)
-                    {
-                        list3.Add(row2[keepOnlyColumn].ToString());
-                    }
+                    var list3 = new List<string>(keepOnlyColumns.Count());
+                    list3.AddRange(keepOnlyColumns.Select(keepOnlyColumn => row2[keepOnlyColumn].ToString()));
 
                     list.Add(list3);
                 }
@@ -428,27 +409,25 @@ namespace NoEntityFramework.DataManipulators
 
         public static List<List<string>> DataTableToListListString(DataTable dt, string dateFormat, IEnumerable<int> keepOnlyColumns, bool removeDuplicates)
         {
-            if (dt == null || dt.Rows.Count == 0)
-            {
-                return null;
-            }
-
             var list = new List<List<string>>(dt.Rows.Count);
-            int num = 0;
+            if (dt.Rows.Count == 0)
+                return list;
+
+            var num = 0;
             int num2;
             if (removeDuplicates)
             {
-                OrderedSet<int> orderedSet = new OrderedSet<int>(keepOnlyColumns);
-                bool[] array = new bool[orderedSet.Count];
+                var orderedSet = new OrderedSet<int>(keepOnlyColumns);
+                var array = new bool[orderedSet.Count];
                 foreach (DataRow row in dt.Rows)
                 {
-                    List<string> list2 = new List<string>(orderedSet.Count());
+                    var list2 = new List<string>(orderedSet.Count());
                     num2 = 0;
                     if (num == 0)
                     {
-                        foreach (int item in orderedSet)
+                        foreach (var item in orderedSet)
                         {
-                            if (row[item].GetType() == typeof(DateTime))
+                            if (row[item] is DateTime)
                             {
                                 array[num2] = true;
                                 list2.Add(((DateTime)row[item]).ToString(dateFormat));
@@ -463,16 +442,11 @@ namespace NoEntityFramework.DataManipulators
                     }
                     else
                     {
-                        foreach (int item2 in orderedSet)
+                        foreach (var item2 in orderedSet)
                         {
-                            if (array[num2])
-                            {
-                                list2.Add(((DateTime)row[item2]).ToString(dateFormat));
-                            }
-                            else
-                            {
-                                list2.Add(row[item2].ToString());
-                            }
+                            list2.Add(array[num2]
+                                ? ((DateTime)row[item2]).ToString(dateFormat)
+                                : row[item2].ToString());
 
                             num2++;
                         }
@@ -484,16 +458,16 @@ namespace NoEntityFramework.DataManipulators
             }
             else
             {
-                bool[] array2 = new bool[keepOnlyColumns.Count()];
+                var array2 = new bool[keepOnlyColumns.Count()];
                 foreach (DataRow row2 in dt.Rows)
                 {
-                    List<string> list3 = new List<string>(keepOnlyColumns.Count());
+                    var list3 = new List<string>(keepOnlyColumns.Count());
                     num2 = 0;
                     if (num == 0)
                     {
-                        foreach (int keepOnlyColumn in keepOnlyColumns)
+                        foreach (var keepOnlyColumn in keepOnlyColumns)
                         {
-                            if (row2[keepOnlyColumn].GetType() == typeof(DateTime))
+                            if (row2[keepOnlyColumn] is DateTime)
                             {
                                 array2[num2] = true;
                                 list3.Add(((DateTime)row2[keepOnlyColumn]).ToString(dateFormat));
@@ -508,16 +482,11 @@ namespace NoEntityFramework.DataManipulators
                     }
                     else
                     {
-                        foreach (int keepOnlyColumn2 in keepOnlyColumns)
+                        foreach (var keepOnlyColumn2 in keepOnlyColumns)
                         {
-                            if (array2[num2])
-                            {
-                                list3.Add(((DateTime)row2[keepOnlyColumn2]).ToString(dateFormat));
-                            }
-                            else
-                            {
-                                list3.Add(row2[keepOnlyColumn2].ToString());
-                            }
+                            list3.Add(array2[num2]
+                                ? ((DateTime)row2[keepOnlyColumn2]).ToString(dateFormat)
+                                : row2[keepOnlyColumn2].ToString());
 
                             num2++;
                         }
@@ -533,10 +502,10 @@ namespace NoEntityFramework.DataManipulators
 
         public static List<Dictionary<string, object>> DataTableToList(DataTable dt)
         {
-            List<Dictionary<string, object>> list = new List<Dictionary<string, object>>(dt.Rows.Count);
+            var list = new List<Dictionary<string, object>>(dt.Rows.Count);
             foreach (DataRow row in dt.Rows)
             {
-                Dictionary<string, object> dictionary = new Dictionary<string, object>(dt.Columns.Count);
+                var dictionary = new Dictionary<string, object>(dt.Columns.Count);
                 foreach (DataColumn column in dt.Columns)
                 {
                     dictionary[column.ColumnName] = row[column];
@@ -550,7 +519,7 @@ namespace NoEntityFramework.DataManipulators
 
         public static string DataTableToJSON(DataTable dt)
         {
-            List<Dictionary<string, object>> list = DataTableToList(dt);
+            var list = DataTableToList(dt);
             return JsonConvert.SerializeObject((object)list);
         }
 
@@ -561,22 +530,19 @@ namespace NoEntityFramework.DataManipulators
                 var typeFromHandle = typeof(T);
                 var value = ModelCache.GetProperties(typeFromHandle);
                 
-                List<T> list = new List<T>(dt.Rows.Count);
+                var list = new List<T>(dt.Rows.Count);
                 foreach (DataRow row in dt.Rows)
                 {
-                    T val = new T();
-                    foreach (PropertyInfo item in value)
+                    var val = new T();
+                    foreach (var item in value)
                     {
                         try
                         {
-                            if (item.PropertyType.IsEnum)
-                            {
-                                item.SetValue(val, Enum.ToObject(item.PropertyType, (int)row[item.GetColumnName()]), null);
-                            }
-                            else
-                            {
-                                item.SetValue(val, Convert.ChangeType(row[item.GetColumnName()], Nullable.GetUnderlyingType(item.PropertyType) ?? item.PropertyType), null);
-                            }
+                            item.SetValue(val,
+                                item.PropertyType.IsEnum
+                                    ? Enum.ToObject(item.PropertyType, (int)row[item.GetColumnName()])
+                                    : Convert.ChangeType(row[item.GetColumnName()],
+                                        Nullable.GetUnderlyingType(item.PropertyType) ?? item.PropertyType), null);
                         }
                         catch
                         {
@@ -598,34 +564,31 @@ namespace NoEntityFramework.DataManipulators
         {
             try
             {
-                Type typeFromHandle = typeof(T);
+                var typeFromHandle = typeof(T);
                 var value = ModelCache.GetProperties(typeFromHandle);
-                if (dt != null && dt.Rows.Count > 0)
-                {
-                    DataRow dataRow = dt.Rows[0];
-                    T val = new T();
-                    foreach (PropertyInfo item in value)
-                    {
-                        try
-                        {
-                            if (item.PropertyType.IsEnum)
-                            {
-                                item.SetValue(val, Enum.ToObject(item.PropertyType, (int)dataRow[item.GetColumnName()]), null);
-                            }
-                            else
-                            {
-                                item.SetValue(val, Convert.ChangeType(dataRow[item.GetColumnName()], Nullable.GetUnderlyingType(item.PropertyType) ?? item.PropertyType), null);
-                            }
-                        }
-                        catch
-                        {
-                        }
-                    }
+                if (dt.Rows.Count <= 0)
+                    return Activator.CreateInstance<T>();
 
-                    return val;
+                var dataRow = dt.Rows[0];
+                var val = new T();
+                foreach (var item in value)
+                {
+                    try
+                    {
+                        item.SetValue(val,
+                            item.PropertyType.IsEnum
+                                ? Enum.ToObject(item.PropertyType, (int)dataRow[item.GetColumnName()])
+                                : Convert.ChangeType(dataRow[item.GetColumnName()],
+                                    Nullable.GetUnderlyingType(item.PropertyType) ?? item.PropertyType), null);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
                 }
 
-                return null;
+                return val;
+
             }
             catch
             {
@@ -637,40 +600,36 @@ namespace NoEntityFramework.DataManipulators
         {
             try
             {
-                Type typeFromHandle = typeof(T);
+                var typeFromHandle = typeof(T);
                 var value = ModelCache.GetProperties(typeFromHandle);
 
-                if (dt != null && dt.Rows.Count > 0)
+                if (dt.Rows.Count <= 0) 
+                    return objectToFill;
+                var dataRow = dt.Rows[0];
+                foreach (var item in value)
                 {
-                    DataRow dataRow = dt.Rows[0];
-                    foreach (PropertyInfo item in value)
+                    var obj = dataRow[item.GetColumnName()];
+                    if (obj == null)
                     {
-                        object obj = dataRow[item.GetColumnName()];
-                        if (obj == null)
-                        {
-                            continue;
-                        }
-
-                        try
-                        {
-                            if (item.PropertyType.IsEnum)
-                            {
-                                item.SetValue(objectToFill, Enum.ToObject(item.PropertyType, (int)dataRow[item.GetColumnName()]), null);
-                            }
-                            else
-                            {
-                                item.SetValue(objectToFill, Convert.ChangeType(dataRow[item.GetColumnName()], Nullable.GetUnderlyingType(item.PropertyType) ?? item.PropertyType), null);
-                            }
-                        }
-                        catch
-                        {
-                        }
+                        continue;
                     }
 
-                    return objectToFill;
+                    try
+                    {
+                        item.SetValue(objectToFill,
+                            item.PropertyType.IsEnum
+                                ? Enum.ToObject(item.PropertyType, (int)dataRow[item.GetColumnName()])
+                                : Convert.ChangeType(dataRow[item.GetColumnName()],
+                                    Nullable.GetUnderlyingType(item.PropertyType) ?? item.PropertyType), null);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
                 }
 
                 return objectToFill;
+
             }
             catch
             {
@@ -682,30 +641,23 @@ namespace NoEntityFramework.DataManipulators
         {
             try
             {
-                Type typeFromHandle = typeof(T);
+                var typeFromHandle = typeof(T);
                 var value = ModelCache.GetProperties(typeFromHandle);
 
-                if (row == null)
-                {
-                    return null;
-                }
-
-                T val = new T();
-                foreach (PropertyInfo item in value)
+                var val = new T();
+                foreach (var item in value)
                 {
                     try
                     {
-                        if (item.PropertyType.IsEnum)
-                        {
-                            item.SetValue(val, Enum.ToObject(item.PropertyType, (int)row[item.GetColumnName()]), null);
-                        }
-                        else
-                        {
-                            item.SetValue(val, Convert.ChangeType(row[item.GetColumnName()], Nullable.GetUnderlyingType(item.PropertyType) ?? item.PropertyType), null);
-                        }
+                        item.SetValue(val,
+                            item.PropertyType.IsEnum
+                                ? Enum.ToObject(item.PropertyType, (int)row[item.GetColumnName()])
+                                : Convert.ChangeType(row[item.GetColumnName()],
+                                    Nullable.GetUnderlyingType(item.PropertyType) ?? item.PropertyType), null);
                     }
                     catch
                     {
+                        // ignored
                     }
                 }
 
@@ -721,17 +673,12 @@ namespace NoEntityFramework.DataManipulators
         {
             try
             {
-                Type typeFromHandle = typeof(T);
+                var typeFromHandle = typeof(T);
                 var value = ModelCache.GetProperties(typeFromHandle);
 
-                if (row == null)
+                foreach (var item in value)
                 {
-                    return objectToFill;
-                }
-
-                foreach (PropertyInfo item in value)
-                {
-                    object obj = row[item.GetColumnName()];
+                    var obj = row[item.GetColumnName()];
                     if (obj == null)
                     {
                         continue;
@@ -739,17 +686,15 @@ namespace NoEntityFramework.DataManipulators
 
                     try
                     {
-                        if (item.PropertyType.IsEnum)
-                        {
-                            item.SetValue(objectToFill, Enum.ToObject(item.PropertyType, (int)row[item.GetColumnName()]), null);
-                        }
-                        else
-                        {
-                            item.SetValue(objectToFill, Convert.ChangeType(row[item.GetColumnName()], Nullable.GetUnderlyingType(item.PropertyType) ?? item.PropertyType), null);
-                        }
+                        item.SetValue(objectToFill,
+                            item.PropertyType.IsEnum
+                                ? Enum.ToObject(item.PropertyType, (int)row[item.GetColumnName()])
+                                : Convert.ChangeType(row[item.GetColumnName()],
+                                    Nullable.GetUnderlyingType(item.PropertyType) ?? item.PropertyType), null);
                     }
                     catch
                     {
+                        // ignored
                     }
                 }
 
@@ -768,14 +713,9 @@ namespace NoEntityFramework.DataManipulators
                 return new List<string>();
             }
 
-            List<string> list = new List<string>(dt.Rows.Count);
-            foreach (DataRow row in dt.Rows)
-            {
-                if (row[columnNumber] != DBNull.Value)
-                    list.Add(row[columnNumber].ToString());
-                else
-                    list.Add(default);
-            }
+            var list = new List<string>(dt.Rows.Count);
+            list.AddRange(from DataRow row in dt.Rows select row[columnNumber] != DBNull.Value ?
+                row[columnNumber].ToString() : default);
 
             return list;
         }
@@ -806,14 +746,9 @@ namespace NoEntityFramework.DataManipulators
                 return new List<string>();
             }
 
-            List<string> list = new List<string>(dt.Rows.Count);
-            foreach (DataRow row in dt.Rows)
-            {
-                if (row[columnName] != DBNull.Value)
-                    list.Add(row[columnName].ToString());
-                else
-                    list.Add(string.Empty);
-            }
+            var list = new List<string>(dt.Rows.Count);
+            list.AddRange(from DataRow row in dt.Rows select row[columnName] != DBNull.Value ? 
+                row[columnName].ToString() : string.Empty);
 
             return list;
         }
@@ -825,7 +760,7 @@ namespace NoEntityFramework.DataManipulators
                 return new List<T>();
             }
 
-            List<T> list = new List<T>(dt.Rows.Count);
+            var list = new List<T>(dt.Rows.Count);
             foreach (DataRow row in dt.Rows)
             {
                 if (row[columnName] != DBNull.Value)
@@ -839,19 +774,18 @@ namespace NoEntityFramework.DataManipulators
 
         public static DataTable ListTToDataTable<T>(IEnumerable<T> list) where T : class
         {
-            Type typeFromHandle = typeof(T);
-            PropertyInfo[] properties = typeFromHandle.GetProperties();
-            DataTable dataTable = new DataTable();
-            PropertyInfo[] array = properties;
-            foreach (PropertyInfo propertyInfo in array)
+            var typeFromHandle = typeof(T);
+            var properties = typeFromHandle.GetProperties();
+            var dataTable = new DataTable();
+            foreach (var propertyInfo in properties)
             {
                 dataTable.Columns.Add(new DataColumn(propertyInfo.Name, Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType));
             }
 
-            foreach (T item in list)
+            foreach (var item in list)
             {
                 object[] array2 = new object[properties.Length];
-                for (int j = 0; j < properties.Length; j++)
+                for (var j = 0; j < properties.Length; j++)
                 {
                     array2[j] = properties[j].GetValue(item, null);
                 }
@@ -869,7 +803,7 @@ namespace NoEntityFramework.DataManipulators
 
         public static string GetClassStringForDataTable(DataTable dt, string className)
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("class " + className);
             stringBuilder.AppendLine("{");
             foreach (DataColumn column in dt.Columns)

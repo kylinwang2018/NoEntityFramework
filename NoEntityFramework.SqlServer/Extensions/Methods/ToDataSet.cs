@@ -4,8 +4,16 @@ using System.Threading.Tasks;
 
 namespace NoEntityFramework.SqlServer
 {
+    /// <summary>
+    ///     Execute the command than cast the result to a <see cref="DataSet"/>.
+    /// </summary>
     public static class ToDataSet
     {
+        /// <summary>
+        ///     Execute the command than cast the result to a <see cref="DataSet"/>.
+        /// </summary>
+        /// <param name="sqlServerQueryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
         public static DataSet AsDataSet(
             this ISqlServerQueryable sqlServerQueryable)
         {
@@ -31,6 +39,11 @@ namespace NoEntityFramework.SqlServer
             return dataTable;
         }
 
+        /// <summary>
+        ///     Execute the command than cast the result to a <see cref="DataSet"/>.
+        /// </summary>
+        /// <param name="sqlServerQueryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
         public static async Task<DataSet> AsDataSetAsync(
             this ISqlServerQueryable sqlServerQueryable)
         {

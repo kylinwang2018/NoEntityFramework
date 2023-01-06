@@ -17,9 +17,9 @@ namespace NoEntityFramework.SqlServer
         /// <summary>
         ///     Add one <see cref="SqlParameter"/> to <see cref="SqlCommand"/>.
         /// </summary>
-        /// <param name="queryable"></param>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
+        /// <param name="queryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <param name="parameter">The <see cref="SqlParameter"/> that want to add to.</param>
+        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static ISqlServerQueryable WithParameter(
             this ISqlServerQueryable queryable, SqlParameter parameter)
@@ -40,6 +40,13 @@ namespace NoEntityFramework.SqlServer
             return queryable;
         }
 
+        /// <summary>
+        ///     Add multiple <see cref="SqlParameter"/>s to <see cref="SqlCommand"/>.
+        /// </summary>
+        /// <param name="queryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <param name="parameters">The <see cref="SqlParameter"/>s that want to add to.</param>
+        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static ISqlServerQueryable WithParameters(
             this ISqlServerQueryable queryable, params SqlParameter[] parameters)
         {
@@ -63,6 +70,14 @@ namespace NoEntityFramework.SqlServer
             return queryable;
         }
 
+        /// <summary>
+        ///     Add parameters in a object model to <see cref="SqlCommand"/>. The parameters must be defined with <see cref="SqlDbParameterAttribute"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the model.</typeparam>
+        /// <param name="queryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <param name="parameterModel">The model object.</param>
+        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static ISqlServerQueryable WithParameter<T>(
             this ISqlServerQueryable queryable, T parameterModel)
             where T : class, new()
@@ -83,7 +98,7 @@ namespace NoEntityFramework.SqlServer
 
                 var sqlParameter = new SqlParameter()
                 {
-                    SqlDbType = attr.Type ?? typeMap[propertyType],
+                    SqlDbType = attr.Type ?? TypeMap[propertyType],
                     Direction = attr.Direction ?? ParameterDirection.InputOutput,
                     Value = property.GetValue(parameterModel) ?? DBNull.Value,
                     ParameterName = attr.Name,
@@ -110,6 +125,13 @@ namespace NoEntityFramework.SqlServer
             return queryable;
         }
 
+        /// <summary>
+        ///     After executed the query, some parameters may need to be returned with a value, call this member can copy these kind
+        ///     of parameters' value return to the model.
+        /// </summary>
+        /// <param name="sqlCommand">The <see cref="SqlCommand"/> that is used to execute the query.</param>
+        /// <param name="parameterModel">The parameter model that is used to execute the query.</param>
+        /// <returns>The parameter model that is used to execute the query.</returns>
         public static object CopyParameterValueToModels(
             this SqlCommand sqlCommand, object parameterModel)
         {
@@ -127,6 +149,17 @@ namespace NoEntityFramework.SqlServer
             return parameterModel;
         }
 
+        /// <summary>
+        ///     Create and add one <see cref="SqlParameter"/> to <see cref="SqlCommand"/>.
+        /// </summary>
+        /// <param name="queryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <param name="paramName">The name of the parameter.</param>
+        /// <param name="dbType">The <see cref="SqlDbType"/> of the parameter.</param>
+        /// <param name="parameterDirection">The <see cref="ParameterDirection"/> of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
+        /// <param name="size">The size of the parameter.</param>
+        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static ISqlServerQueryable WithParameter(
             this ISqlServerQueryable queryable,
             string paramName, SqlDbType dbType, ParameterDirection parameterDirection, object? value, int? size)
@@ -148,30 +181,57 @@ namespace NoEntityFramework.SqlServer
                 else
                     param.Value = DBNull.Value;
             }
+            else
+                param.Value = value;
 
             queryable.SqlCommand.Parameters.Add(param);
             return queryable;
         }
 
+        /// <summary>
+        ///     Create and add one input only <see cref="SqlParameter"/> to <see cref="SqlCommand"/>.
+        /// </summary>
+        /// <param name="queryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <param name="paramName">The name of the parameter.</param>
+        /// <param name="dbType">The <see cref="SqlDbType"/> of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
+        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
         public static ISqlServerQueryable WithInputParameter(
             this ISqlServerQueryable queryable, string paramName, SqlDbType dbType, object value)
         {
             return WithInputParameter(queryable, paramName, dbType, value, null);
         }
 
+        /// <summary>
+        ///     Create and add one input only <see cref="SqlParameter"/> to <see cref="SqlCommand"/>.
+        /// </summary>
+        /// <param name="queryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <param name="paramName">The name of the parameter.</param>
+        /// <param name="dbType">The <see cref="SqlDbType"/> of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
+        /// <param name="size">The size of the parameter.</param>
+        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
         public static ISqlServerQueryable WithInputParameter(
             this ISqlServerQueryable queryable, string paramName, SqlDbType dbType, object value, int? size)
         {
             return WithParameter(queryable, paramName, dbType, ParameterDirection.Input, value, size);
         }
 
+        /// <summary>
+        ///     Create and add one output only <see cref="SqlParameter"/> to <see cref="SqlCommand"/>.
+        /// </summary>
+        /// <param name="queryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <param name="paramName">The name of the parameter.</param>
+        /// <param name="dbType">The <see cref="SqlDbType"/> of the parameter.</param>
+        /// <param name="size">The size of the parameter.</param>
+        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
         public static ISqlServerQueryable WithOutputParameter(
             this ISqlServerQueryable queryable, string paramName, SqlDbType dbType, int? size)
         {
             return WithParameter(queryable, paramName, dbType, ParameterDirection.Output, null, size);
         }
 
-        private static readonly Dictionary<Type, SqlDbType> typeMap = new Dictionary<Type, SqlDbType>
+        private static readonly Dictionary<Type, SqlDbType> TypeMap = new Dictionary<Type, SqlDbType>
         {
             [typeof(byte)] = SqlDbType.TinyInt,
             [typeof(sbyte)] = SqlDbType.TinyInt,

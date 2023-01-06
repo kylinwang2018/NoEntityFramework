@@ -3,6 +3,16 @@ using System.Data;
 
 namespace NoEntityFramework.SqlServer
 {
+    /// <summary>
+    ///     Provide a connection factory for create <see cref="SqlConnection"/>,
+    /// <see cref="SqlCommand"/> and <see cref="SqlDataAdapter"/>. 
+    /// </summary>
+    /// <typeparam name="TDbContext">
+    ///     The type of the database context used.
+    /// </typeparam>
+    /// <typeparam name="TOption">
+    ///     The instances which the database context required.
+    /// </typeparam>
     public interface ISqlConnectionFactory<out TDbContext, TOption> : ISqlConnectionFactory
         where TDbContext : class, IDbContext
         where TOption : class, IDbContextOptions
@@ -10,6 +20,10 @@ namespace NoEntityFramework.SqlServer
 
     }
 
+    /// <summary>
+    ///     Provide a connection factory for create <see cref="SqlConnection"/>,
+    /// <see cref="SqlCommand"/> and <see cref="SqlDataAdapter"/>.
+    /// </summary>
     public interface ISqlConnectionFactory
     {
         /// <summary>

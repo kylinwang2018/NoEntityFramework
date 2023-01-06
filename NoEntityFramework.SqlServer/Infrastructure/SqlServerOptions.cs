@@ -1,9 +1,6 @@
-using NoEntityFramework.SqlServer;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using NoEntityFramework.SqlServer.Infrastructure;
 
-namespace NoEntityFramework
+namespace NoEntityFramework.SqlServer
 {
     internal class SqlServerOptions<TDbContext> : ISqlServerOptions<TDbContext>
         where TDbContext : class, ISqlServerDbContext

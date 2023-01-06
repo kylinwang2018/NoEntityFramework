@@ -1,6 +1,4 @@
 ﻿using Microsoft.Data.SqlClient;
-using NoEntityFramework.SqlServer.Infrastructure;
-using System.Collections.Generic;
 
 namespace NoEntityFramework.SqlServer
 {

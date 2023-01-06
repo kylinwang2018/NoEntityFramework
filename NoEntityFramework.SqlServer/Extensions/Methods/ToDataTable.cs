@@ -1,6 +1,4 @@
-﻿using NoEntityFramework.DataManipulators;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Data;
 using System.Threading.Tasks;
 
@@ -8,6 +6,11 @@ namespace NoEntityFramework.SqlServer
 {
     public static class ToDataTable
     {
+        /// <summary>
+        ///     Execute the command than cast the result to a <see cref="DataTable"/>.
+        /// </summary>
+        /// <param name="sqlServerQueryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
         public static DataTable AsDataTable(
             this ISqlServerQueryable sqlServerQueryable)
         {
@@ -33,6 +36,11 @@ namespace NoEntityFramework.SqlServer
             return dataTable;
         }
 
+        /// <summary>
+        ///     Execute the command than cast the result to a <see cref="DataTable"/>.
+        /// </summary>
+        /// <param name="sqlServerQueryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
         public static async Task<DataTable> AsDataTableAsync(
             this ISqlServerQueryable sqlServerQueryable)
         {
@@ -56,20 +64,6 @@ namespace NoEntityFramework.SqlServer
                 throw;
             }
             return dataTable;
-        }
-
-        public static List<T> AsDataTable<T>(
-            this ISqlServerQueryable sqlServerQueryable) where T : class, new()
-        {
-            var dataTable = sqlServerQueryable.AsDataTable();
-            return DataTableHelper.DataTableToList<T>(dataTable);
-        }
-
-        public static async Task<List<T>> AsDataTableAsync<T>(
-            this ISqlServerQueryable sqlServerQueryable) where T : class, new()
-        {
-            var dataTable = await sqlServerQueryable.AsDataTableAsync();
-            return DataTableHelper.DataTableToList<T>(dataTable);
         }
     }
 }

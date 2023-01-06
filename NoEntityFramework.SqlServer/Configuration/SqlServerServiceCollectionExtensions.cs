@@ -1,11 +1,10 @@
-﻿using NoEntityFramework.SqlServer;
-using NoEntityFramework.Utilities;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using NoEntityFramework.SqlServer;
+using NoEntityFramework.Utilities;
 using System;
 using System.Linq;
 using System.Reflection;
-using NoEntityFramework.SqlServer.Infrastructure;
 
 namespace NoEntityFramework
 {
@@ -30,7 +29,7 @@ namespace NoEntityFramework
             services.AddOptions();
             services.Configure(typeof(TDbContext).ToString(), setupAction);
 
-            // register dbprovider in service collection
+            // register dbProvider in service collection
             services.TryAddSingleton(typeof(TDbContext));
 
             // register sql factory for create connection, command and dataAdapter
@@ -75,19 +74,19 @@ namespace NoEntityFramework
             return dbContext;
         }
 
-        private static void RegisterServiceByAttribute(this IServiceCollection services, Assembly[] allAssembly)
+        private static void RegisterServiceByAttribute(this IServiceCollection services, params Assembly[] allAssembly)
         {
 
             var types = allAssembly
                 .SelectMany(t =>
                     t.GetTypes())
-                .Where(t => t.IsClass && !t.IsInterface && !t.IsSealed && !t.IsAbstract &&
-                    t.GetCustomAttributes(typeof(SqlServerRepoAttribute), false).Length > 0);
+                .Where(t => t.IsClass && t is { IsInterface: false, IsSealed: false, IsAbstract: false } &&
+                            t.GetCustomAttributes(typeof(SqlServerRepoAttribute), false).Length > 0);
 
             foreach (var type in types)
             {
                 var serviceLifetime = type.GetCustomAttribute<SqlServerRepoAttribute>().Lifetime;
-                Type? typeInterface = type.GetInterfaces().FirstOrDefault();
+                var typeInterface = type.GetInterfaces().FirstOrDefault();
                 if (typeInterface != null)
                 {
                     switch (serviceLifetime)
@@ -95,11 +94,12 @@ namespace NoEntityFramework
                         case ServiceLifetime.Singleton:
                             services.TryAddSingleton(typeInterface, type);
                             break;
-                        case ServiceLifetime.Scoped:
-                            services.TryAddScoped(typeInterface, type);
-                            break;
                         case ServiceLifetime.Transient:
                             services.TryAddTransient(typeInterface, type);
+                            break;
+                        case ServiceLifetime.Scoped:
+                        default:
+                            services.TryAddScoped(typeInterface, type);
                             break;
                     }
                 }

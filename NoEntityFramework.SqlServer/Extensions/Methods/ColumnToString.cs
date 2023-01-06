@@ -4,9 +4,18 @@ using System.Threading.Tasks;
 
 namespace NoEntityFramework.SqlServer
 {
+    /// <summary>
+    ///     Execute the query then get a column to string.
+    /// </summary>
     public static class ColumnToString
     {
-        public static List<string> GetColumnToString(
+        /// <summary>
+        ///     Execute the query then get a column as a list of string.
+        /// </summary>
+        /// <param name="sqlServerQueryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <param name="columnIndex">the index of the column, start from <see langword="0" /> by default.</param>
+        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
+        public static List<string> GetColumnAsString(
             this ISqlServerQueryable sqlServerQueryable,
             int columnIndex = 0)
         {
@@ -14,7 +23,13 @@ namespace NoEntityFramework.SqlServer
             return DataTableHelper.DataTableToListString(dataTable, columnIndex);
         }
 
-        public static List<string> GetColumnToString(
+        /// <summary>
+        ///     Execute the query then get a column as a list of string.
+        /// </summary>
+        /// <param name="sqlServerQueryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <param name="columnName">the name of the column.</param>
+        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
+        public static List<string> GetColumnAsString(
             this ISqlServerQueryable sqlServerQueryable,
             string columnName)
         {
@@ -22,7 +37,13 @@ namespace NoEntityFramework.SqlServer
             return DataTableHelper.DataTableToListString(dataTable, columnName);
         }
 
-        public static async Task<List<string>> GetColumnToStringAsync(
+        /// <summary>
+        ///     Execute the query then get a column as a list of string.
+        /// </summary>
+        /// <param name="sqlServerQueryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <param name="columnIndex">the index of the column, start from <see langword="0" /> by default.</param>
+        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
+        public static async Task<List<string>> GetColumnAsStringAsync(
             this ISqlServerQueryable sqlServerQueryable,
             int columnIndex = 0)
         {
@@ -30,7 +51,13 @@ namespace NoEntityFramework.SqlServer
             return DataTableHelper.DataTableToListString(dataTable, columnIndex);
         }
 
-        public static async Task<List<string>> GetColumnToStringAsync(
+        /// <summary>
+        ///     Execute the query then get a column as a list of string.
+        /// </summary>
+        /// <param name="sqlServerQueryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <param name="columnName">the name of the column.</param>
+        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
+        public static async Task<List<string>> GetColumnAsStringAsync(
             this ISqlServerQueryable sqlServerQueryable,
             string columnName)
         {
