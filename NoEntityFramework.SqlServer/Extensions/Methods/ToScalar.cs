@@ -3,8 +3,17 @@ using System.Threading.Tasks;
 
 namespace NoEntityFramework.SqlServer
 {
+    /// <summary>
+    ///     Execute command and get a single value from the query.
+    /// </summary>
     public static class ToScalar
     {
+        /// <summary>
+        ///     Execute the command and get a single value from the query.
+        /// </summary>
+        /// <typeparam name="T">The type of the returned value</typeparam>
+        /// <param name="query">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <returns>The value for the query.</returns>
         public static T As<T>(this ISqlServerQueryable query)
             where T : struct
         {
@@ -35,6 +44,12 @@ namespace NoEntityFramework.SqlServer
             }
         }
 
+        /// <summary>
+        ///     Execute the command and get a single value from the query.
+        /// </summary>
+        /// <typeparam name="T">The type of the returned value</typeparam>
+        /// <param name="query">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <returns>The value for the query.</returns>
         public static async Task<T> AsAsync<T>(this ISqlServerQueryable query)
             where T : struct
         {

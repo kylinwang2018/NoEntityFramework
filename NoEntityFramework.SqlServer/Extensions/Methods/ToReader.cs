@@ -5,8 +5,17 @@ using System.Threading.Tasks;
 
 namespace NoEntityFramework.SqlServer
 {
+    /// <summary>
+    ///     Return a <see cref="SqlDataReader"/>.
+    /// </summary>
     public static class ToReader
     {
+        /// <summary>
+        ///     Create a <see cref="SqlDataReader"/> for calling method with selected query.
+        /// </summary>
+        /// <param name="query">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <param name="commandBehavior">A description of the results of the query and its effect on the database.</param>
+        /// <returns>A <see cref="SqlDataReader"/>.</returns>
         public static SqlDataReader AsDataReader(
             this ISqlServerQueryable query, CommandBehavior? commandBehavior)
         {
@@ -33,6 +42,12 @@ namespace NoEntityFramework.SqlServer
             }
         }
 
+        /// <summary>
+        ///     Create a <see cref="SqlDataReader"/> for calling method with selected query.
+        /// </summary>
+        /// <param name="query">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <param name="commandBehavior">A description of the results of the query and its effect on the database.</param>
+        /// <returns>A <see cref="SqlDataReader"/>.</returns>
         public static async Task<SqlDataReader> AsDataReaderAsync(
             this ISqlServerQueryable query, CommandBehavior? commandBehavior)
         {

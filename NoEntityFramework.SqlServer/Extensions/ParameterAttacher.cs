@@ -98,8 +98,8 @@ namespace NoEntityFramework.SqlServer
 
                 var sqlParameter = new SqlParameter()
                 {
-                    SqlDbType = attr.Type ?? TypeMap[propertyType],
-                    Direction = attr.Direction ?? ParameterDirection.InputOutput,
+                    SqlDbType = (attr.DbType == SqlDbType.Variant) ? TypeMap[propertyType] : attr.DbType,
+                    Direction = attr.Direction,
                     Value = property.GetValue(parameterModel) ?? DBNull.Value,
                     ParameterName = attr.Name,
                     IsNullable = attr.Nullable,
@@ -108,8 +108,8 @@ namespace NoEntityFramework.SqlServer
                     Offset = attr.Offset ?? 0,
                     ForceColumnEncryption = attr.ForceColumnEncryption ?? false,
                     Precision = attr.Precision ?? 0,
-                    SourceVersion = attr.SourceVersion ?? DataRowVersion.Current,
-                    CompareInfo = attr.CompareInfo ?? SqlCompareOptions.None
+                    SourceVersion = attr.SourceVersion,
+                    CompareInfo = attr.CompareInfo
                 };
 
                 if (attr.Size != null)

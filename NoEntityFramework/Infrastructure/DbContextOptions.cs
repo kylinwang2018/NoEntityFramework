@@ -34,16 +34,13 @@ namespace NoEntityFramework
         /// </summary>
         public string ConnectionString
         {
-            get
-            {
-                return _connectionString;
-            }
+            get => _connectionString;
             set
             {
-                if (isConnectionStringInitialized)
+                if (_isConnectionStringInitialized)
                     throw new FieldAccessException("Connection string cannot be modified after initialized.");
                 _connectionString = value;
-                isConnectionStringInitialized = true;
+                _isConnectionStringInitialized = true;
             }
         }
 
@@ -52,7 +49,7 @@ namespace NoEntityFramework
         /// </summary>
         public bool EnableStatistics { get; set;}
 
-        private bool isConnectionStringInitialized = false;
+        private bool _isConnectionStringInitialized = false;
         private string _connectionString = string.Empty;
     }
 }

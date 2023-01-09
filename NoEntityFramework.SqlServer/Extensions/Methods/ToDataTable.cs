@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace NoEntityFramework.SqlServer
 {
+    /// <summary>
+    ///     Execute the command than cast the result to a <see cref="DataTable"/>.
+    /// </summary>
     public static class ToDataTable
     {
         /// <summary>

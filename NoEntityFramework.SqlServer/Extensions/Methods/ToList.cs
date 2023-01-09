@@ -5,8 +5,17 @@ using System.Threading.Tasks;
 
 namespace NoEntityFramework.SqlServer
 {
+    /// <summary>
+    ///     Execute the command than cast the result to a <see cref="List{T}"/>.
+    /// </summary>
     public static class ToList
     {
+        /// <summary>
+        ///     Execute the command than cast the result to a <see cref="List{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the object that represents the each row of the result of the query.</typeparam>
+        /// <param name="query">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <returns>A <see cref="List{T}"/> of the query result.</returns>
         public static List<T> AsList<T>(this ISqlServerQueryable query)
             where T : class, new()
         {
@@ -55,6 +64,12 @@ namespace NoEntityFramework.SqlServer
             return list;
         }
 
+        /// <summary>
+        ///     Execute the command than cast the result to a <see cref="List{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the object that represents the each row of the result of the query.</typeparam>
+        /// <param name="query">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <returns>A <see cref="List{T}"/> of the query result.</returns>
         public static async Task<List<T>> AsListAsync<T>(this ISqlServerQueryable query)
             where T : class, new()
         {

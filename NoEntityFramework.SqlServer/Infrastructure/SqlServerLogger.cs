@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 
 namespace NoEntityFramework.SqlServer
@@ -10,11 +11,11 @@ namespace NoEntityFramework.SqlServer
         protected readonly ILogger<TDbContext> _logger;
         private readonly bool _statisticsEnabled;
         public SqlServerLogger(
-            ISqlServerOptions<TDbContext> sqlServerOptions,
+            IOptionsMonitor<RelationalDbOptions> options,
             ILogger<TDbContext> logger)
         {
             _logger = logger;
-            _statisticsEnabled = sqlServerOptions.Options
+            _statisticsEnabled = options
                 .Get(typeof(TDbContext).ToString()).EnableStatistics;
         }
 

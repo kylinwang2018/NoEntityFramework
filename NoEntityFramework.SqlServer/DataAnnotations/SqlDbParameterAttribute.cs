@@ -18,17 +18,17 @@ namespace NoEntityFramework.DataAnnotations
         /// <summary>
         ///     One of the <see cref="SqlDbType"/> values.
         /// </summary>
-        public SqlDbType? Type { get; set; }
+        public SqlDbType DbType { get; set; } = SqlDbType.Variant;
 
         /// <summary>
         ///     Defines how string comparisons should be performed for this parameter.
         /// </summary>
-        public SqlCompareOptions? CompareInfo { get; set; }
+        public SqlCompareOptions CompareInfo { get; set; } = SqlCompareOptions.None;
 
         /// <summary>
         ///     One of the <see cref="ParameterDirection"/> values.
         /// </summary>
-        public ParameterDirection? Direction { get; set; } = ParameterDirection.Input;
+        public ParameterDirection Direction { get; set; } = ParameterDirection.Input;
 
         /// <summary>
         ///     <para>
@@ -82,6 +82,6 @@ namespace NoEntityFramework.DataAnnotations
         /// <summary>
         ///     The total number of decimal places to which the value is resolved.
         /// </summary>
-        public DataRowVersion? SourceVersion { get; set; }
+        public DataRowVersion SourceVersion { get; set; } = DataRowVersion.Default;
     }
 }

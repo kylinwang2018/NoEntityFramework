@@ -47,6 +47,25 @@ namespace NoEntityFramework.SqlServer
         }
 
         /// <summary>
+        ///     Create a query with specific query text. May also specify the command type.
+        /// </summary>
+        /// <param name="commandText">
+        ///     The text for this query.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="ISqlServerQueryable"/> for following configuration and operation.
+        /// </returns>
+        public ISqlServerQueryable UseCommand(string commandText)
+        {
+            var queryable = new SqlServerQueryable(
+                _connectionFactory, _logger,
+                _connectionFactory.CreateConnection(),
+                _connectionFactory.CreateCommand(commandText));
+
+            return queryable;
+        }
+
+        /// <summary>
         ///     Create a query with predefined <see cref="SqlCommand"/>.
         /// </summary>
         /// <param name="command">

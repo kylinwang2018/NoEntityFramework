@@ -58,6 +58,7 @@ namespace NoEntityFramework.SqlServer
         /// Creates a sql command with specified command text for a sql connection
         /// </summary>
         /// <param name="commandText">the command text</param>
+        /// <param name="commandType">the type of the command.</param>
         /// <returns>A new <see cref="SqlCommand"/> object</returns>
         SqlCommand CreateCommand(string commandText, CommandType commandType);
 
