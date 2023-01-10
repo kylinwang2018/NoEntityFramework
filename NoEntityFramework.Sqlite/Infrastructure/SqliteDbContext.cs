@@ -27,6 +27,16 @@ namespace NoEntityFramework.Sqlite
             return queryable;
         }
 
+        public ISqliteQueryable UseCommand(string commandText)
+        {
+            var queryable = new SqliteQueryable(
+                _connectionFactory, _logger,
+                _connectionFactory.CreateConnection(),
+                _connectionFactory.CreateCommand(commandText));
+
+            return queryable;
+        }
+
         public ISqliteQueryable UseCommand(SqliteCommand command)
         {
             var queryable = new SqliteQueryable(

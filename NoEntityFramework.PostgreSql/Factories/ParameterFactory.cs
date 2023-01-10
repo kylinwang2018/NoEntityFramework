@@ -4,7 +4,7 @@ using System;
 using System.Data;
 using System.Data.SqlTypes;
 
-namespace NoEntityFramework.PostgresSQL
+namespace NoEntityFramework.Npgsql
 {
     public class ParameterFactory
     {

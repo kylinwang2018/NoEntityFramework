@@ -4,7 +4,7 @@ using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NoEntityFramework.PostgresSQL
+namespace NoEntityFramework.Npgsql
 {
     public static class NpgsqlConnectionExtension
     {

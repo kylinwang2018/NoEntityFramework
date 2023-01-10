@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using NoEntityFramework.PostgresSQL;
+using NoEntityFramework.Npgsql;
 using NoEntityFramework.Utilities;
 using System;
 using System.Collections.Generic;
@@ -10,12 +10,12 @@ using System.Reflection;
 namespace NoEntityFramework
 {
     /// <summary>
-    ///     PostgreSql specific extension methods for <see cref="IServiceCollection" />.
+    ///     Postgres specific extension methods for <see cref="IServiceCollection" />.
     /// </summary>
     public static class NpgsqlServiceCollectionExtensions
     {
         /// <summary>
-        ///     Configures the context to connect to a PostgreSql database, must set up 
+        ///     Configures the context to connect to a Postgres database, must set up 
         ///     connection string before use it.
         /// </summary>
         /// <typeparam name="TDbContext"></typeparam>
@@ -30,7 +30,7 @@ namespace NoEntityFramework
             services.AddOptions();
             services.Configure(typeof(TDbContext).ToString(), setupAction);
 
-            // register dbprovider in service collection
+            // register dbProvider in service collection
             services.TryAddSingleton(typeof(TDbContext));
 
             // register sql factory for create connection, command and dataAdapter
@@ -45,7 +45,7 @@ namespace NoEntityFramework
 
         /// <summary>
         /// <para>
-        /// inject all project-related repository with [PostgreRepo]
+        /// inject all project-related repository with [PostgresRepo]
         /// (<see cref="PostgresRepoAttribute"/>) attribute to <see cref="IServiceCollection"/>.
         /// </para>
         /// <para>
@@ -60,7 +60,7 @@ namespace NoEntityFramework
         /// <param name="dbContext"></param>
         /// <param name="assemblyName"></param>
         /// <returns></returns>
-        public static DbContext<TDbContext> RegisterPostgreRepositories<TDbContext>(
+        public static DbContext<TDbContext> RegisterPostgresRepositories<TDbContext>(
             this DbContext<TDbContext> dbContext, params string[] assemblyName) 
             where TDbContext : class, IDbContext
         {
@@ -71,19 +71,19 @@ namespace NoEntityFramework
             return dbContext;
         }
 
-        private static void RegisterServiceByAttribute(this IServiceCollection services, Assembly[] allAssembly)
+        private static void RegisterServiceByAttribute(this IServiceCollection services, params Assembly[] allAssembly)
         {
-            List<Type> types = allAssembly
+            var types = allAssembly
                 .SelectMany(t => 
                 t.GetTypes())
-                .Where(t => !t.IsInterface && !t.IsSealed && !t.IsAbstract)
+                .Where(t => !t.IsInterface && t is { IsSealed: false, IsAbstract: false })
                     .Where(t => 
                         t.GetCustomAttributes(typeof(PostgresRepoAttribute), false).Length > 0 && 
-                            t.IsClass && !t.IsAbstract).ToList();
+                        t is { IsClass: true, IsAbstract: false }).ToList();
             foreach (var type in types)
             {
                 var serviceLifetime = type.GetCustomAttribute<PostgresRepoAttribute>().Lifetime;
-                Type? typeInterface = type.GetInterfaces().FirstOrDefault();
+                var typeInterface = type.GetInterfaces().FirstOrDefault();
                 if (typeInterface != null)
                 {
                     switch (serviceLifetime)

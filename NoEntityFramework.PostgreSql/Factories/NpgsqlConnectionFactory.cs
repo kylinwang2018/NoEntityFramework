@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Npgsql;
 
-namespace NoEntityFramework.PostgresSQL
+namespace NoEntityFramework.Npgsql
 {
     internal class NpgsqlConnectionFactory<TDbContext,TOption> : INpgsqlConnectionFactory<TDbContext, TOption>
         where TDbContext : class, IDbContext

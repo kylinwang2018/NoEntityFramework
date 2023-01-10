@@ -9,9 +9,9 @@
 		<Authors>Ben Wang</Authors>
 		<Company>HashcodeStudio</Company>
 		<Copyright>Copyright Ben Wang 2022</Copyright>
-		<PackageTags>Database;SqlServer;Postgres</PackageTags>
+		<PackageTags>Database;SqlServer</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Description>Database Aniki's Sql Server support library</Description>
+		<Description>NoEntityFramework's Sql Server support library</Description>
 	</PropertyGroup>
 
 	<ItemGroup>

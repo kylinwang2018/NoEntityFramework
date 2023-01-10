@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoEntityFramework.SqlServer
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoEntityFramework.MongoDb", "NoEntityFramework.MongoDb\NoEntityFramework.MongoDb.csproj", "{999309BD-3A7B-43AA-B12D-7BB69BCF1276}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoEntityFramework.PostgreSql", "NoEntityFramework.PostgreSql\NoEntityFramework.PostgreSql.csproj", "{387EB2ED-6075-4D31-AA21-334C2373D8F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoEntityFramework.Npgsql", "NoEntityFramework.PostgreSql\NoEntityFramework.Npgsql.csproj", "{387EB2ED-6075-4D31-AA21-334C2373D8F9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoEntityFramework.MySql", "NoEntityFramework.MySql\NoEntityFramework.MySql.csproj", "{649927C6-7737-40A6-A531-6B2BA7DE726A}"
 EndProject
@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{900CA8D2-896
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "demo", "demo", "{BB5C1C60-5964-4EE0-A62E-E48100958842}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlServerDemo", "demos\SqlServerDemo\SqlServerDemo.csproj", "{7EBD572B-CEFE-4737-B3E0-F85403460D91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlServerDemo", "demos\SqlServerDemo\SqlServerDemo.csproj", "{7EBD572B-CEFE-4737-B3E0-F85403460D91}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

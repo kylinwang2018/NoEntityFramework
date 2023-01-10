@@ -1,6 +1,6 @@
 ﻿using Npgsql;
 
-namespace NoEntityFramework.PostgresSQL
+namespace NoEntityFramework.Npgsql
 {
     public interface INpgsqlConnectionFactory<out TDbContext, TOption>
         where TDbContext : class, IDbContext

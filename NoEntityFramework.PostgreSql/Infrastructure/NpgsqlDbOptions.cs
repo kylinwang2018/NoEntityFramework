@@ -1,4 +1,4 @@
-using NoEntityFramework.PostgresSQL;
+using NoEntityFramework.Npgsql;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 

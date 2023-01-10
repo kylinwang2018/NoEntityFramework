@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NoEntityFramework.PostgresSQL
+namespace NoEntityFramework.Npgsql
 {
     public class NpgsqlRetryLogicOption
     {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Options;
 
 namespace NoEntityFramework.Sqlite
 {
@@ -10,11 +11,11 @@ namespace NoEntityFramework.Sqlite
         protected readonly ILogger<TDbContext> _logger;
         private readonly bool _statisticsEnabled;
         public SqliteLogger(
-            ISqliteOptions<TDbContext> sqliteOptions,
+            IOptionsMonitor<RelationalDbOptions> options,
             ILogger<TDbContext> logger)
         {
             _logger = logger;
-            _statisticsEnabled = sqliteOptions.Options
+            _statisticsEnabled = options
                 .Get(typeof(TDbContext).ToString()).EnableStatistics;
         }
 
@@ -38,17 +39,14 @@ namespace NoEntityFramework.Sqlite
                 );
         }
 
-        public void LogInfo(SqliteCommand sqlCommand, SqliteConnection connection, string? message = null)
+        public void LogInfo(SqliteCommand sqlCommand, long timeConsumedInMillisecond, string? message = null)
         {
             if (_statisticsEnabled)
             {
-                var executionTime = (long)stats["ExecutionTime"];
-                var commandNetworkServerTimeInMs = (long)stats["NetworkServerTime"];
-                _logger.LogInformation("{customMessage}\n\tCommand:\n\t{Command}\nExecution Time: {Time}[ms]\nNetwork Time: {NetworkTime}[ms]",
+                _logger.LogInformation("{customMessage}\n\tCommand:\n\t{Command}\nTime Consumed: {Time}[ms]",
                     message ?? string.Empty,
                     sqlCommand.CommandText,
-                    executionTime,
-                    commandNetworkServerTimeInMs
+                    timeConsumedInMillisecond
                     );
             }
             else

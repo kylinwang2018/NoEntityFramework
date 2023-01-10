@@ -18,7 +18,7 @@ namespace NoEntityFramework.DataAnnotations
         /// <summary>
         ///     One of the <see cref="NpgsqlDbType"/> values.
         /// </summary>
-        public NpgsqlDbType Type { get; set; }
+        public NpgsqlDbType Type { get; set; } = NpgsqlDbType.Unknown;
 
         /// <summary>
         ///     The length of the parameter.
@@ -33,7 +33,7 @@ namespace NoEntityFramework.DataAnnotations
         /// <summary>
         ///     One of the <see cref="ParameterDirection"/> values.
         /// </summary>
-        public ParameterDirection? Direction { get; set; }
+        public ParameterDirection Direction { get; set; } = ParameterDirection.Input;
 
         /// <summary>
         ///     <see langword="true"/> if the value of the field can be <see langword="null"/>, otherwise <see langword="false"/>.
@@ -53,6 +53,6 @@ namespace NoEntityFramework.DataAnnotations
         /// <summary>
         ///     The total number of decimal places to which the value is resolved.
         /// </summary>
-        public DataRowVersion? SourceVersion { get; set; }
+        public DataRowVersion SourceVersion { get; set; } = DataRowVersion.Default;
     }
 }

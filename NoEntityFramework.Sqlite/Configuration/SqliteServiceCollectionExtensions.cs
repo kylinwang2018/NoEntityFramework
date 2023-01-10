@@ -85,7 +85,7 @@ namespace NoEntityFramework.Sqlite
             foreach (var type in types)
             {
                 var serviceLifetime = type.GetCustomAttribute<SqliteRepoAttribute>().Lifetime;
-                Type? typeInterface = type.GetInterfaces().FirstOrDefault();
+                var typeInterface = type.GetInterfaces().FirstOrDefault();
                 if (typeInterface != null)
                 {
                     switch (serviceLifetime)

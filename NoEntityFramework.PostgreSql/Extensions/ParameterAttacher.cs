@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 
-namespace NoEntityFramework.PostgresSQL
+namespace NoEntityFramework.Npgsql
 {
     internal static class ParameterAttacher
     {
@@ -25,24 +25,20 @@ namespace NoEntityFramework.PostgresSQL
         /// </summary>
         /// <param name="command">The command to which the parameters will be added</param>
         /// <param name="commandParameters">An array of <see cref="NpgsqlParameter"/> to be added to command</param>
-        public static NpgsqlCommand AttachParameters(this NpgsqlCommand command, NpgsqlParameter[] commandParameters)
+        public static NpgsqlCommand AttachParameters(this NpgsqlCommand command, params NpgsqlParameter[] commandParameters)
         {
-            if (command == null) throw new ArgumentNullException("command");
-            if (commandParameters == null) return command;
+            if (command == null) throw new ArgumentNullException(nameof(command));
 
-            foreach (NpgsqlParameter p in commandParameters)
+            foreach (var p in commandParameters)
             {
-                if (p != null)
+                // Check for derived output value with no value assigned
+                if ((p.Direction == ParameterDirection.InputOutput ||
+                     p.Direction == ParameterDirection.Input) &&
+                    (p.Value == null))
                 {
-                    // Check for derived output value with no value assigned
-                    if ((p.Direction == ParameterDirection.InputOutput ||
-                        p.Direction == ParameterDirection.Input) &&
-                        (p.Value == null))
-                    {
-                        p.Value = DBNull.Value;
-                    }
-                    command.Parameters.Add(p);
+                    p.Value = DBNull.Value;
                 }
+                command.Parameters.Add(p);
             }
             return command;
         }
@@ -66,7 +62,6 @@ namespace NoEntityFramework.PostgresSQL
         public static NpgsqlCommand AttachParameters(this NpgsqlCommand command, Array commandParameters)
         {
             if (command == null) throw new ArgumentNullException("command");
-            if (commandParameters == null) return command;
 
             foreach (NpgsqlParameter p in commandParameters)
             {

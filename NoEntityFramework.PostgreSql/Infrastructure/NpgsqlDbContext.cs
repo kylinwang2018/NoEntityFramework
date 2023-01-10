@@ -1,6 +1,6 @@
 ﻿using NoEntityFramework.DataManipulators;
 using NoEntityFramework.Exceptions;
-using NoEntityFramework.PostgresSQL;
+using NoEntityFramework.Npgsql;
 using Npgsql;
 using System;
 using System.Collections.Generic;

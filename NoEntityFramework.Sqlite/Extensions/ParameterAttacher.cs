@@ -10,12 +10,12 @@ using System.Reflection;
 namespace NoEntityFramework.Sqlite
 {
     /// <summary>
-    ///     Add to Parameter to selected <see cref="SqlCommand"/>.
+    ///     Add to Parameter to selected <see cref="SqliteCommand"/>.
     /// </summary>
     public static class ParameterAttacher
     {
         /// <summary>
-        ///     Add one <see cref="SqliteParameter"/> to <see cref="SqlCommand"/>.
+        ///     Add one <see cref="SqliteParameter"/> to <see cref="SqliteCommand"/>.
         /// </summary>
         /// <param name="queryable"></param>
         /// <param name="parameter"></param>
@@ -83,15 +83,15 @@ namespace NoEntityFramework.Sqlite
 
                 var sqlParameter = new SqliteParameter()
                 {
-                    SqliteType = attr.Type ?? typeMap[propertyType],
-                    Direction = attr.Direction ?? ParameterDirection.InputOutput,
+                    SqliteType = attr.TypeDefined ? attr.DbType : typeMap[propertyType],
+                    Direction = attr.Direction,
                     Value = property.GetValue(parameterModel) ?? DBNull.Value,
                     ParameterName = attr.Name,
                     IsNullable = attr.Nullable,
                     Scale = attr.Scale ?? 0,
                     SourceColumn = attr.SourceColumn,
                     Precision = attr.Precision ?? 0,
-                    SourceVersion = attr.SourceVersion ?? DataRowVersion.Current,
+                    SourceVersion = attr.SourceVersion,
                 };
 
                 if (attr.Size != null)
