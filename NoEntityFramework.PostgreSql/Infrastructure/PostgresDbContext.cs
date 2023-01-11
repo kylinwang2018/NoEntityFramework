@@ -1,28 +1,28 @@
 ﻿using System.Data;
-using Microsoft.Data.Sqlite;
-using NoEntityFramework.Sqlite.Models;
+using NoEntityFramework.Npgsql.Models;
+using Npgsql;
 
-namespace NoEntityFramework.Sqlite
+namespace NoEntityFramework.Npgsql
 {
     /// <summary>
-    ///     The base sqlite database context.
+    ///     The base Postgres database context.
     /// </summary>
-    public abstract class SqliteDbContext : ISqliteDbContext
+    public abstract class PostgresDbContext : IPostgresDbContext
     {
-        private readonly ISqliteConnectionFactory<IDbContext, RelationalDbOptions> _connectionFactory;
-        private readonly ISqliteLogger<SqliteDbContext> _logger;
-        private readonly SqliteRetryLogicOption _retryOptions;
+        private readonly IPostgresConnectionFactory<IDbContext, RelationalDbOptions> _connectionFactory;
+        private readonly IPostgresLogger<PostgresDbContext> _logger;
+        private readonly NpgsqlRetryLogicOption _retryOptions;
 
         /// <summary>
-        ///     The constructor of <see cref="SqliteDbContext"/>.
+        ///     The constructor of <see cref="PostgresDbContext"/>.
         /// </summary>
-        /// <param name="sqliteOptions">The instances which the database context required.</param>
-        protected SqliteDbContext(
-            ISqliteOptions<SqliteDbContext> sqliteOptions)
+        /// <param name="postgresOptions">The instances which the database context required.</param>
+        protected PostgresDbContext(
+            IPostgresOptions<PostgresDbContext> postgresOptions)
         {
-            _connectionFactory = sqliteOptions.ConnectionFactory;
-            _logger = sqliteOptions.Logger;
-            _retryOptions = sqliteOptions.RetryLogicOption;
+            _connectionFactory = postgresOptions.ConnectionFactory;
+            _logger = postgresOptions.Logger;
+            _retryOptions = postgresOptions.RetryLogicOption;
         }
 
         /// <summary>
@@ -35,11 +35,11 @@ namespace NoEntityFramework.Sqlite
         ///     The <see cref="CommandType"/> for this query, specify this can speed up the query operation.
         /// </param>
         /// <returns>
-        ///     A <see cref="ISqliteQueryable"/> for following configuration and operation.
+        ///     A <see cref="IPostgresQueryable"/> for following configuration and operation.
         /// </returns>
-        public ISqliteQueryable UseCommand(string commandText, CommandType? commandType)
+        public IPostgresQueryable UseCommand(string commandText, CommandType? commandType)
         {
-            var queryable = new SqliteQueryable(
+            var queryable = new PostgresQueryable(
                 _connectionFactory, _logger,
                 _connectionFactory.CreateConnection(),
                 _connectionFactory.CreateCommand(commandText))
@@ -59,11 +59,11 @@ namespace NoEntityFramework.Sqlite
         ///     The text for this query.
         /// </param>
         /// <returns>
-        ///     A <see cref="ISqliteQueryable"/> for following configuration and operation.
+        ///     A <see cref="IPostgresQueryable"/> for following configuration and operation.
         /// </returns>
-        public ISqliteQueryable UseCommand(string commandText)
+        public IPostgresQueryable UseCommand(string commandText)
         {
-            var queryable = new SqliteQueryable(
+            var queryable = new PostgresQueryable(
                 _connectionFactory, _logger,
                 _connectionFactory.CreateConnection(),
                 _connectionFactory.CreateCommand(commandText))
@@ -80,11 +80,11 @@ namespace NoEntityFramework.Sqlite
         ///     The <see cref="SqliteCommand"/> that already configured.
         /// </param>
         /// <returns>
-        ///     A <see cref="ISqliteQueryable"/> for following configuration and operation.
+        ///     A <see cref="IPostgresQueryable"/> for following configuration and operation.
         /// </returns>
-        public ISqliteQueryable UseCommand(SqliteCommand command)
+        public IPostgresQueryable UseCommand(NpgsqlCommand command)
         {
-            var queryable = new SqliteQueryable(
+            var queryable = new PostgresQueryable(
                 _connectionFactory, _logger,
                 _connectionFactory.CreateConnection(),
                 _connectionFactory.CreateCommand(command))

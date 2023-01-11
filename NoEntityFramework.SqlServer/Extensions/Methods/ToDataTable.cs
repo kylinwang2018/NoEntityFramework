@@ -13,7 +13,7 @@ namespace NoEntityFramework.SqlServer
         ///     Execute the command than cast the result to a <see cref="DataTable"/>.
         /// </summary>
         /// <param name="sqlServerQueryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
-        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
+        /// <returns>A <see cref="DataTable"/> object contains the query result.</returns>
         public static DataTable AsDataTable(
             this ISqlServerQueryable sqlServerQueryable)
         {
@@ -43,7 +43,7 @@ namespace NoEntityFramework.SqlServer
         ///     Execute the command than cast the result to a <see cref="DataTable"/>.
         /// </summary>
         /// <param name="sqlServerQueryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
-        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
+        /// <returns>A <see cref="DataTable"/> object contains the query result.</returns>
         public static async Task<DataTable> AsDataTableAsync(
             this ISqlServerQueryable sqlServerQueryable)
         {

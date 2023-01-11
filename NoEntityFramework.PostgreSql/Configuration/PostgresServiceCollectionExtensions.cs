@@ -1,18 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using NoEntityFramework.Utilities;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using NoEntityFramework.Npgsql;
-using NoEntityFramework.Utilities;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace NoEntityFramework
+namespace NoEntityFramework.Npgsql
 {
     /// <summary>
     ///     Postgres specific extension methods for <see cref="IServiceCollection" />.
     /// </summary>
-    public static class NpgsqlServiceCollectionExtensions
+    public static class PostgresServiceCollectionExtensions
     {
         /// <summary>
         ///     Configures the context to connect to a Postgres database, must set up 
@@ -23,8 +21,8 @@ namespace NoEntityFramework
         /// <param name="setupAction"></param>
         /// <returns></returns>
         public static DbContext<TDbContext> AddPostgresDbContext<TDbContext>(
-            this IServiceCollection services, Action<RelationalDbOptions> setupAction)
-            where TDbContext : NpgsqlDbContext
+            this IServiceCollection services, Action<RelationalDbOptions> setupAction) 
+            where TDbContext : PostgresDbContext
         {
 
             services.AddOptions();
@@ -34,14 +32,18 @@ namespace NoEntityFramework
             services.TryAddSingleton(typeof(TDbContext));
 
             // register sql factory for create connection, command and dataAdapter
-            services.TryAddSingleton<INpgsqlConnectionFactory<TDbContext, RelationalDbOptions>, NpgsqlConnectionFactory<TDbContext, RelationalDbOptions>>();
+            services.TryAddSingleton<IPostgresConnectionFactory<TDbContext,RelationalDbOptions>, PostgresConnectionFactory<TDbContext,RelationalDbOptions>>();
 
-            services.TryAddSingleton<INpgsqlDbOptions<TDbContext>, NpgsqlDbOptions<TDbContext>>();
-            return new DbContext<TDbContext>
+            services.TryAddSingleton<IPostgresOptions<TDbContext>, PostgresOptions<TDbContext>>();
+
+            services.TryAddSingleton<IPostgresLogger<TDbContext>, PostgresLogger<TDbContext>>();
+
+            return new DbContext<TDbContext> 
             {
                 ServiceCollection = services
             };
         }
+
 
         /// <summary>
         /// <para>
@@ -73,13 +75,13 @@ namespace NoEntityFramework
 
         private static void RegisterServiceByAttribute(this IServiceCollection services, params Assembly[] allAssembly)
         {
+
             var types = allAssembly
-                .SelectMany(t => 
-                t.GetTypes())
-                .Where(t => !t.IsInterface && t is { IsSealed: false, IsAbstract: false })
-                    .Where(t => 
-                        t.GetCustomAttributes(typeof(PostgresRepoAttribute), false).Length > 0 && 
-                        t is { IsClass: true, IsAbstract: false }).ToList();
+                .SelectMany(t =>
+                    t.GetTypes())
+                .Where(t => t.IsClass && !t.IsInterface && !t.IsSealed && !t.IsAbstract &&
+                    t.GetCustomAttributes(typeof(PostgresRepoAttribute), false).Length > 0);
+
             foreach (var type in types)
             {
                 var serviceLifetime = type.GetCustomAttribute<PostgresRepoAttribute>().Lifetime;
@@ -88,14 +90,14 @@ namespace NoEntityFramework
                 {
                     switch (serviceLifetime)
                     {
-                        case ServiceLifetime.Singleton: 
-                            services.TryAddSingleton(typeInterface, type); 
+                        case ServiceLifetime.Singleton:
+                            services.TryAddSingleton(typeInterface, type);
                             break;
-                        case ServiceLifetime.Scoped: 
-                            services.TryAddScoped(typeInterface, type); 
+                        case ServiceLifetime.Scoped:
+                            services.TryAddScoped(typeInterface, type);
                             break;
-                        case ServiceLifetime.Transient: 
-                            services.TryAddTransient(typeInterface, type); 
+                        case ServiceLifetime.Transient:
+                            services.TryAddTransient(typeInterface, type);
                             break;
                     }
                 }

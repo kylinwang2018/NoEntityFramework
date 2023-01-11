@@ -5,7 +5,7 @@ namespace NoEntityFramework.Npgsql
 {
     /// <summary>
     /// Add this attribute to any class with its interface will be automatically dependency injected to
-    /// <see cref="IServiceCollection"/> after use RegisterPostgresRepositories method.
+    /// <see cref="IServiceCollection"/> after use RegisterSqlServerRepositories method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class PostgresRepoAttribute : Attribute

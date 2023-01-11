@@ -16,10 +16,7 @@ namespace NoEntityFramework.MongoDb
         /// </summary>
         public string DatabaseName
         {
-            get
-            {
-                return _databaseName;
-            }
+            get => _databaseName;
             set
             {
                 if (isDatabaseNameInitialized)

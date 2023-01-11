@@ -18,20 +18,8 @@ namespace NoEntityFramework
             _logger = mongoDbOptions.Logger;
         }
 
-        public MongoDbContextOptions Options
-        {
-            get
-            {
-                return _options;
-            }
-        }
+        public MongoDbContextOptions Options => _options;
 
-        public IMongoDatabase Database
-        {
-            get
-            {
-                return _connectionFactory.ConnectDatabase();
-            }
-        }
+        public IMongoDatabase Database => _connectionFactory.ConnectDatabase();
     }
 }

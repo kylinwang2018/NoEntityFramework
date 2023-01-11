@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
+using NoEntityFramework.Sqlite.Models;
 
 namespace NoEntityFramework.Sqlite
 {
     internal class SqliteQueryable : ISqliteQueryable
     {
         public SqliteQueryable(
-            ISqlConnectionFactory connectionFactory,
+            ISqliteConnectionFactory connectionFactory,
             ISqliteLogger logger,
             SqliteConnection sqlConnection,
             SqliteCommand sqlCommand)
@@ -16,8 +18,13 @@ namespace NoEntityFramework.Sqlite
             SqlConnection = sqlConnection;
             SqlCommand = sqlCommand;
             SqlCommand.Connection = SqlConnection;
+            RetryLogicOption = new SqliteRetryLogicOption()
+            {
+                DeltaTime = TimeSpan.FromSeconds(5),
+                NumberOfTries = 6
+            };
         }
-        public ISqlConnectionFactory ConnectionFactory { get; }
+        public ISqliteConnectionFactory ConnectionFactory { get; }
 
         public ISqliteLogger Logger { get; }
 
@@ -26,5 +33,7 @@ namespace NoEntityFramework.Sqlite
         public SqliteConnection SqlConnection { get; }
 
         public object? ParameterModel { get; set; }
+
+        public SqliteRetryLogicOption RetryLogicOption { get; set; }
     }
 }

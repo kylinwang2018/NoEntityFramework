@@ -3,7 +3,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace NoEntityFramework.Sqlite
+namespace NoEntityFramework.Npgsql
 {
     /// <summary>
     ///     Execute the command than cast the result to a <see cref="DataSet"/>.
@@ -13,10 +13,10 @@ namespace NoEntityFramework.Sqlite
         /// <summary>
         ///     Execute the command than cast the result to a <see cref="DataSet"/>.
         /// </summary>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <returns>A <see cref="DataSet"/> object contains the query result.</returns>
         public static DataSet AsDataSet(
-            this ISqliteQueryable query)
+            this IPostgresQueryable query)
         {
             var dataTable = new DataSet();
             try
@@ -50,10 +50,10 @@ namespace NoEntityFramework.Sqlite
         /// <summary>
         ///     Execute the command than cast the result to a <see cref="DataSet"/>.
         /// </summary>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <returns>A <see cref="DataSet"/> object contains the query result.</returns>
         public static async Task<DataSet> AsDataSetAsync(
-            this ISqliteQueryable query)
+            this IPostgresQueryable query)
         {
             var dataTable = new DataSet();
             try

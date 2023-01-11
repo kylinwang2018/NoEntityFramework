@@ -3,14 +3,28 @@ using Microsoft.Data.Sqlite;
 
 namespace NoEntityFramework.Sqlite
 {
-    public interface ISqlConnectionFactory<out TDbContext, TOption> : ISqlConnectionFactory
+    /// <summary>
+    ///     Provide a connection factory for create <see cref="SqliteConnection"/>,
+    /// <see cref="SqliteCommand"/> and <see cref="SqliteDataAdapter"/>. 
+    /// </summary>
+    /// <typeparam name="TDbContext">
+    ///     The type of the database context used.
+    /// </typeparam>
+    /// <typeparam name="TOption">
+    ///     The instances which the database context required.
+    /// </typeparam>
+    public interface ISqliteConnectionFactory<out TDbContext, TOption> : ISqliteConnectionFactory
         where TDbContext : class, IDbContext
         where TOption : class, IDbContextOptions
     {
 
     }
 
-    public interface ISqlConnectionFactory
+    /// <summary>
+    ///     Provide a connection factory for create <see cref="SqliteConnection"/>,
+    /// <see cref="SqliteCommand"/> and <see cref="SqliteDataAdapter"/>.
+    /// </summary>
+    public interface ISqliteConnectionFactory
     {
         /// <summary>
         /// Creates a database connection to the specified database.

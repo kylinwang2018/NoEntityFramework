@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Data;
-using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
-namespace NoEntityFramework.Sqlite
+namespace NoEntityFramework.Npgsql
 {
     /// <summary>
-    ///     Execute the command than cast the result to a <see cref="DataSet"/>.
+    ///     Execute the command than cast the result to a <see cref="DataTable"/>.
     /// </summary>
-    public static class ToDataSet
+    public static class ToDataTable
     {
         /// <summary>
-        ///     Execute the command than cast the result to a <see cref="DataSet"/>.
+        ///     Execute the command than cast the result to a <see cref="DataTable"/>.
         /// </summary>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
-        /// <returns>A <see cref="DataSet"/> object contains the query result.</returns>
-        public static DataSet AsDataSet(
-            this ISqliteQueryable query)
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
+        /// <returns>A <see cref="DataTable"/> object contains the query result.</returns>
+        public static DataTable AsDataTable(
+            this IPostgresQueryable query)
         {
-            var dataTable = new DataSet();
+            var dataTable = new DataTable();
             try
             {
                 var watch = new Stopwatch();
@@ -43,19 +43,18 @@ namespace NoEntityFramework.Sqlite
                 query.Logger.LogError(query.SqlCommand, ex);
                 throw;
             }
-
             return dataTable;
         }
 
         /// <summary>
-        ///     Execute the command than cast the result to a <see cref="DataSet"/>.
+        ///     Execute the command than cast the result to a <see cref="DataTable"/>.
         /// </summary>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
-        /// <returns>A <see cref="DataSet"/> object contains the query result.</returns>
-        public static async Task<DataSet> AsDataSetAsync(
-            this ISqliteQueryable query)
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
+        /// <returns>A <see cref="DataTable"/> object contains the query result.</returns>
+        public static async Task<DataTable> AsDataTableAsync(
+            this IPostgresQueryable query)
         {
-            var dataTable = new DataSet();
+            var dataTable = new DataTable();
             try
             {
                 var watch = new Stopwatch();

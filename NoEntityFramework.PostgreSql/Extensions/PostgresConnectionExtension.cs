@@ -1,17 +1,21 @@
-﻿using Npgsql;
-using System;
-using System.Data;
-using System.Threading;
+﻿using System.Data;
 using System.Threading.Tasks;
+using System.Threading;
+using System;
+using NoEntityFramework.Npgsql.Models;
+using Npgsql;
 
 namespace NoEntityFramework.Npgsql
 {
-    public static class NpgsqlConnectionExtension
+    /// <summary>
+    ///     Provides command and connection execution with retry logic.
+    /// </summary>
+    public static class PostgresConnectionExtension
     {
         #region Connection Open
         public static NpgsqlConnection OpenWithRetry(this NpgsqlConnection connection, NpgsqlRetryLogicOption retryLogicOption)
         {
-            int retry = 0;
+            var retry = 0;
             while (true)
             {
                 try
@@ -21,14 +25,14 @@ namespace NoEntityFramework.Npgsql
                 }
                 catch (Exception ex)
                 {
-                    HandleNpgsqlExcpetion(ex, retry++, retryLogicOption);
+                    HandleNpgsqlException(ex, retry++, retryLogicOption);
                 }
             }
         }
 
         public static async Task<NpgsqlConnection> OpenWithRetryAsync(this NpgsqlConnection connection, NpgsqlRetryLogicOption retryLogicOption)
         {
-            int retry = 0;
+            var retry = 0;
             while (true)
             {
                 try
@@ -38,7 +42,7 @@ namespace NoEntityFramework.Npgsql
                 }
                 catch (Exception ex)
                 {
-                    await HandleNpgsqlExcpetionAsync(ex, retry++, retryLogicOption);
+                    await HandleNpgsqlExceptionAsync(ex, retry++, retryLogicOption);
                 }
             }
         }
@@ -47,7 +51,7 @@ namespace NoEntityFramework.Npgsql
         #region Connection Close
         public static NpgsqlConnection CloseWithRetry(this NpgsqlConnection connection, NpgsqlRetryLogicOption retryLogicOption)
         {
-            int retry = 0;
+            var retry = 0;
             while (true)
             {
                 try
@@ -57,14 +61,14 @@ namespace NoEntityFramework.Npgsql
                 }
                 catch (Exception ex)
                 {
-                    HandleNpgsqlExcpetion(ex, retry++, retryLogicOption);
+                    HandleNpgsqlException(ex, retry++, retryLogicOption);
                 }
             }
         }
 
         public static async Task<NpgsqlConnection> CloseWithRetryAsync(this NpgsqlConnection connection, NpgsqlRetryLogicOption retryLogicOption)
         {
-            int retry = 0;
+            var retry = 0;
             while (true)
             {
                 try
@@ -74,7 +78,7 @@ namespace NoEntityFramework.Npgsql
                 }
                 catch (Exception ex)
                 {
-                    await HandleNpgsqlExcpetionAsync(ex, retry++, retryLogicOption);
+                    await HandleNpgsqlExceptionAsync(ex, retry++, retryLogicOption);
                 }
             }
         }
@@ -83,7 +87,7 @@ namespace NoEntityFramework.Npgsql
         #region Command ExecuteReader
         public static NpgsqlDataReader ExecuteReaderWithRetry(this NpgsqlCommand command, NpgsqlRetryLogicOption retryLogicOption)
         {
-            int retry = 0;
+            var retry = 0;
             while (true)
             {
                 try
@@ -92,14 +96,14 @@ namespace NoEntityFramework.Npgsql
                 }
                 catch (Exception ex)
                 {
-                    HandleNpgsqlExcpetion(ex, retry++, retryLogicOption);
+                    HandleNpgsqlException(ex, retry++, retryLogicOption);
                 }
             }
         }
 
         public static NpgsqlDataReader ExecuteReaderWithRetry(this NpgsqlCommand command, NpgsqlRetryLogicOption retryLogicOption, CommandBehavior commandBehavior)
         {
-            int retry = 0;
+            var retry = 0;
             while (true)
             {
                 try
@@ -108,14 +112,14 @@ namespace NoEntityFramework.Npgsql
                 }
                 catch (Exception ex)
                 {
-                    HandleNpgsqlExcpetion(ex, retry++, retryLogicOption);
+                    HandleNpgsqlException(ex, retry++, retryLogicOption);
                 }
             }
         }
 
         public static async Task<NpgsqlDataReader> ExecuteReaderWithRetryAsync(this NpgsqlCommand command, NpgsqlRetryLogicOption retryLogicOption)
         {
-            int retry = 0;
+            var retry = 0;
             while (true)
             {
                 try
@@ -124,14 +128,14 @@ namespace NoEntityFramework.Npgsql
                 }
                 catch (Exception ex)
                 {
-                    await HandleNpgsqlExcpetionAsync(ex, retry++, retryLogicOption);
+                    await HandleNpgsqlExceptionAsync(ex, retry++, retryLogicOption);
                 }
             }
         }
 
         public static async Task<NpgsqlDataReader> ExecuteReaderWithRetryAsync(this NpgsqlCommand command, NpgsqlRetryLogicOption retryLogicOption, CommandBehavior commandBehavior)
         {
-            int retry = 0;
+            var retry = 0;
             while (true)
             {
                 try
@@ -140,7 +144,7 @@ namespace NoEntityFramework.Npgsql
                 }
                 catch (Exception ex)
                 {
-                    await HandleNpgsqlExcpetionAsync(ex, retry++, retryLogicOption);
+                    await HandleNpgsqlExceptionAsync(ex, retry++, retryLogicOption);
                 }
             }
         }
@@ -149,7 +153,7 @@ namespace NoEntityFramework.Npgsql
         #region Command ExecuteNonQuery
         public static int ExecuteNonQueryWithRetry(this NpgsqlCommand command, NpgsqlRetryLogicOption retryLogicOption)
         {
-            int retry = 0;
+            var retry = 0;
             while (true)
             {
                 try
@@ -158,14 +162,14 @@ namespace NoEntityFramework.Npgsql
                 }
                 catch (Exception ex)
                 {
-                    HandleNpgsqlExcpetion(ex, retry++, retryLogicOption);
+                    HandleNpgsqlException(ex, retry++, retryLogicOption);
                 }
             }
         }
 
         public static async Task<int> ExecuteNonQueryWithRetryAsync(this NpgsqlCommand command, NpgsqlRetryLogicOption retryLogicOption)
         {
-            int retry = 0;
+            var retry = 0;
             while (true)
             {
                 try
@@ -174,7 +178,7 @@ namespace NoEntityFramework.Npgsql
                 }
                 catch (Exception ex)
                 {
-                    await HandleNpgsqlExcpetionAsync(ex, retry++, retryLogicOption);
+                    await HandleNpgsqlExceptionAsync(ex, retry++, retryLogicOption);
                 }
             }
         }
@@ -183,7 +187,7 @@ namespace NoEntityFramework.Npgsql
         #region Command ExecuteScalar
         public static object ExecuteScalarWithRetry(this NpgsqlCommand command, NpgsqlRetryLogicOption retryLogicOption)
         {
-            int retry = 0;
+            var retry = 0;
             while (true)
             {
                 try
@@ -192,14 +196,14 @@ namespace NoEntityFramework.Npgsql
                 }
                 catch (Exception ex)
                 {
-                    HandleNpgsqlExcpetion(ex, retry++, retryLogicOption);
+                    HandleNpgsqlException(ex, retry++, retryLogicOption);
                 }
             }
         }
 
         public static async Task<object> ExecuteScalarWithRetryAsync(this NpgsqlCommand command, NpgsqlRetryLogicOption retryLogicOption)
         {
-            int retry = 0;
+            var retry = 0;
             while (true)
             {
                 try
@@ -208,22 +212,17 @@ namespace NoEntityFramework.Npgsql
                 }
                 catch (Exception ex)
                 {
-                    await HandleNpgsqlExcpetionAsync(ex, retry++, retryLogicOption);
+                    await HandleNpgsqlExceptionAsync(ex, retry++, retryLogicOption);
                 }
             }
         }
         #endregion
 
         #region Exception Handler
-        private static void HandleNpgsqlExcpetion(Exception ex, int retry, NpgsqlRetryLogicOption retryLogicOption)
+        private static void HandleNpgsqlException(Exception ex, int retry, NpgsqlRetryLogicOption retryLogicOption)
         {
-            if ((ex is NpgsqlException ||
-                ex is InvalidOperationException) &&
-                (ex.Message.Contains("A network-related or instance-specific error occurred")
-                    || ex.Message.Contains("A transport-level error has occurred")
-                    || ex.Message.Contains("The timeout period elapsed prior to obtaining a connection from the pool")
-                    || ex.Message.Contains("an error occurred during the pre-login handshake")) &&
-                retry < retryLogicOption.NumberOfTries) 
+            if (ex is NpgsqlException &&
+                retry < retryLogicOption.NumberOfTries)
             {
                 Thread.Sleep(retryLogicOption.DeltaTime);
             }
@@ -233,14 +232,9 @@ namespace NoEntityFramework.Npgsql
             }
         }
 
-        private static async Task HandleNpgsqlExcpetionAsync(Exception ex, int retry, NpgsqlRetryLogicOption retryLogicOption)
+        private static async Task HandleNpgsqlExceptionAsync(Exception ex, int retry, NpgsqlRetryLogicOption retryLogicOption)
         {
-            if ((ex is NpgsqlException ||
-                ex is InvalidOperationException) &&
-                (ex.Message.Contains("A network-related or instance-specific error occurred")
-                    || ex.Message.Contains("A transport-level error has occurred")
-                    || ex.Message.Contains("The timeout period elapsed prior to obtaining a connection from the pool")
-                    || ex.Message.Contains("an error occurred during the pre-login handshake")) &&
+            if (ex is NpgsqlException &&
                 retry < retryLogicOption.NumberOfTries)
             {
                 await Task.Delay(retryLogicOption.DeltaTime);

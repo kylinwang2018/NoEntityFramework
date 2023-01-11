@@ -18,7 +18,7 @@ namespace NoEntityFramework.DataAnnotations
         /// <summary>
         ///     One of the <see cref="SqlDbType"/> values.
         /// </summary>
-        public SqlDbType DbType { get; set; } = SqlDbType.Variant;
+        public SqlDbType Type { get; set; } = SqlDbType.Variant;
 
         /// <summary>
         ///     Defines how string comparisons should be performed for this parameter.

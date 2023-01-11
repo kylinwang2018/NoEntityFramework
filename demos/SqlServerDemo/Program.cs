@@ -39,7 +39,10 @@ app.MapGet("/users", async ([FromServices]ApplicationDbContext dbContext) =>
             .WithParameter(new User() { Id = 1, Name = "Ben" })
             .ExecuteAsync();
 
-        var user = (await dbContext.UseCommand("Select * from [dbo].[User];").AsListAsync<User>()).First();
+        var user = (await dbContext
+            .UseCommand("Select * from [dbo].[User];")
+            .AsListAsync<User>())
+            .First();
         await dbContext.UseCommand(
                 @"DELETE FROM [dbo].[User]
                     Where Id=@Id;")

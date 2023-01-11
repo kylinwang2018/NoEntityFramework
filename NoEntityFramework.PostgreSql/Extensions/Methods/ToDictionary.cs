@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace NoEntityFramework.Sqlite
+namespace NoEntityFramework.Npgsql
 {
     /// <summary>
     ///     Execute the command than cast the result to a <see cref="Dictionary{TKey,TValue}"/>.
@@ -22,12 +22,12 @@ namespace NoEntityFramework.Sqlite
         /// </summary>
         /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <param name="keyColumnIndex">The index of the key column, start from <see langword="0"/>.</param>
         /// <param name="valueColumnIndex">The index of the value column, start from <see langword="0"/>.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/> contains key-value pairs.</returns>
         public static Dictionary<TKey, TValue> AsDictionary<TKey, TValue>(
-            this ISqliteQueryable query, int keyColumnIndex, int valueColumnIndex)
+            this IPostgresQueryable query, int keyColumnIndex, int valueColumnIndex)
         {
             var dictionary = new Dictionary<TKey, TValue>();
             try
@@ -77,9 +77,9 @@ namespace NoEntityFramework.Sqlite
         /// </summary>
         /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/> contains key-value pairs.</returns>
-        public static Dictionary<TKey, TValue> AsDictionary<TKey, TValue>(this ISqliteQueryable query)
+        public static Dictionary<TKey, TValue> AsDictionary<TKey, TValue>(this IPostgresQueryable query)
         {
             return query.AsDictionary<TKey, TValue>(0, 1);
         }
@@ -94,12 +94,12 @@ namespace NoEntityFramework.Sqlite
         ///     or only two columns need to be read.
         /// </para>
         /// </summary> 
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <param name="keyColumnIndex">The index of the key column, start from <see langword="0"/>.</param>
         /// <param name="valueColumnIndex">The index of the value column, start from <see langword="0"/>.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/> contains key-value pairs as <see langword="string"/>.</returns>
         public static Dictionary<string, string> AsDictionary(
-            this ISqliteQueryable query, int keyColumnIndex, int valueColumnIndex)
+            this IPostgresQueryable query, int keyColumnIndex, int valueColumnIndex)
         {
             var dictionary = new Dictionary<string, string>();
             try
@@ -148,9 +148,9 @@ namespace NoEntityFramework.Sqlite
         ///     The first column will be the key and second column will be the value.
         /// </para>
         /// </summary>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/> contains key-value pairs as <see langword="string"/>.</returns>
-        public static Dictionary<string, string> AsDictionary(this ISqliteQueryable query)
+        public static Dictionary<string, string> AsDictionary(this IPostgresQueryable query)
         {
             return query.AsDictionary(0, 1);
         }
@@ -166,12 +166,12 @@ namespace NoEntityFramework.Sqlite
         /// </summary>
         /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <param name="keyColumnIndex">The index of the key column, start from <see langword="0"/>.</param>
         /// <param name="valueColumnIndex">The index of the value column, start from <see langword="0"/>.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/> contains key-value pairs.</returns>
         public static async Task<Dictionary<TKey, TValue>?> AsDictionaryAsync<TKey, TValue>(
-            this ISqliteQueryable query, int keyColumnIndex, int valueColumnIndex)
+            this IPostgresQueryable query, int keyColumnIndex, int valueColumnIndex)
         {
             var dictionary = new Dictionary<TKey, TValue>();
             try
@@ -221,9 +221,9 @@ namespace NoEntityFramework.Sqlite
         /// </summary>
         /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/> contains key-value pairs.</returns>
-        public static async Task<Dictionary<TKey, TValue>?> AsDictionaryAsync<TKey, TValue>(this ISqliteQueryable query)
+        public static async Task<Dictionary<TKey, TValue>?> AsDictionaryAsync<TKey, TValue>(this IPostgresQueryable query)
         {
             return await query.AsDictionaryAsync<TKey, TValue>(0, 1);
         }
@@ -238,12 +238,12 @@ namespace NoEntityFramework.Sqlite
         ///     or only two columns need to be read.
         /// </para>
         /// </summary> 
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <param name="keyColumnIndex">The index of the key column, start from <see langword="0"/>.</param>
         /// <param name="valueColumnIndex">The index of the value column, start from <see langword="0"/>.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/> contains key-value pairs as <see langword="string"/>.</returns>
         public static async Task<Dictionary<string, string>?> AsDictionaryAsync(
-            this ISqliteQueryable query, int keyColumnIndex, int valueColumnIndex)
+            this IPostgresQueryable query, int keyColumnIndex, int valueColumnIndex)
         {
             var dictionary = new Dictionary<string, string>();
             try
@@ -292,9 +292,9 @@ namespace NoEntityFramework.Sqlite
         ///     The first column will be the key and second column will be the value.
         /// </para>
         /// </summary>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/> contains key-value pairs as <see langword="string"/>.</returns>
-        public static async Task<Dictionary<string, string>?> AsDictionaryAsync(this ISqliteQueryable query)
+        public static async Task<Dictionary<string, string>?> AsDictionaryAsync(this IPostgresQueryable query)
         {
             return await query.AsDictionaryAsync(0, 1);
         }

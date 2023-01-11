@@ -4,19 +4,19 @@ using Microsoft.Data.Sqlite;
 
 namespace NoEntityFramework.Sqlite
 {
-    internal class SqlConnectionFactory<TDbContext, TOption> 
-        : ISqlConnectionFactory<TDbContext, TOption>, ISqlConnectionFactory
+    internal class SqliteConnectionFactory<TDbContext, TOption> 
+        : ISqliteConnectionFactory<TDbContext, TOption>, ISqliteConnectionFactory
         where TOption : class, IDbContextOptions
         where TDbContext : class, IDbContext
     {
         private readonly string _sqlConnectionString;
         private readonly int _commandTimeout;
 
-        public SqlConnectionFactory(IOptionsMonitor<TOption> options)
+        public SqliteConnectionFactory(IOptionsMonitor<TOption> options)
         {
-            var _options = options.Get(typeof(TDbContext).ToString());
-            _sqlConnectionString = _options.ConnectionString;
-            _commandTimeout = _options.DbCommandTimeout;
+            var option = options.Get(typeof(TDbContext).ToString());
+            _sqlConnectionString = option.ConnectionString;
+            _commandTimeout = option.DbCommandTimeout;
         }
 
         public SqliteCommand CreateCommand()

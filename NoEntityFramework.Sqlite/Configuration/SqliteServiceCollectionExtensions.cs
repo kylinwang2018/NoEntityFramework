@@ -8,7 +8,7 @@ using System.Reflection;
 namespace NoEntityFramework.Sqlite
 {
     /// <summary>
-    ///     SQL Server specific extension methods for <see cref="IServiceCollection" />.
+    ///     Sqlite specific extension methods for <see cref="IServiceCollection" />.
     /// </summary>
     public static class SqliteServiceCollectionExtensions
     {
@@ -32,7 +32,7 @@ namespace NoEntityFramework.Sqlite
             services.TryAddSingleton(typeof(TDbContext));
 
             // register sql factory for create connection, command and dataAdapter
-            services.TryAddSingleton<ISqlConnectionFactory<TDbContext,RelationalDbOptions>, SqlConnectionFactory<TDbContext,RelationalDbOptions>>();
+            services.TryAddSingleton<ISqliteConnectionFactory<TDbContext,RelationalDbOptions>, SqliteConnectionFactory<TDbContext,RelationalDbOptions>>();
 
             services.TryAddSingleton<ISqliteOptions<TDbContext>, SqliteOptions<TDbContext>>();
 
@@ -73,7 +73,7 @@ namespace NoEntityFramework.Sqlite
             return dbContext;
         }
 
-        private static void RegisterServiceByAttribute(this IServiceCollection services, Assembly[] allAssembly)
+        private static void RegisterServiceByAttribute(this IServiceCollection services, params Assembly[] allAssembly)
         {
 
             var types = allAssembly

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace NoEntityFramework.Sqlite
+namespace NoEntityFramework.Npgsql
 {
     /// <summary>
     ///     Execute the command than cast the result to a <see cref="Dictionary{TKey,TValue}"/>.
@@ -19,11 +19,11 @@ namespace NoEntityFramework.Sqlite
         /// </summary>
         /// <typeparam name="TKey">The index key of the objects.</typeparam>
         /// <typeparam name="TObject">The object that represents each result row.</typeparam>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <param name="keyColumnIndex">The index number of the key column of the result.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/>.</returns>
         public static Dictionary<TKey, TObject> AsDictionaryOfObjects<TKey, TObject>(
-            this ISqliteQueryable query, int keyColumnIndex)
+            this IPostgresQueryable query, int keyColumnIndex)
         where TKey : struct
         where TObject : class, new()
         {
@@ -88,11 +88,11 @@ namespace NoEntityFramework.Sqlite
         /// </summary>
         /// <typeparam name="TKey">The index key of the objects.</typeparam>
         /// <typeparam name="TObject">The object that represents each result row.</typeparam>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <param name="keyColumnName">The key column name of the result.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/>.</returns>
         public static Dictionary<TKey, TObject> AsDictionaryOfObjects<TKey, TObject>(
-            this ISqliteQueryable query, string keyColumnName)
+            this IPostgresQueryable query, string keyColumnName)
             where TKey : struct
             where TObject : class, new()
         {
@@ -157,11 +157,11 @@ namespace NoEntityFramework.Sqlite
         /// </summary>
         /// <typeparam name="TKey">The index key of the objects.</typeparam>
         /// <typeparam name="TObject">The object that represents each result row.</typeparam>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <param name="keyColumnName">The key column name of the result.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/>.</returns>
         public static Dictionary<TKey, List<TObject>> AsDictionaryOfListObjects<TKey, TObject>(
-            this ISqliteQueryable query, string keyColumnName)
+            this IPostgresQueryable query, string keyColumnName)
         {
             var dictionary = new Dictionary<TKey, List<TObject>>();
             try
@@ -235,11 +235,11 @@ namespace NoEntityFramework.Sqlite
         /// </summary>
         /// <typeparam name="TKey">The index key of the objects.</typeparam>
         /// <typeparam name="TObject">The object that represents each result row.</typeparam>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <param name="keyColumnIndex">The key column's index of the result.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/>.</returns>
         public static Dictionary<TKey, List<TObject>> AsDictionaryOfListObjects<TKey, TObject>(
-            this ISqliteQueryable query, int keyColumnIndex)
+            this IPostgresQueryable query, int keyColumnIndex)
         {
             var dictionary = new Dictionary<TKey, List<TObject>>();
             try
@@ -313,11 +313,11 @@ namespace NoEntityFramework.Sqlite
         /// </summary>
         /// <typeparam name="TKey">The index key of the objects.</typeparam>
         /// <typeparam name="TObject">The object that represents each result row.</typeparam>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <param name="keyColumnIndex">The index number of the key column of the result.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/>.</returns>
         public static async Task<Dictionary<TKey, TObject>> AsDictionaryOfObjectsAsync<TKey, TObject>(
-            this ISqliteQueryable query, int keyColumnIndex)
+            this IPostgresQueryable query, int keyColumnIndex)
         {
             var dictionary = new Dictionary<TKey, TObject>();
             try
@@ -380,11 +380,11 @@ namespace NoEntityFramework.Sqlite
         /// </summary>
         /// <typeparam name="TKey">The index key of the objects.</typeparam>
         /// <typeparam name="TObject">The object that represents each result row.</typeparam>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <param name="keyColumnName">The key column name of the result.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/>.</returns>
         public static async Task<Dictionary<TKey, TObject>> AsDictionaryOfObjectsAsync<TKey, TObject>(
-            this ISqliteQueryable query, string keyColumnName)
+            this IPostgresQueryable query, string keyColumnName)
         {
             var dictionary = new Dictionary<TKey, TObject>();
             try
@@ -447,11 +447,11 @@ namespace NoEntityFramework.Sqlite
         /// </summary>
         /// <typeparam name="TKey">The index key of the objects.</typeparam>
         /// <typeparam name="TObject">The object that represents each result row.</typeparam>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <param name="keyColumnName">The key column name of the result.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/>.</returns>
         public static async Task<Dictionary<TKey, List<TObject>>> AsDictionaryOfListObjectsAsync<TKey, TObject>(
-            this ISqliteQueryable query, string keyColumnName)
+            this IPostgresQueryable query, string keyColumnName)
         {
             var dictionary = new Dictionary<TKey, List<TObject>>();
             try
@@ -525,11 +525,11 @@ namespace NoEntityFramework.Sqlite
         /// </summary>
         /// <typeparam name="TKey">The index key of the objects.</typeparam>
         /// <typeparam name="TObject">The object that represents each result row.</typeparam>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <param name="keyColumnIndex">The key column's index of the result.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/>.</returns>
         public static async Task<Dictionary<TKey, List<TObject>>> AsDictionaryOfListObjectsAsync<TKey, TObject>(
-            this ISqliteQueryable query, int keyColumnIndex)
+            this IPostgresQueryable query, int keyColumnIndex)
         {
             var dictionary = new Dictionary<TKey, List<TObject>>();
             try

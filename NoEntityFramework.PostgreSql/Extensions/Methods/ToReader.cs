@@ -2,23 +2,23 @@
 using System.Data;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Microsoft.Data.Sqlite;
+using Npgsql;
 
-namespace NoEntityFramework.Sqlite
+namespace NoEntityFramework.Npgsql
 {
     /// <summary>
-    ///     Return a <see cref="SqliteDataReader"/>.
+    ///     Return a <see cref="NpgsqlDataReader"/>.
     /// </summary>
     public static class ToReader
     {
         /// <summary>
-        ///     Create a <see cref="SqliteDataReader"/> for calling method with selected query.
+        ///     Create a <see cref="NpgsqlDataReader"/> for calling method with selected query.
         /// </summary>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <param name="commandBehavior">A description of the results of the query and its effect on the database.</param>
-        /// <returns>A <see cref="SqliteDataReader"/>.</returns>
-        public static SqliteDataReader AsDataReader(
-            this ISqliteQueryable query, CommandBehavior? commandBehavior)
+        /// <returns>A <see cref="NpgsqlDataReader"/>.</returns>
+        public static NpgsqlDataReader AsDataReader(
+            this IPostgresQueryable query, CommandBehavior? commandBehavior)
         {
             try
             {
@@ -49,13 +49,13 @@ namespace NoEntityFramework.Sqlite
         }
 
         /// <summary>
-        ///     Create a <see cref="SqliteDataReader"/> for calling method with selected query.
+        ///     Create a <see cref="NpgsqlDataReader"/> for calling method with selected query.
         /// </summary>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <param name="commandBehavior">A description of the results of the query and its effect on the database.</param>
-        /// <returns>A <see cref="SqliteDataReader"/>.</returns>
-        public static async Task<SqliteDataReader> AsDataReaderAsync(
-            this ISqliteQueryable query, CommandBehavior? commandBehavior)
+        /// <returns>A <see cref="NpgsqlDataReader"/>.</returns>
+        public static async Task<NpgsqlDataReader> AsDataReaderAsync(
+            this IPostgresQueryable query, CommandBehavior? commandBehavior)
         {
             try
             {

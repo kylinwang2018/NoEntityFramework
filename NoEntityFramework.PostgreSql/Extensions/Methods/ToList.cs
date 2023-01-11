@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace NoEntityFramework.Sqlite
+namespace NoEntityFramework.Npgsql
 {
     /// <summary>
     ///     Execute the command than cast the result to a <see cref="List{T}"/>.
@@ -15,9 +15,9 @@ namespace NoEntityFramework.Sqlite
         ///     Execute the command than cast the result to a <see cref="List{T}"/>.
         /// </summary>
         /// <typeparam name="T">The type of the object that represents the each row of the result of the query.</typeparam>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <returns>A <see cref="List{T}"/> of the query result.</returns>
-        public static List<T> AsList<T>(this ISqliteQueryable query)
+        public static List<T> AsList<T>(this IPostgresQueryable query)
             where T : class, new()
         {
             var list = new List<T>();
@@ -74,9 +74,9 @@ namespace NoEntityFramework.Sqlite
         ///     Execute the command than cast the result to a <see cref="List{T}"/>.
         /// </summary>
         /// <typeparam name="T">The type of the object that represents the each row of the result of the query.</typeparam>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <returns>A <see cref="List{T}"/> of the query result.</returns>
-        public static async Task<List<T>> AsListAsync<T>(this ISqliteQueryable query)
+        public static async Task<List<T>> AsListAsync<T>(this IPostgresQueryable query)
             where T : class, new()
         {
             var list = new List<T>();

@@ -10,7 +10,7 @@ using System.Reflection;
 namespace NoEntityFramework
 {
     /// <summary>
-    ///     PostgreSql specific extension methods for <see cref="IServiceCollection" />.
+    ///     MongoDb specific extension methods for <see cref="IServiceCollection" />.
     /// </summary>
     public static class MongoDbServiceCollectionExtensions
     {
@@ -31,7 +31,7 @@ namespace NoEntityFramework
             services.AddOptions();
             services.Configure(typeof(TDbContext).ToString(), setupAction);
 
-            // register dbprovider in service collection
+            // register dbProvider in service collection
             services.TryAddSingleton(typeof(TDbContext));
 
             // register sql factory for create connection, command and dataAdapter
@@ -72,19 +72,19 @@ namespace NoEntityFramework
             return dbContext;
         }
 
-        private static void RegisterServiceByAttribute(this IServiceCollection services, Assembly[] allAssembly)
+        private static void RegisterServiceByAttribute(this IServiceCollection services, params Assembly[] allAssembly)
         {
-            List<Type> types = allAssembly
+            var types = allAssembly
                 .SelectMany(t =>
                 t.GetTypes())
-                .Where(t => !t.IsInterface && !t.IsSealed && !t.IsAbstract)
+                .Where(t => !t.IsInterface && t is { IsSealed: false, IsAbstract: false })
                     .Where(t =>
                         t.GetCustomAttributes(typeof(MongoDbRepoAttribute), false).Length > 0 &&
-                            t.IsClass && !t.IsAbstract).ToList();
+                        t is { IsClass: true, IsAbstract: false }).ToList();
             foreach (var type in types)
             {
                 var serviceLifetime = type.GetCustomAttribute<MongoDbRepoAttribute>().Lifetime;
-                Type typeInterface = type.GetInterfaces().FirstOrDefault();
+                var typeInterface = type.GetInterfaces().FirstOrDefault();
                 if (typeInterface != null)
                 {
                     switch (serviceLifetime)

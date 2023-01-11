@@ -1,14 +1,14 @@
-using Npgsql;
-using NpgsqlTypes;
 using System;
 using System.Data;
+using Npgsql;
+using NpgsqlTypes;
 
 namespace NoEntityFramework.DataAnnotations
 {
     /// <summary>
     ///     Annotate a property in the model as a <see cref="NpgsqlParameter"/>.
     /// </summary>
-    public class NpgsqlDbParameterAttribute : Attribute
+    public class PostgresDbParameterAttribute : Attribute
     {
         /// <summary>
         ///     The name of the parameter to map.

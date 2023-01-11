@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NoEntityFramework.Npgsql.Models
+namespace NoEntityFramework.Sqlite.Models
 {
-    public class NpgsqlRetryLogicOption
+    public class SqliteRetryLogicOption
     {
         public int NumberOfTries { get; set; } = 6;
         public TimeSpan DeltaTime { get; set; } = TimeSpan.FromSeconds(5);

@@ -1,31 +1,44 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace NoEntityFramework.Sqlite
 {
+    /// <summary>
+    ///     Execute command and get a single value from the query.
+    /// </summary>
     public static class ToScalar
     {
+        /// <summary>
+        ///     Execute the command and get a single value from the query.
+        /// </summary>
+        /// <typeparam name="T">The type of the returned value</typeparam>
+        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <returns>The value for the query.</returns>
         public static T As<T>(this ISqliteQueryable query)
             where T : struct
         {
             try
             {
+                var watch = new Stopwatch();
+                watch.Start();
+
                 using var sqlConnection = query.SqlConnection;
-                sqlConnection.Open();
+                sqlConnection.OpenWithRetry(query.RetryLogicOption);
                 query.SqlCommand.Connection = sqlConnection;
                 using var sqlTransaction = sqlConnection.BeginTransaction();
                 query.SqlCommand.Connection = sqlConnection;
                 query.SqlCommand.Transaction = sqlTransaction;
-                var result = query.SqlCommand.ExecuteScalar();
+                var result = query.SqlCommand.ExecuteScalarWithRetry(query.RetryLogicOption);
                 sqlTransaction.Commit();
+
+                watch.Stop();
 
                 if (query.ParameterModel != null)
                     query.SqlCommand
                         .CopyParameterValueToModels(query.ParameterModel);
-                query.Logger.LogInfo(query.SqlCommand, sqlConnection);
+                query.Logger.LogInfo(query.SqlCommand, watch.ElapsedMilliseconds);
 
-                if (result == null)
-                    return default;
                 return (T)result;
             }
             catch (Exception ex)
@@ -35,27 +48,36 @@ namespace NoEntityFramework.Sqlite
             }
         }
 
+        /// <summary>
+        ///     Execute the command and get a single value from the query.
+        /// </summary>
+        /// <typeparam name="T">The type of the returned value</typeparam>
+        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <returns>The value for the query.</returns>
         public static async Task<T> AsAsync<T>(this ISqliteQueryable query)
             where T : struct
         {
             try
             {
+                var watch = new Stopwatch();
+                watch.Start();
+
                 await using var sqlConnection = query.SqlConnection;
-                await sqlConnection.OpenAsync();
+                await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
                 query.SqlCommand.Connection = sqlConnection;
                 await using var sqlTransaction = sqlConnection.BeginTransaction();
                 query.SqlCommand.Connection = sqlConnection;
                 query.SqlCommand.Transaction = sqlTransaction;
-                var result = await query.SqlCommand.ExecuteScalarAsync();
+                var result = await query.SqlCommand.ExecuteScalarWithRetryAsync(query.RetryLogicOption);
                 sqlTransaction.Commit();
+
+                watch.Stop();
 
                 if (query.ParameterModel != null)
                     query.SqlCommand
                         .CopyParameterValueToModels(query.ParameterModel);
-                query.Logger.LogInfo(query.SqlCommand, sqlConnection);
+                query.Logger.LogInfo(query.SqlCommand, watch.ElapsedMilliseconds);
 
-                if (result == null)
-                    return default;
                 return (T)result;
             }
             catch (Exception ex)

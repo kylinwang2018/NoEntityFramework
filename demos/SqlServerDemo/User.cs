@@ -5,10 +5,10 @@ namespace SqlServerDemo
 {
     public class User
     {
-        [SqlDbParameter(Name = "@Id", DbType = SqlDbType.Int)]
+        [SqlDbParameter(Name = "@Id", Type = SqlDbType.Int)]
         public int Id { get; set; }
 
-        [SqlDbParameter(Name = "@Name", DbType = SqlDbType.NVarChar)]
+        [SqlDbParameter(Name = "@Name", Type = SqlDbType.NVarChar)]
         public string? Name { get; set; }
     }
 }

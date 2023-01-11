@@ -1,24 +1,21 @@
 ﻿using System;
-using System.Data;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace NoEntityFramework.Sqlite
+namespace NoEntityFramework.Npgsql
 {
     /// <summary>
-    ///     Execute the command than cast the result to a <see cref="DataSet"/>.
+    ///     Execute a non-query command.
     /// </summary>
-    public static class ToDataSet
+    public static class ExecuteNonQuery
     {
         /// <summary>
-        ///     Execute the command than cast the result to a <see cref="DataSet"/>.
+        ///     Execute a non-query command.
         /// </summary>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
-        /// <returns>A <see cref="DataSet"/> object contains the query result.</returns>
-        public static DataSet AsDataSet(
-            this ISqliteQueryable query)
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
+        /// <returns>The number of the row has been affected.</returns>
+        public static int Execute(this IPostgresQueryable query)
         {
-            var dataTable = new DataSet();
             try
             {
                 var watch = new Stopwatch();
@@ -27,9 +24,11 @@ namespace NoEntityFramework.Sqlite
                 using var sqlConnection = query.SqlConnection;
                 sqlConnection.OpenWithRetry(query.RetryLogicOption);
                 query.SqlCommand.Connection = sqlConnection;
-                using var sqlDataAdapter = query.ConnectionFactory.CreateDataAdapter();
-                sqlDataAdapter.SelectCommand = query.SqlCommand;
-                sqlDataAdapter.Fill(dataTable);
+                using var sqlTransaction = sqlConnection.BeginTransaction();
+                query.SqlCommand.Connection = sqlConnection;
+                query.SqlCommand.Transaction = sqlTransaction;
+                var result = query.SqlCommand.ExecuteNonQueryWithRetry(query.RetryLogicOption);
+                sqlTransaction.Commit();
 
                 watch.Stop();
 
@@ -37,25 +36,23 @@ namespace NoEntityFramework.Sqlite
                     query.SqlCommand
                         .CopyParameterValueToModels(query.ParameterModel);
                 query.Logger.LogInfo(query.SqlCommand, watch.ElapsedMilliseconds);
+
+                return result;
             }
             catch (Exception ex)
             {
                 query.Logger.LogError(query.SqlCommand, ex);
                 throw;
             }
-
-            return dataTable;
         }
 
         /// <summary>
-        ///     Execute the command than cast the result to a <see cref="DataSet"/>.
+        ///     Execute a non-query command.
         /// </summary>
-        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
-        /// <returns>A <see cref="DataSet"/> object contains the query result.</returns>
-        public static async Task<DataSet> AsDataSetAsync(
-            this ISqliteQueryable query)
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
+        /// <returns>The number of the row has been affected.</returns>
+        public static async Task<int> ExecuteAsync(this IPostgresQueryable query)
         {
-            var dataTable = new DataSet();
             try
             {
                 var watch = new Stopwatch();
@@ -64,9 +61,11 @@ namespace NoEntityFramework.Sqlite
                 await using var sqlConnection = query.SqlConnection;
                 await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
                 query.SqlCommand.Connection = sqlConnection;
-                using var sqlDataAdapter = query.ConnectionFactory.CreateDataAdapter();
-                sqlDataAdapter.SelectCommand = query.SqlCommand;
-                sqlDataAdapter.Fill(dataTable);
+                await using var sqlTransaction = await sqlConnection.BeginTransactionAsync();
+                query.SqlCommand.Connection = sqlConnection;
+                query.SqlCommand.Transaction = sqlTransaction;
+                var result = await query.SqlCommand.ExecuteNonQueryWithRetryAsync(query.RetryLogicOption);
+                await sqlTransaction.CommitAsync();
 
                 watch.Stop();
 
@@ -74,13 +73,14 @@ namespace NoEntityFramework.Sqlite
                     query.SqlCommand
                         .CopyParameterValueToModels(query.ParameterModel);
                 query.Logger.LogInfo(query.SqlCommand, watch.ElapsedMilliseconds);
+
+                return result;
             }
             catch (Exception ex)
             {
                 query.Logger.LogError(query.SqlCommand, ex);
                 throw;
             }
-            return dataTable;
         }
     }
 }

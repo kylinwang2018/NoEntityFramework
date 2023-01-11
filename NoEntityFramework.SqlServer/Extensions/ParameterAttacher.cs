@@ -98,7 +98,7 @@ namespace NoEntityFramework.SqlServer
 
                 var sqlParameter = new SqlParameter()
                 {
-                    SqlDbType = (attr.DbType == SqlDbType.Variant) ? TypeMap[propertyType] : attr.DbType,
+                    SqlDbType = (attr.Type == SqlDbType.Variant) ? TypeMap[propertyType] : attr.Type,
                     Direction = attr.Direction,
                     Value = property.GetValue(parameterModel) ?? DBNull.Value,
                     ParameterName = attr.Name,

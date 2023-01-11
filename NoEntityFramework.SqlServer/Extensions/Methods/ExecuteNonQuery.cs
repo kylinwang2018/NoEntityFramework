@@ -12,7 +12,7 @@ namespace NoEntityFramework.SqlServer
         ///     Execute a non-query command.
         /// </summary>
         /// <param name="query">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
-        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
+        /// <returns>The number of the row has been affected.</returns>
         public static int Execute(this ISqlServerQueryable query)
         {
             try
@@ -44,7 +44,7 @@ namespace NoEntityFramework.SqlServer
         ///     Execute a non-query command.
         /// </summary>
         /// <param name="query">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
-        /// <returns>The <see cref="ISqlServerQueryable"/> that represent the query.</returns>
+        /// <returns>The number of the row has been affected.</returns>
         public static async Task<int> ExecuteAsync(this ISqlServerQueryable query)
         {
             try
