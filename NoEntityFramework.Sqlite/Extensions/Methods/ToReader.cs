@@ -13,12 +13,16 @@ namespace NoEntityFramework.Sqlite
     {
         /// <summary>
         ///     Create a <see cref="SqliteDataReader"/> for calling method with selected query.
+        /// <para>
+        ///     If a non-CloseConnection <see cref="CommandBehavior"/> is selected,
+        ///     the <see cref="SqliteConnection"/> in the <see cref="ISqliteQueryable"/> must be closed manually.
+        /// </para>
         /// </summary>
         /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
         /// <param name="commandBehavior">A description of the results of the query and its effect on the database.</param>
         /// <returns>A <see cref="SqliteDataReader"/>.</returns>
         public static SqliteDataReader AsDataReader(
-            this ISqliteQueryable query, CommandBehavior? commandBehavior)
+            this ISqliteQueryable query, CommandBehavior commandBehavior = CommandBehavior.CloseConnection)
         {
             try
             {
@@ -28,9 +32,8 @@ namespace NoEntityFramework.Sqlite
                 using var sqlConnection = query.SqlConnection;
                 sqlConnection.OpenWithRetry(query.RetryLogicOption);
                 query.SqlCommand.Connection = sqlConnection;
-                var reader = commandBehavior == null? 
-                    query.SqlCommand.ExecuteReaderWithRetry(query.RetryLogicOption) :
-                    query.SqlCommand.ExecuteReaderWithRetry(query.RetryLogicOption, (CommandBehavior)commandBehavior);
+                var reader = 
+                    query.SqlCommand.ExecuteReaderWithRetry(query.RetryLogicOption, commandBehavior);
 
                 watch.Stop();
 
@@ -50,12 +53,16 @@ namespace NoEntityFramework.Sqlite
 
         /// <summary>
         ///     Create a <see cref="SqliteDataReader"/> for calling method with selected query.
+        /// <para>
+        ///     If a non-CloseConnection <see cref="CommandBehavior"/> is selected,
+        ///     the <see cref="SqliteConnection"/> in the <see cref="ISqliteQueryable"/> must be closed manually.
+        /// </para>
         /// </summary>
         /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
         /// <param name="commandBehavior">A description of the results of the query and its effect on the database.</param>
         /// <returns>A <see cref="SqliteDataReader"/>.</returns>
         public static async Task<SqliteDataReader> AsDataReaderAsync(
-            this ISqliteQueryable query, CommandBehavior? commandBehavior)
+            this ISqliteQueryable query, CommandBehavior commandBehavior = CommandBehavior.CloseConnection)
         {
             try
             {
@@ -65,9 +72,8 @@ namespace NoEntityFramework.Sqlite
                 await using var sqlConnection = query.SqlConnection;
                 await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
                 query.SqlCommand.Connection = sqlConnection;
-                var reader = commandBehavior == null ?
-                    await query.SqlCommand.ExecuteReaderWithRetryAsync(query.RetryLogicOption) :
-                    await query.SqlCommand.ExecuteReaderWithRetryAsync(query.RetryLogicOption, (CommandBehavior)commandBehavior);
+                var reader = 
+                    await query.SqlCommand.ExecuteReaderWithRetryAsync(query.RetryLogicOption, commandBehavior);
 
                 watch.Stop();
 

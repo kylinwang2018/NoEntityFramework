@@ -13,12 +13,16 @@ namespace NoEntityFramework.Npgsql
     {
         /// <summary>
         ///     Create a <see cref="NpgsqlDataReader"/> for calling method with selected query.
+        /// <para>
+        ///     If a non-CloseConnection <see cref="CommandBehavior"/> is selected,
+        ///     the <see cref="NpgsqlConnection"/> in the <see cref="IPostgresQueryable"/> must be closed manually.
+        /// </para>
         /// </summary>
         /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <param name="commandBehavior">A description of the results of the query and its effect on the database.</param>
         /// <returns>A <see cref="NpgsqlDataReader"/>.</returns>
         public static NpgsqlDataReader AsDataReader(
-            this IPostgresQueryable query, CommandBehavior? commandBehavior)
+            this IPostgresQueryable query, CommandBehavior commandBehavior = CommandBehavior.CloseConnection)
         {
             try
             {
@@ -28,9 +32,8 @@ namespace NoEntityFramework.Npgsql
                 using var sqlConnection = query.SqlConnection;
                 sqlConnection.OpenWithRetry(query.RetryLogicOption);
                 query.SqlCommand.Connection = sqlConnection;
-                var reader = commandBehavior == null? 
-                    query.SqlCommand.ExecuteReaderWithRetry(query.RetryLogicOption) :
-                    query.SqlCommand.ExecuteReaderWithRetry(query.RetryLogicOption, (CommandBehavior)commandBehavior);
+                var reader = 
+                    query.SqlCommand.ExecuteReaderWithRetry(query.RetryLogicOption, commandBehavior);
 
                 watch.Stop();
 
@@ -50,12 +53,16 @@ namespace NoEntityFramework.Npgsql
 
         /// <summary>
         ///     Create a <see cref="NpgsqlDataReader"/> for calling method with selected query.
+        /// <para>
+        ///     If a non-CloseConnection <see cref="CommandBehavior"/> is selected,
+        ///     the <see cref="NpgsqlConnection"/> in the <see cref="IPostgresQueryable"/> must be closed manually.
+        /// </para>
         /// </summary>
         /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
         /// <param name="commandBehavior">A description of the results of the query and its effect on the database.</param>
         /// <returns>A <see cref="NpgsqlDataReader"/>.</returns>
         public static async Task<NpgsqlDataReader> AsDataReaderAsync(
-            this IPostgresQueryable query, CommandBehavior? commandBehavior)
+            this IPostgresQueryable query, CommandBehavior commandBehavior = CommandBehavior.CloseConnection)
         {
             try
             {
@@ -65,9 +72,8 @@ namespace NoEntityFramework.Npgsql
                 await using var sqlConnection = query.SqlConnection;
                 await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
                 query.SqlCommand.Connection = sqlConnection;
-                var reader = commandBehavior == null ?
-                    await query.SqlCommand.ExecuteReaderWithRetryAsync(query.RetryLogicOption) :
-                    await query.SqlCommand.ExecuteReaderWithRetryAsync(query.RetryLogicOption, (CommandBehavior)commandBehavior);
+                var reader = 
+                    await query.SqlCommand.ExecuteReaderWithRetryAsync(query.RetryLogicOption, commandBehavior);
 
                 watch.Stop();
 
