@@ -25,7 +25,7 @@ namespace NoEntityFramework.SqlServer
         {
             try
             {
-                using var sqlConnection = query.SqlConnection;
+                var sqlConnection = query.SqlConnection;
                 sqlConnection.Open();
                 query.SqlCommand.Connection = sqlConnection;
                 var reader = 
@@ -60,7 +60,7 @@ namespace NoEntityFramework.SqlServer
         {
             try
             {
-                await using var sqlConnection = query.SqlConnection;
+                var sqlConnection = query.SqlConnection;
                 await sqlConnection.OpenAsync();
                 query.SqlCommand.Connection = sqlConnection;
                 var reader = 

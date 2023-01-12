@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using NoEntityFramework.Npgsql.Models;
 using Npgsql;
 
@@ -35,5 +36,17 @@ namespace NoEntityFramework.Npgsql
         public object? ParameterModel { get; set; }
 
         public NpgsqlRetryLogicOption RetryLogicOption { get; set; }
+
+        public void Dispose()
+        {
+            SqlCommand.Dispose();
+            SqlConnection.Dispose();
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await SqlCommand.DisposeAsync();
+            await SqlConnection.DisposeAsync();
+        }
     }
 }

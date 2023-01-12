@@ -14,7 +14,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSqlServerDbContext<ApplicationDbContext>(
     options =>
     {
-        options.ConnectionString = "Server=(localdb)\\MSSQLLocalDB; Database=NoEntityFrameWorkDemo; MultipleActiveResultSets=true;TrustServerCertificate=true";
+        options.ConnectionString = "Server=(localdb)\\MSSQLLocalDB; Database=NoEntityFrameWorkDemo; MultipleActiveResultSets=true;TrustServerCertificate=true;Max Pool Size=5";
         options.NumberOfTries = 6;
         options.MaxTimeInterval = 5;
         options.DbCommandTimeout = 20;
@@ -31,7 +31,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGet("/users", async ([FromServices]ApplicationDbContext dbContext) =>
+app.MapGet("/users", async ([FromServices] ApplicationDbContext dbContext) =>
     {
         await dbContext.UseCommand(
                 @"Insert into [dbo].[User] (Id, Name)
@@ -43,10 +43,19 @@ app.MapGet("/users", async ([FromServices]ApplicationDbContext dbContext) =>
             .UseCommand("Select * from [dbo].[User];")
             .AsListAsync<User>())
             .First();
+
+        for (var i = 0; i < 20; i++)
+        {
+            await using var query = dbContext.UseCommand("select * from [dbo].[User];");
+            await using var reader = await query.AsDataReaderAsync();
+            await reader.ReadAsync();
+            Console.WriteLine(reader[1]);
+        }
+
         await dbContext.UseCommand(
                 @"DELETE FROM [dbo].[User]
                     Where Id=@Id;")
-            .WithInputParameter("@Id",SqlDbType.Int,1)
+            .WithInputParameter("@Id", SqlDbType.Int, 1)
             .ExecuteAsync();
         return user;
     })

@@ -1,3 +1,4 @@
+using System;
 using System.Data;
 using NoEntityFramework.DataAnnotations;
 using NoEntityFramework.Npgsql.Models;
@@ -8,7 +9,7 @@ namespace NoEntityFramework.Npgsql
     /// <summary>
     ///     The SQL Server query context for NoEntityFramework.Sqlite.
     /// </summary>
-    public interface IPostgresQueryable
+    public interface IPostgresQueryable : IDisposable, IAsyncDisposable
     {
         /// <summary>
         ///     Provide a connection factory for create <see cref="NpgsqlConnection"/>,

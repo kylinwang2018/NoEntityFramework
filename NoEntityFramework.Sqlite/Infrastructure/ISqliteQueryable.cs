@@ -1,3 +1,4 @@
+using System;
 using System.Data;
 using Microsoft.Data.Sqlite;
 using NoEntityFramework.DataAnnotations;
@@ -8,7 +9,7 @@ namespace NoEntityFramework.Sqlite
     /// <summary>
     ///     The SQL Server query context for NoEntityFramework.Sqlite.
     /// </summary>
-    public interface ISqliteQueryable
+    public interface ISqliteQueryable : IDisposable, IAsyncDisposable
     {
         /// <summary>
         ///     Provide a connection factory for create <see cref="SqliteConnection"/>,

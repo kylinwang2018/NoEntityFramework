@@ -1,3 +1,4 @@
+using System;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using NoEntityFramework.DataAnnotations;
@@ -7,7 +8,7 @@ namespace NoEntityFramework.SqlServer
     /// <summary>
     ///     The SQL Server query context for NoEntityFramework.SqlServer.
     /// </summary>
-    public interface ISqlServerQueryable
+    public interface ISqlServerQueryable : IDisposable, IAsyncDisposable
     {
         /// <summary>
         ///     Provide a connection factory for create <see cref="Microsoft.Data.SqlClient.SqlConnection"/>,

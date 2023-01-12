@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using NoEntityFramework.Sqlite.Models;
 
@@ -35,5 +36,17 @@ namespace NoEntityFramework.Sqlite
         public object? ParameterModel { get; set; }
 
         public SqliteRetryLogicOption RetryLogicOption { get; set; }
+
+        public void Dispose()
+        {
+            SqlCommand.Dispose();
+            SqlConnection.Dispose();
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await SqlCommand.DisposeAsync();
+            await SqlConnection.DisposeAsync();
+        }
     }
 }
