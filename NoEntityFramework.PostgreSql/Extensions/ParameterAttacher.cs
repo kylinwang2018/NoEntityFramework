@@ -167,7 +167,7 @@ namespace NoEntityFramework.Npgsql
 
             param.Direction = parameterDirection;
 
-            if (value == null) param.Value = DBNull.Value;
+            param.Value = value ?? DBNull.Value;
 
             queryable.SqlCommand.Parameters.Add(param);
             return queryable;

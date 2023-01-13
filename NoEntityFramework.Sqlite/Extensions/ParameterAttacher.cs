@@ -98,7 +98,7 @@ namespace NoEntityFramework.Sqlite
 
                 var sqlParameter = new SqliteParameter()
                 {
-                    SqliteType = attr.TypeDefined ? attr.DbType : TypeMap[propertyType],
+                    SqliteType = attr.TypeDefined ? attr.Type : TypeMap[propertyType],
                     Direction = attr.Direction,
                     Value = property.GetValue(parameterModel) ?? DBNull.Value,
                     ParameterName = attr.Name,
@@ -167,7 +167,7 @@ namespace NoEntityFramework.Sqlite
 
             param.Direction = parameterDirection;
 
-            if (value == null) param.Value = DBNull.Value;
+            param.Value = value ?? DBNull.Value;
 
             queryable.SqlCommand.Parameters.Add(param);
             return queryable;

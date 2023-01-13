@@ -29,7 +29,7 @@ namespace NoEntityFramework.Sqlite
                 var watch = new Stopwatch();
                 watch.Start();
 
-                using var sqlConnection = query.SqlConnection;
+                var sqlConnection = query.SqlConnection;
                 sqlConnection.OpenWithRetry(query.RetryLogicOption);
                 query.SqlCommand.Connection = sqlConnection;
                 var reader = 
@@ -69,7 +69,7 @@ namespace NoEntityFramework.Sqlite
                 var watch = new Stopwatch();
                 watch.Start();
 
-                await using var sqlConnection = query.SqlConnection;
+                var sqlConnection = query.SqlConnection;
                 await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
                 query.SqlCommand.Connection = sqlConnection;
                 var reader = 

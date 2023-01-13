@@ -17,7 +17,7 @@ namespace NoEntityFramework.DataAnnotations
         /// <summary>
         ///     One of the <see cref="SqlDbType"/> values.
         /// </summary>
-        public SqliteType DbType
+        public SqliteType Type
         {
             get => _type;
             set { 
