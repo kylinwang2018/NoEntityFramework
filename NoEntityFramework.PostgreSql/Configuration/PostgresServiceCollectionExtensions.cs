@@ -1,11 +1,12 @@
 ﻿using NoEntityFramework.Utilities;
+using NoEntityFramework.Npgsql;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Linq;
 using System.Reflection;
 
-namespace NoEntityFramework.Npgsql
+namespace NoEntityFramework
 {
     /// <summary>
     ///     Postgres specific extension methods for <see cref="IServiceCollection" />.
