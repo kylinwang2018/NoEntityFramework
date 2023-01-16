@@ -8,5 +8,6 @@ namespace NoEntityFramework.Sqlite.Models
     {
         public int NumberOfTries { get; set; } = 6;
         public TimeSpan DeltaTime { get; set; } = TimeSpan.FromSeconds(5);
+        public ISqliteLogger Logger { get; set; }
     }
 }

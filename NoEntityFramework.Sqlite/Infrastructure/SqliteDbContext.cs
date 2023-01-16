@@ -23,6 +23,7 @@ namespace NoEntityFramework.Sqlite
             _connectionFactory = sqliteOptions.ConnectionFactory;
             _logger = sqliteOptions.Logger;
             _retryOptions = sqliteOptions.RetryLogicOption;
+            _retryOptions.Logger = _logger;
         }
 
         /// <summary>

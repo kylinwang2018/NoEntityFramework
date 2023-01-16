@@ -224,6 +224,7 @@ namespace NoEntityFramework.Npgsql
             if (ex is NpgsqlException &&
                 retry < retryLogicOption.NumberOfTries)
             {
+                retryLogicOption.Logger.LogError(ex, $"Retry {retry}/{retryLogicOption.NumberOfTries}");
                 Thread.Sleep(retryLogicOption.DeltaTime);
             }
             else
@@ -237,6 +238,7 @@ namespace NoEntityFramework.Npgsql
             if (ex is NpgsqlException &&
                 retry < retryLogicOption.NumberOfTries)
             {
+                retryLogicOption.Logger.LogError(ex, $"Retry {retry}/{retryLogicOption.NumberOfTries}");
                 await Task.Delay(retryLogicOption.DeltaTime);
             }
             else

@@ -11,7 +11,7 @@
 	  <Copyright>Copyright Ben Wang 2022</Copyright>
 	  <PackageTags>Database;SqlServer;Postgres</PackageTags>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
-	  <Description>Database Aniki's PostgresDb support library</Description>
+	  <Description>NoEntityFramework's PostgresDb support library</Description>
   </PropertyGroup>
 
   <ItemGroup>

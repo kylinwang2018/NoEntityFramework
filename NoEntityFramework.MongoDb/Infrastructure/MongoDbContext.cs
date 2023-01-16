@@ -13,7 +13,7 @@ namespace NoEntityFramework
         public MongoDbContext(
             IMongoDbOptions<MongoDbContext> mongoDbOptions)
         {
-            _options = mongoDbOptions.Options.Get((this.GetType()).ToString());
+            _options = mongoDbOptions.Options.Get(GetType().ToString());
             _connectionFactory = mongoDbOptions.ConnectionFactory;
             _logger = mongoDbOptions.Logger;
         }
