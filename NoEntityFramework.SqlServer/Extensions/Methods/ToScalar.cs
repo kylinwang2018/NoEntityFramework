@@ -19,23 +19,27 @@ namespace NoEntityFramework.SqlServer
         {
             try
             {
-                using var sqlConnection = query.SqlConnection;
-                sqlConnection.Open();
-                query.SqlCommand.Connection = sqlConnection;
-                using var sqlTransaction = sqlConnection.BeginTransaction();
-                query.SqlCommand.Connection = sqlConnection;
-                query.SqlCommand.Transaction = sqlTransaction;
-                var result = query.SqlCommand.ExecuteScalar();
-                sqlTransaction.Commit();
+                using (var sqlConnection = query.SqlConnection)
+                {
+                    sqlConnection.Open();
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlTransaction = sqlConnection.BeginTransaction())
+                    {
+                        query.SqlCommand.Connection = sqlConnection;
+                        query.SqlCommand.Transaction = sqlTransaction;
+                        var result = query.SqlCommand.ExecuteScalar();
+                        sqlTransaction.Commit();
 
-                if (query.ParameterModel != null)
-                    query.SqlCommand
-                        .CopyParameterValueToModels(query.ParameterModel);
-                query.Logger.LogInfo(query.SqlCommand, sqlConnection);
+                        if (query.ParameterModel != null)
+                            query.SqlCommand
+                                .CopyParameterValueToModels(query.ParameterModel);
+                        query.Logger.LogInfo(query.SqlCommand, sqlConnection);
 
-                if (result == null)
-                    return default;
-                return (T)result;
+                        if (result == null)
+                            return default;
+                        return (T)result;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -55,23 +59,27 @@ namespace NoEntityFramework.SqlServer
         {
             try
             {
-                await using var sqlConnection = query.SqlConnection;
-                await sqlConnection.OpenAsync();
-                query.SqlCommand.Connection = sqlConnection;
-                await using var sqlTransaction = sqlConnection.BeginTransaction();
-                query.SqlCommand.Connection = sqlConnection;
-                query.SqlCommand.Transaction = sqlTransaction;
-                var result = await query.SqlCommand.ExecuteScalarAsync();
-                sqlTransaction.Commit();
+                using (var sqlConnection = query.SqlConnection)
+                {
+                    await sqlConnection.OpenAsync();
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlTransaction = sqlConnection.BeginTransaction())
+                    {
+                        query.SqlCommand.Connection = sqlConnection;
+                        query.SqlCommand.Transaction = sqlTransaction;
+                        var result = await query.SqlCommand.ExecuteScalarAsync();
+                        sqlTransaction.Commit();
 
-                if (query.ParameterModel != null)
-                    query.SqlCommand
-                        .CopyParameterValueToModels(query.ParameterModel);
-                query.Logger.LogInfo(query.SqlCommand, sqlConnection);
+                        if (query.ParameterModel != null)
+                            query.SqlCommand
+                                .CopyParameterValueToModels(query.ParameterModel);
+                        query.Logger.LogInfo(query.SqlCommand, sqlConnection);
 
-                if (result == null)
-                    return default;
-                return (T)result;
+                        if (result == null)
+                            return default;
+                        return (T)result;
+                    }
+                }
             }
             catch (Exception ex)
             {

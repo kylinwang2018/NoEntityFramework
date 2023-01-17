@@ -14,7 +14,7 @@ namespace NoEntityFramework.SqlServer
         /// <param name="sqlCommand">The command that executed.</param>
         /// <param name="connection">The connection that contain the command.</param>
         /// <param name="message">The additional message.</param>
-        void LogInfo(SqlCommand sqlCommand, SqlConnection connection, string? message = null);
+        void LogInfo(SqlCommand sqlCommand, SqlConnection connection, string message = null);
 
         /// <summary>
         ///     Log message with ERROR level.
@@ -22,7 +22,7 @@ namespace NoEntityFramework.SqlServer
         /// <param name="sqlCommand">The command that executed.</param>
         /// <param name="exception">The exception.</param>
         /// <param name="message">The additional message.</param>
-        void LogError(SqlCommand sqlCommand, Exception exception, string? message = null);
+        void LogError(SqlCommand sqlCommand, Exception exception, string message = null);
 
         /// <summary>
         ///     Log message with WARING level.
@@ -30,7 +30,7 @@ namespace NoEntityFramework.SqlServer
         /// <param name="sqlCommand">The command that executed.</param>
         /// <param name="exception">The exception.</param>
         /// <param name="message">The additional message.</param>
-        void LogWaring(SqlCommand sqlCommand, Exception exception, string? message = null);
+        void LogWaring(SqlCommand sqlCommand, Exception exception, string message = null);
 
         /// <summary>
         ///     Log message with CRITICAL level.
@@ -38,7 +38,7 @@ namespace NoEntityFramework.SqlServer
         /// <param name="sqlCommand">The command that executed.</param>
         /// <param name="exception">The exception.</param>
         /// <param name="message">The additional message.</param>
-        void LogCritical(SqlCommand sqlCommand, Exception exception, string? message = null);
+        void LogCritical(SqlCommand sqlCommand, Exception exception, string message = null);
     }
 
     /// <summary>

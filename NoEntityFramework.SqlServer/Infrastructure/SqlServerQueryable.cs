@@ -25,18 +25,12 @@ namespace NoEntityFramework.SqlServer
 
         public SqlConnection SqlConnection { get; }
 
-        public object? ParameterModel { get; set; }
+        public object ParameterModel { get; set; }
 
         public void Dispose()
         {
             SqlCommand.Dispose();
             SqlConnection.Dispose();
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            await SqlCommand.DisposeAsync();
-            await SqlConnection.DisposeAsync();
         }
     }
 }

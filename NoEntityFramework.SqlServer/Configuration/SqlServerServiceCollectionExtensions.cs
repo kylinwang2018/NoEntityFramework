@@ -80,7 +80,7 @@ namespace NoEntityFramework
             var types = allAssembly
                 .SelectMany(t =>
                     t.GetTypes())
-                .Where(t => t.IsClass && t is { IsInterface: false, IsSealed: false, IsAbstract: false } &&
+                .Where(t => t.IsClass && !t.IsInterface && !t.IsSealed && !t.IsAbstract &&
                             t.GetCustomAttributes(typeof(SqlServerRepoAttribute), false).Length > 0);
 
             foreach (var type in types)

@@ -24,37 +24,41 @@ namespace NoEntityFramework.SqlServer
             var objectProperties = ModelCache.GetProperties(type);
             try
             {
-                using var sqlConnection = query.SqlConnection;
-                sqlConnection.Open();
-                query.SqlCommand.Connection = sqlConnection;
-                using var sqlDataReader = query.SqlCommand.ExecuteReader();
-                while (sqlDataReader.Read())
+                using (var sqlConnection = query.SqlConnection)
                 {
-                    var obj = (T)Activator.CreateInstance(type);
-                    foreach (var propertyInfo in objectProperties)
+                    sqlConnection.Open();
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataReader = query.SqlCommand.ExecuteReader())
                     {
-                        try
+                        while (sqlDataReader.Read())
                         {
-                            propertyInfo.SetValue(obj,
-                                propertyInfo.PropertyType.IsEnum
-                                    ? Enum.ToObject(propertyInfo.PropertyType,
-                                        (int)sqlDataReader[propertyInfo.GetColumnName()])
-                                    : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
-                                        Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
-                                        propertyInfo.PropertyType), null);
+                            var obj = (T)Activator.CreateInstance(type);
+                            foreach (var propertyInfo in objectProperties)
+                            {
+                                try
+                                {
+                                    propertyInfo.SetValue(obj,
+                                        propertyInfo.PropertyType.IsEnum
+                                            ? Enum.ToObject(propertyInfo.PropertyType,
+                                                (int)sqlDataReader[propertyInfo.GetColumnName()])
+                                            : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
+                                                Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
+                                                propertyInfo.PropertyType), null);
+                                }
+                                catch
+                                {
+                                    // ignored
+                                }
+                            }
+                            list.Add(obj);
                         }
-                        catch
-                        {
-                            // ignored
-                        }
-                    }
-                    list.Add(obj);
-                }
 
-                if (query.ParameterModel != null)
-                    query.SqlCommand
-                        .CopyParameterValueToModels(query.ParameterModel);
-                query.Logger.LogInfo(query.SqlCommand, sqlConnection);
+                        if (query.ParameterModel != null)
+                            query.SqlCommand
+                                .CopyParameterValueToModels(query.ParameterModel);
+                        query.Logger.LogInfo(query.SqlCommand, sqlConnection);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -78,37 +82,41 @@ namespace NoEntityFramework.SqlServer
             var objectProperties = ModelCache.GetProperties(type);
             try
             {
-                await using var sqlConnection = query.SqlConnection;
-                await sqlConnection.OpenAsync();
-                query.SqlCommand.Connection = sqlConnection;
-                await using var sqlDataReader = await query.SqlCommand.ExecuteReaderAsync();
-                while (await sqlDataReader.ReadAsync())
+                using (var sqlConnection = query.SqlConnection)
                 {
-                    var obj = (T)Activator.CreateInstance(type);
-                    foreach (var propertyInfo in objectProperties)
+                    await sqlConnection.OpenAsync();
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataReader = await query.SqlCommand.ExecuteReaderAsync())
                     {
-                        try
+                        while (await sqlDataReader.ReadAsync())
                         {
-                            propertyInfo.SetValue(obj,
-                                propertyInfo.PropertyType.IsEnum
-                                    ? Enum.ToObject(propertyInfo.PropertyType,
-                                        (int)sqlDataReader[propertyInfo.GetColumnName()])
-                                    : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
-                                        Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
-                                        propertyInfo.PropertyType), null);
+                            var obj = (T)Activator.CreateInstance(type);
+                            foreach (var propertyInfo in objectProperties)
+                            {
+                                try
+                                {
+                                    propertyInfo.SetValue(obj,
+                                        propertyInfo.PropertyType.IsEnum
+                                            ? Enum.ToObject(propertyInfo.PropertyType,
+                                                (int)sqlDataReader[propertyInfo.GetColumnName()])
+                                            : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
+                                                Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
+                                                propertyInfo.PropertyType), null);
+                                }
+                                catch
+                                {
+                                    // ignored
+                                }
+                            }
+                            list.Add(obj);
                         }
-                        catch
-                        {
-                            // ignored
-                        }
-                    }
-                    list.Add(obj);
-                }
 
-                if (query.ParameterModel != null)
-                    query.SqlCommand
-                        .CopyParameterValueToModels(query.ParameterModel);
-                query.Logger.LogInfo(query.SqlCommand, sqlConnection);
+                        if (query.ParameterModel != null)
+                            query.SqlCommand
+                                .CopyParameterValueToModels(query.ParameterModel);
+                        query.Logger.LogInfo(query.SqlCommand, sqlConnection);
+                    }
+                }
             }
             catch (Exception ex)
             {

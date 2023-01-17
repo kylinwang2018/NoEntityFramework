@@ -19,7 +19,7 @@ namespace NoEntityFramework.SqlServer
                 .Get(typeof(TDbContext).ToString()).EnableStatistics;
         }
 
-        public void LogCritical(SqlCommand sqlCommand, Exception exception, string? message = null)
+        public void LogCritical(SqlCommand sqlCommand, Exception exception, string message = null)
         {
             _logger.LogCritical(exception, "{customMessage}\n\tCommand:\n\t{Command}",
                 message?? string.Empty,
@@ -27,7 +27,7 @@ namespace NoEntityFramework.SqlServer
                 );
         }
 
-        public void LogError(SqlCommand sqlCommand, Exception exception, string? message = null)
+        public void LogError(SqlCommand sqlCommand, Exception exception, string message = null)
         {
             _logger.LogError(exception, "{customMessage}\n\tCommand:\n\t{Command}",
                 message ?? string.Empty,
@@ -35,7 +35,7 @@ namespace NoEntityFramework.SqlServer
             );
         }
 
-        public void LogInfo(SqlCommand sqlCommand, SqlConnection connection, string? message = null)
+        public void LogInfo(SqlCommand sqlCommand, SqlConnection connection, string message = null)
         {
             if (_statisticsEnabled)
             {
@@ -56,7 +56,7 @@ namespace NoEntityFramework.SqlServer
                     );
         }
 
-        public void LogWaring(SqlCommand sqlCommand, Exception exception, string? message = null)
+        public void LogWaring(SqlCommand sqlCommand, Exception exception, string message = null)
         {
             _logger.LogWarning(exception, "{customMessage}\n\tCommand:\n\t{Command}", 
                 message ?? string.Empty,

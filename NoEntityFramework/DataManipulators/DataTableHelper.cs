@@ -261,12 +261,12 @@ namespace NoEntityFramework.DataManipulators
             return "<table><thead><tr><th>" + string.Join("</th><th>", array2) + "</th></tr></thead><tbody>" + string.Join("", array) + "</tbody></table>";
         }
 
-        public static string DataTableToHTMLTableString(DataTable data, string? dateFormat)
+        public static string DataTableToHTMLTableString(DataTable data, string dateFormat)
         {
             return DataTableToHTMLTableString(data, dateFormat, null);
         }
 
-        public static string DataTableToHTMLTableString(DataTable data, string? dateFormat, string? tableClass)
+        public static string DataTableToHTMLTableString(DataTable data, string dateFormat, string tableClass)
         {
             var array = new string[data.Rows.Count];
             var array2 = new string[data.Columns.Count];
@@ -706,7 +706,7 @@ namespace NoEntityFramework.DataManipulators
             }
         }
 
-        public static List<string> DataTableToListString(DataTable? dt, int columnNumber = 0)
+        public static List<string> DataTableToListString(DataTable dt, int columnNumber = 0)
         {
             if (columnNumber < 0 || columnNumber > dt.Columns.Count - 1)
             {

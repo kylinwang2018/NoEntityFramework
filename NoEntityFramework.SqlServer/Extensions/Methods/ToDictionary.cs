@@ -31,23 +31,26 @@ namespace NoEntityFramework.SqlServer
             var dictionary = new Dictionary<TKey, TValue>();
             try
             {
-                using var sqlConnection = sqlServerQueryable.SqlConnection;
-                sqlConnection.Open();
-                sqlServerQueryable.SqlCommand.Connection = sqlConnection;
-                using var sqlDataReader = sqlServerQueryable.SqlCommand.ExecuteReader();
-
-                if (sqlDataReader.FieldCount < 2 &&
-                    !(keyColumnIndex == valueColumnIndex && sqlDataReader.FieldCount == 1))
-                    throw new DatabaseException("Query did not return at least two columns of data.");
-                while (sqlDataReader.Read())
+                using (var sqlConnection = sqlServerQueryable.SqlConnection)
                 {
-                    dictionary.Add((TKey)sqlDataReader[keyColumnIndex], (TValue)sqlDataReader[valueColumnIndex]);
-                }
+                    sqlConnection.Open();
+                    sqlServerQueryable.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataReader = sqlServerQueryable.SqlCommand.ExecuteReader())
+                    {
+                        if (sqlDataReader.FieldCount < 2 &&
+                            !(keyColumnIndex == valueColumnIndex && sqlDataReader.FieldCount == 1))
+                            throw new DatabaseException("Query did not return at least two columns of data.");
+                        while (sqlDataReader.Read())
+                        {
+                            dictionary.Add((TKey)sqlDataReader[keyColumnIndex], (TValue)sqlDataReader[valueColumnIndex]);
+                        }
 
-                if (sqlServerQueryable.ParameterModel != null)
-                    sqlServerQueryable.SqlCommand
-                        .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
-                sqlServerQueryable.Logger.LogInfo(sqlServerQueryable.SqlCommand, sqlConnection);
+                        if (sqlServerQueryable.ParameterModel != null)
+                            sqlServerQueryable.SqlCommand
+                                .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
+                        sqlServerQueryable.Logger.LogInfo(sqlServerQueryable.SqlCommand, sqlConnection);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -98,23 +101,26 @@ namespace NoEntityFramework.SqlServer
             var dictionary = new Dictionary<string, string>();
             try
             {
-                using var sqlConnection = sqlServerQueryable.SqlConnection;
-                sqlConnection.Open();
-                sqlServerQueryable.SqlCommand.Connection = sqlConnection;
-                using var sqlDataReader = sqlServerQueryable.SqlCommand.ExecuteReader();
-
-                if (sqlDataReader.FieldCount < 2 &&
-                    !(keyColumnIndex == valueColumnIndex && sqlDataReader.FieldCount == 1))
-                    throw new DatabaseException("Query did not return at least two columns of data.");
-                while (sqlDataReader.Read())
+                using (var sqlConnection = sqlServerQueryable.SqlConnection)
                 {
-                    dictionary.Add(sqlDataReader[keyColumnIndex].ToString(), sqlDataReader[valueColumnIndex].ToString());
-                }
+                    sqlConnection.Open();
+                    sqlServerQueryable.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataReader = sqlServerQueryable.SqlCommand.ExecuteReader())
+                    {
+                        if (sqlDataReader.FieldCount < 2 &&
+                            !(keyColumnIndex == valueColumnIndex && sqlDataReader.FieldCount == 1))
+                            throw new DatabaseException("Query did not return at least two columns of data.");
+                        while (sqlDataReader.Read())
+                        {
+                            dictionary.Add(sqlDataReader[keyColumnIndex].ToString(), sqlDataReader[valueColumnIndex].ToString());
+                        }
 
-                if (sqlServerQueryable.ParameterModel != null)
-                    sqlServerQueryable.SqlCommand
-                        .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
-                sqlServerQueryable.Logger.LogInfo(sqlServerQueryable.SqlCommand, sqlConnection);
+                        if (sqlServerQueryable.ParameterModel != null)
+                            sqlServerQueryable.SqlCommand
+                                .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
+                        sqlServerQueryable.Logger.LogInfo(sqlServerQueryable.SqlCommand, sqlConnection);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -159,29 +165,32 @@ namespace NoEntityFramework.SqlServer
         /// <param name="keyColumnIndex">The index of the key column, start from <see langword="0"/>.</param>
         /// <param name="valueColumnIndex">The index of the value column, start from <see langword="0"/>.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/> contains key-value pairs.</returns>
-        public static async Task<Dictionary<TKey, TValue>?> AsDictionaryAsync<TKey, TValue>(
+        public static async Task<Dictionary<TKey, TValue>> AsDictionaryAsync<TKey, TValue>(
             this ISqlServerQueryable sqlServerQueryable, int keyColumnIndex, int valueColumnIndex)
         {
             var dictionary = new Dictionary<TKey, TValue>();
             try
             {
-                await using var sqlConnection = sqlServerQueryable.SqlConnection;
-                await sqlConnection.OpenAsync();
-                sqlServerQueryable.SqlCommand.Connection = sqlConnection;
-                await using var sqlDataReader = await sqlServerQueryable.SqlCommand.ExecuteReaderAsync();
-
-                if (sqlDataReader.FieldCount < 2 &&
-                    !(keyColumnIndex == valueColumnIndex && sqlDataReader.FieldCount == 1))
-                    throw new DatabaseException("Query did not return at least two columns of data.");
-                while (await sqlDataReader.ReadAsync())
+                using (var sqlConnection = sqlServerQueryable.SqlConnection)
                 {
-                    dictionary.Add((TKey)sqlDataReader[keyColumnIndex], (TValue)sqlDataReader[valueColumnIndex]);
-                }
+                    await sqlConnection.OpenAsync();
+                    sqlServerQueryable.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataReader = await sqlServerQueryable.SqlCommand.ExecuteReaderAsync())
+                    {
+                        if (sqlDataReader.FieldCount < 2 &&
+                            !(keyColumnIndex == valueColumnIndex && sqlDataReader.FieldCount == 1))
+                            throw new DatabaseException("Query did not return at least two columns of data.");
+                        while (await sqlDataReader.ReadAsync())
+                        {
+                            dictionary.Add((TKey)sqlDataReader[keyColumnIndex], (TValue)sqlDataReader[valueColumnIndex]);
+                        }
 
-                if (sqlServerQueryable.ParameterModel != null)
-                    sqlServerQueryable.SqlCommand
-                        .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
-                sqlServerQueryable.Logger.LogInfo(sqlServerQueryable.SqlCommand, sqlConnection);
+                        if (sqlServerQueryable.ParameterModel != null)
+                            sqlServerQueryable.SqlCommand
+                                .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
+                        sqlServerQueryable.Logger.LogInfo(sqlServerQueryable.SqlCommand, sqlConnection);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -207,7 +216,7 @@ namespace NoEntityFramework.SqlServer
         /// <typeparam name="TValue">The value type.</typeparam>
         /// <param name="sqlServerQueryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/> contains key-value pairs.</returns>
-        public static async Task<Dictionary<TKey, TValue>?> AsDictionaryAsync<TKey, TValue>(this ISqlServerQueryable sqlServerQueryable)
+        public static async Task<Dictionary<TKey, TValue>> AsDictionaryAsync<TKey, TValue>(this ISqlServerQueryable sqlServerQueryable)
         {
             return await sqlServerQueryable.AsDictionaryAsync<TKey, TValue>(0, 1);
         }
@@ -226,29 +235,32 @@ namespace NoEntityFramework.SqlServer
         /// <param name="keyColumnIndex">The index of the key column, start from <see langword="0"/>.</param>
         /// <param name="valueColumnIndex">The index of the value column, start from <see langword="0"/>.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/> contains key-value pairs as <see langword="string"/>.</returns>
-        public static async Task<Dictionary<string, string>?> AsDictionaryAsync(
+        public static async Task<Dictionary<string, string>> AsDictionaryAsync(
             this ISqlServerQueryable sqlServerQueryable, int keyColumnIndex, int valueColumnIndex)
         {
             var dictionary = new Dictionary<string, string>();
             try
             {
-                await using var sqlConnection = sqlServerQueryable.SqlConnection;
-                await sqlConnection.OpenAsync();
-                sqlServerQueryable.SqlCommand.Connection = sqlConnection;
-                await using var sqlDataReader = await sqlServerQueryable.SqlCommand.ExecuteReaderAsync();
-
-                if (sqlDataReader.FieldCount < 2 &&
-                    !(keyColumnIndex == valueColumnIndex && sqlDataReader.FieldCount == 1))
-                    throw new DatabaseException("Query did not return at least two columns of data.");
-                while (await sqlDataReader.ReadAsync())
+                using (var sqlConnection = sqlServerQueryable.SqlConnection)
                 {
-                    dictionary.Add(sqlDataReader[keyColumnIndex].ToString(), sqlDataReader[valueColumnIndex].ToString());
-                }
+                    await sqlConnection.OpenAsync();
+                    sqlServerQueryable.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataReader = await sqlServerQueryable.SqlCommand.ExecuteReaderAsync())
+                    {
+                        if (sqlDataReader.FieldCount < 2 &&
+                            !(keyColumnIndex == valueColumnIndex && sqlDataReader.FieldCount == 1))
+                            throw new DatabaseException("Query did not return at least two columns of data.");
+                        while (await sqlDataReader.ReadAsync())
+                        {
+                            dictionary.Add(sqlDataReader[keyColumnIndex].ToString(), sqlDataReader[valueColumnIndex].ToString());
+                        }
 
-                if (sqlServerQueryable.ParameterModel != null)
-                    sqlServerQueryable.SqlCommand
-                        .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
-                sqlServerQueryable.Logger.LogInfo(sqlServerQueryable.SqlCommand, sqlConnection);
+                        if (sqlServerQueryable.ParameterModel != null)
+                            sqlServerQueryable.SqlCommand
+                                .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
+                        sqlServerQueryable.Logger.LogInfo(sqlServerQueryable.SqlCommand, sqlConnection);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -273,7 +285,7 @@ namespace NoEntityFramework.SqlServer
         /// </summary>
         /// <param name="sqlServerQueryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/> contains key-value pairs as <see langword="string"/>.</returns>
-        public static async Task<Dictionary<string, string>?> AsDictionaryAsync(this ISqlServerQueryable sqlServerQueryable)
+        public static async Task<Dictionary<string, string>> AsDictionaryAsync(this ISqlServerQueryable sqlServerQueryable)
         {
             return await sqlServerQueryable.AsDictionaryAsync(0, 1);
         }

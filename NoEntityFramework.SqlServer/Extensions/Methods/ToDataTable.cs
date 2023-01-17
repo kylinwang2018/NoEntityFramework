@@ -20,16 +20,20 @@ namespace NoEntityFramework.SqlServer
             var dataTable = new DataTable();
             try
             {
-                using var sqlConnection = sqlServerQueryable.SqlConnection;
-                sqlConnection.Open();
-                sqlServerQueryable.SqlCommand.Connection = sqlConnection;
-                using var sqlDataAdapter = sqlServerQueryable.ConnectionFactory.CreateDataAdapter();
-                sqlDataAdapter.SelectCommand = sqlServerQueryable.SqlCommand;
-                sqlDataAdapter.Fill(dataTable);
-                if (sqlServerQueryable.ParameterModel != null)
-                    sqlServerQueryable.SqlCommand
-                        .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
-                sqlServerQueryable.Logger.LogInfo(sqlServerQueryable.SqlCommand, sqlConnection);
+                using (var sqlConnection = sqlServerQueryable.SqlConnection)
+                {
+                    sqlConnection.Open();
+                    sqlServerQueryable.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataAdapter = sqlServerQueryable.ConnectionFactory.CreateDataAdapter())
+                    {
+                        sqlDataAdapter.SelectCommand = sqlServerQueryable.SqlCommand;
+                        sqlDataAdapter.Fill(dataTable);
+                        if (sqlServerQueryable.ParameterModel != null)
+                            sqlServerQueryable.SqlCommand
+                                .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
+                        sqlServerQueryable.Logger.LogInfo(sqlServerQueryable.SqlCommand, sqlConnection);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -50,16 +54,20 @@ namespace NoEntityFramework.SqlServer
             var dataTable = new DataTable();
             try
             {
-                await using var sqlConnection = sqlServerQueryable.SqlConnection;
-                await sqlConnection.OpenAsync();
-                sqlServerQueryable.SqlCommand.Connection = sqlConnection;
-                using var sqlDataAdapter = sqlServerQueryable.ConnectionFactory.CreateDataAdapter();
-                sqlDataAdapter.SelectCommand = sqlServerQueryable.SqlCommand;
-                sqlDataAdapter.Fill(dataTable);
-                if (sqlServerQueryable.ParameterModel != null)
-                    sqlServerQueryable.SqlCommand
-                        .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
-                sqlServerQueryable.Logger.LogInfo(sqlServerQueryable.SqlCommand, sqlConnection);
+                using (var sqlConnection = sqlServerQueryable.SqlConnection)
+                {
+                    await sqlConnection.OpenAsync();
+                    sqlServerQueryable.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataAdapter = sqlServerQueryable.ConnectionFactory.CreateDataAdapter())
+                    {
+                        sqlDataAdapter.SelectCommand = sqlServerQueryable.SqlCommand;
+                        sqlDataAdapter.Fill(dataTable);
+                        if (sqlServerQueryable.ParameterModel != null)
+                            sqlServerQueryable.SqlCommand
+                                .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
+                        sqlServerQueryable.Logger.LogInfo(sqlServerQueryable.SqlCommand, sqlConnection);
+                    }
+                }
             }
             catch (Exception ex)
             {

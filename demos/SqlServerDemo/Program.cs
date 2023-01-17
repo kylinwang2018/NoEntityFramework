@@ -46,7 +46,7 @@ app.MapGet("/users", async ([FromServices] ApplicationDbContext dbContext) =>
 
         for (var i = 0; i < 20; i++)
         {
-            await using var query = dbContext.UseCommand("select * from [dbo].[User];");
+            using var query = dbContext.UseCommand("select * from [dbo].[User];");
             await using var reader = await query.AsDataReaderAsync();
             await reader.ReadAsync();
             Console.WriteLine(reader[1]);
