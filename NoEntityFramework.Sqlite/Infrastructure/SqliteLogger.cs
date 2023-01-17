@@ -29,6 +29,15 @@ namespace NoEntityFramework.Sqlite
                 );
         }
 
+        public void LogCritical(Exception exception, string? message = null)
+        {
+            _logger.LogCritical("{customMessage}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
+                message ?? string.Empty,
+                exception.Message,
+                exception.StackTrace
+            );
+        }
+
         public void LogError(SqliteCommand sqlCommand, Exception exception, string? message = null)
         {
             _logger.LogError("{customMessage}\n\tCommand:\n\t{Command}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
@@ -37,6 +46,15 @@ namespace NoEntityFramework.Sqlite
                 exception.Message,
                 exception.StackTrace
                 );
+        }
+
+        public void LogError(Exception exception, string? message = null)
+        {
+            _logger.LogError("{customMessage}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
+                message ?? string.Empty,
+                exception.Message,
+                exception.StackTrace
+            );
         }
 
         public void LogInfo(SqliteCommand sqlCommand, long timeConsumedInMillisecond, string? message = null)
@@ -64,6 +82,15 @@ namespace NoEntityFramework.Sqlite
                 exception.Message,
                 exception.StackTrace
                 );
+        }
+
+        public void LogWaring(Exception exception, string? message = null)
+        {
+            _logger.LogWarning("{customMessage}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
+                message ?? string.Empty,
+                exception.Message,
+                exception.StackTrace
+            );
         }
     }
 }

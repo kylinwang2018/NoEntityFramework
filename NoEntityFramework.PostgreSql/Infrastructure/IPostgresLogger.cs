@@ -25,12 +25,21 @@ namespace NoEntityFramework.Npgsql
         void LogError(NpgsqlCommand sqlCommand, Exception exception, string? message = null);
 
         /// <summary>
+        ///     Log message with ERROR level.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        /// <param name="message">The additional message.</param>
+        void LogError(Exception exception, string? message = null);
+
+        /// <summary>
         ///     Log message with WARING level.
         /// </summary>
         /// <param name="sqlCommand">The command that executed.</param>
         /// <param name="exception">The exception.</param>
         /// <param name="message">The additional message.</param>
         void LogWaring(NpgsqlCommand sqlCommand, Exception exception, string? message = null);
+
+        void LogWaring(Exception exception, string? message = null);
 
         /// <summary>
         ///     Log message with CRITICAL level.
@@ -39,6 +48,13 @@ namespace NoEntityFramework.Npgsql
         /// <param name="exception">The exception.</param>
         /// <param name="message">The additional message.</param>
         void LogCritical(NpgsqlCommand sqlCommand, Exception exception, string? message = null);
+
+        /// <summary>
+        ///     Log message with CRITICAL level.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        /// <param name="message">The additional message.</param>
+        void LogCritical(Exception exception, string? message = null);
     }
 
     /// <summary>

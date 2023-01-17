@@ -23,6 +23,7 @@ namespace NoEntityFramework.Npgsql
             _connectionFactory = postgresOptions.ConnectionFactory;
             _logger = postgresOptions.Logger;
             _retryOptions = postgresOptions.RetryLogicOption;
+            _retryOptions.Logger = _logger;
         }
 
         /// <summary>
