@@ -12,7 +12,7 @@ namespace NoEntityFramework.DataAnnotations
         /// <summary>
         ///     The name of the parameter to map.
         /// </summary>
-        public string? Name { get; set; }
+        public string Name { get; set; } = null;
 
         /// <summary>
         ///     One of the <see cref="SqlDbType"/> values.
@@ -58,7 +58,7 @@ namespace NoEntityFramework.DataAnnotations
         /// <summary>
         ///     The name of the source column.
         /// </summary>
-        public string? SourceColumn { get; set; }
+        public string SourceColumn { get; set; } = null;
 
         /// <summary>
         ///     The total number of decimal places to which the value is resolved.

@@ -35,17 +35,20 @@ namespace NoEntityFramework.Sqlite
                 var watch = new Stopwatch();
                 watch.Start();
 
-                using var sqlConnection = query.SqlConnection;
-                sqlConnection.OpenWithRetry(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                using var sqlDataReader = query.SqlCommand.ExecuteReaderWithRetry(query.RetryLogicOption);
-
-                if (sqlDataReader.FieldCount < 2 &&
-                    !(keyColumnIndex == valueColumnIndex && sqlDataReader.FieldCount == 1))
-                    throw new DatabaseException("Query did not return at least two columns of data.");
-                while (sqlDataReader.Read())
+                using (var sqlConnection = query.SqlConnection)
                 {
-                    dictionary.Add((TKey)sqlDataReader[keyColumnIndex], (TValue)sqlDataReader[valueColumnIndex]);
+                    sqlConnection.OpenWithRetry(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataReader = query.SqlCommand.ExecuteReaderWithRetry(query.RetryLogicOption))
+                    {
+                        if (sqlDataReader.FieldCount < 2 &&
+                            !(keyColumnIndex == valueColumnIndex && sqlDataReader.FieldCount == 1))
+                            throw new DatabaseException("Query did not return at least two columns of data.");
+                        while (sqlDataReader.Read())
+                        {
+                            dictionary.Add((TKey)sqlDataReader[keyColumnIndex], (TValue)sqlDataReader[valueColumnIndex]);
+                        }
+                    }
                 }
 
                 watch.Stop();
@@ -107,17 +110,20 @@ namespace NoEntityFramework.Sqlite
                 var watch = new Stopwatch();
                 watch.Start();
 
-                using var sqlConnection = query.SqlConnection;
-                sqlConnection.OpenWithRetry(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                using var sqlDataReader = query.SqlCommand.ExecuteReaderWithRetry(query.RetryLogicOption);
-
-                if (sqlDataReader.FieldCount < 2 &&
-                    !(keyColumnIndex == valueColumnIndex && sqlDataReader.FieldCount == 1))
-                    throw new DatabaseException("Query did not return at least two columns of data.");
-                while (sqlDataReader.Read())
+                using (var sqlConnection = query.SqlConnection)
                 {
-                    dictionary.Add(sqlDataReader[keyColumnIndex].ToString(), sqlDataReader[valueColumnIndex].ToString());
+                    sqlConnection.OpenWithRetry(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataReader = query.SqlCommand.ExecuteReaderWithRetry(query.RetryLogicOption))
+                    {
+                        if (sqlDataReader.FieldCount < 2 &&
+                            !(keyColumnIndex == valueColumnIndex && sqlDataReader.FieldCount == 1))
+                            throw new DatabaseException("Query did not return at least two columns of data.");
+                        while (sqlDataReader.Read())
+                        {
+                            dictionary.Add(sqlDataReader[keyColumnIndex].ToString(), sqlDataReader[valueColumnIndex].ToString());
+                        }
+                    }
                 }
 
                 watch.Stop();
@@ -170,7 +176,7 @@ namespace NoEntityFramework.Sqlite
         /// <param name="keyColumnIndex">The index of the key column, start from <see langword="0"/>.</param>
         /// <param name="valueColumnIndex">The index of the value column, start from <see langword="0"/>.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/> contains key-value pairs.</returns>
-        public static async Task<Dictionary<TKey, TValue>?> AsDictionaryAsync<TKey, TValue>(
+        public static async Task<Dictionary<TKey, TValue>> AsDictionaryAsync<TKey, TValue>(
             this ISqliteQueryable query, int keyColumnIndex, int valueColumnIndex)
         {
             var dictionary = new Dictionary<TKey, TValue>();
@@ -179,17 +185,21 @@ namespace NoEntityFramework.Sqlite
                 var watch = new Stopwatch();
                 watch.Start();
 
-                await using var sqlConnection = query.SqlConnection;
-                await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                await using var sqlDataReader = await query.SqlCommand.ExecuteReaderWithRetryAsync(query.RetryLogicOption);
-
-                if (sqlDataReader.FieldCount < 2 &&
-                    !(keyColumnIndex == valueColumnIndex && sqlDataReader.FieldCount == 1))
-                    throw new DatabaseException("Query did not return at least two columns of data.");
-                while (await sqlDataReader.ReadAsync())
+                using (var sqlConnection = query.SqlConnection)
                 {
-                    dictionary.Add((TKey)sqlDataReader[keyColumnIndex], (TValue)sqlDataReader[valueColumnIndex]);
+                    await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataReader =
+                           await query.SqlCommand.ExecuteReaderWithRetryAsync(query.RetryLogicOption))
+                    {
+                        if (sqlDataReader.FieldCount < 2 &&
+                            !(keyColumnIndex == valueColumnIndex && sqlDataReader.FieldCount == 1))
+                            throw new DatabaseException("Query did not return at least two columns of data.");
+                        while (await sqlDataReader.ReadAsync())
+                        {
+                            dictionary.Add((TKey)sqlDataReader[keyColumnIndex], (TValue)sqlDataReader[valueColumnIndex]);
+                        }
+                    }
                 }
 
                 watch.Stop();
@@ -223,7 +233,7 @@ namespace NoEntityFramework.Sqlite
         /// <typeparam name="TValue">The value type.</typeparam>
         /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/> contains key-value pairs.</returns>
-        public static async Task<Dictionary<TKey, TValue>?> AsDictionaryAsync<TKey, TValue>(this ISqliteQueryable query)
+        public static async Task<Dictionary<TKey, TValue>> AsDictionaryAsync<TKey, TValue>(this ISqliteQueryable query)
         {
             return await query.AsDictionaryAsync<TKey, TValue>(0, 1);
         }
@@ -242,7 +252,7 @@ namespace NoEntityFramework.Sqlite
         /// <param name="keyColumnIndex">The index of the key column, start from <see langword="0"/>.</param>
         /// <param name="valueColumnIndex">The index of the value column, start from <see langword="0"/>.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/> contains key-value pairs as <see langword="string"/>.</returns>
-        public static async Task<Dictionary<string, string>?> AsDictionaryAsync(
+        public static async Task<Dictionary<string, string>> AsDictionaryAsync(
             this ISqliteQueryable query, int keyColumnIndex, int valueColumnIndex)
         {
             var dictionary = new Dictionary<string, string>();
@@ -251,17 +261,21 @@ namespace NoEntityFramework.Sqlite
                 var watch = new Stopwatch();
                 watch.Start();
 
-                await using var sqlConnection = query.SqlConnection;
-                await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                await using var sqlDataReader = await query.SqlCommand.ExecuteReaderWithRetryAsync(query.RetryLogicOption);
-
-                if (sqlDataReader.FieldCount < 2 &&
-                    !(keyColumnIndex == valueColumnIndex && sqlDataReader.FieldCount == 1))
-                    throw new DatabaseException("Query did not return at least two columns of data.");
-                while (await sqlDataReader.ReadAsync())
+                using (var sqlConnection = query.SqlConnection)
                 {
-                    dictionary.Add(sqlDataReader[keyColumnIndex].ToString(), sqlDataReader[valueColumnIndex].ToString());
+                    await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataReader =
+                           await query.SqlCommand.ExecuteReaderWithRetryAsync(query.RetryLogicOption))
+                    {
+                        if (sqlDataReader.FieldCount < 2 &&
+                            !(keyColumnIndex == valueColumnIndex && sqlDataReader.FieldCount == 1))
+                            throw new DatabaseException("Query did not return at least two columns of data.");
+                        while (await sqlDataReader.ReadAsync())
+                        {
+                            dictionary.Add(sqlDataReader[keyColumnIndex].ToString(), sqlDataReader[valueColumnIndex].ToString());
+                        }
+                    }
                 }
 
                 watch.Stop();
@@ -294,7 +308,7 @@ namespace NoEntityFramework.Sqlite
         /// </summary>
         /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
         /// <returns>A <see cref="Dictionary{TKey,TValue}"/> contains key-value pairs as <see langword="string"/>.</returns>
-        public static async Task<Dictionary<string, string>?> AsDictionaryAsync(this ISqliteQueryable query)
+        public static async Task<Dictionary<string, string>> AsDictionaryAsync(this ISqliteQueryable query)
         {
             return await query.AsDictionaryAsync(0, 1);
         }

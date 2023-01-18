@@ -25,7 +25,7 @@ namespace NoEntityFramework.SqlServer
 
         public SqlConnection SqlConnection { get; }
 
-        public object ParameterModel { get; set; }
+        public object ParameterModel { get; set; } = null;
 
         public void Dispose()
         {

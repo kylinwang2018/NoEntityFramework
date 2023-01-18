@@ -8,9 +8,9 @@ namespace NoEntityFramework.Sqlite
     public delegate void SqliteRowUpdatingEventHandler(object sender, SqliteRowUpdatingEventArgs e);
     public sealed class SqliteDataAdapter : DbDataAdapter
     {
-        public event SqliteRowUpdatedEventHandler? RowUpdated;
+        public event SqliteRowUpdatedEventHandler RowUpdated;
 
-        public event SqliteRowUpdatingEventHandler? RowUpdating;
+        public event SqliteRowUpdatingEventHandler RowUpdating;
 
         public SqliteDataAdapter() { }
 

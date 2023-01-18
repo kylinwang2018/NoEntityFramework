@@ -33,36 +33,41 @@ namespace NoEntityFramework.Npgsql
                 var watch = new Stopwatch();
                 watch.Start();
 
-                using var sqlConnection = query.SqlConnection;
-                sqlConnection.OpenWithRetry(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                using var sqlDataReader = query.SqlCommand.ExecuteReaderWithRetry(query.RetryLogicOption);
-                var typeFromHandle = typeof(TObject);
-                var objectProperties = ModelCache.GetProperties(typeFromHandle);
-
-                while (sqlDataReader.Read())
+                using (var sqlConnection = query.SqlConnection)
                 {
-                    var u = Activator.CreateInstance<TObject>();
-                    foreach (var propertyInfo in objectProperties)
+                    sqlConnection.OpenWithRetry(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataReader = query.SqlCommand.ExecuteReaderWithRetry(query.RetryLogicOption))
                     {
-                        try
+                        var typeFromHandle = typeof(TObject);
+                        var objectProperties = ModelCache.GetProperties(typeFromHandle);
+
+                        while (sqlDataReader.Read())
                         {
-                            var isEnum = propertyInfo.PropertyType.IsEnum;
-                            propertyInfo.SetValue(u,
-                                isEnum
-                                    ? Enum.ToObject(propertyInfo.PropertyType,
-                                        (int)sqlDataReader[propertyInfo.GetColumnName()])
-                                    : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
-                                        Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
-                                        propertyInfo.PropertyType), null);
-                        }
-                        catch
-                        {
-                            // ignored
+                            var u = Activator.CreateInstance<TObject>();
+                            foreach (var propertyInfo in objectProperties)
+                            {
+                                try
+                                {
+                                    var isEnum = propertyInfo.PropertyType.IsEnum;
+                                    propertyInfo.SetValue(u,
+                                        isEnum
+                                            ? Enum.ToObject(propertyInfo.PropertyType,
+                                                (int)sqlDataReader[propertyInfo.GetColumnName()])
+                                            : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
+                                                Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
+                                                propertyInfo.PropertyType), null);
+                                }
+                                catch
+                                {
+                                    // ignored
+                                }
+                            }
+                            dictionary[(TKey)sqlDataReader[keyColumnIndex]] = u;
                         }
                     }
-                    dictionary[(TKey)sqlDataReader[keyColumnIndex]] = u;
                 }
+
 
                 watch.Stop();
 
@@ -102,36 +107,41 @@ namespace NoEntityFramework.Npgsql
                 var watch = new Stopwatch();
                 watch.Start();
 
-                using var sqlConnection = query.SqlConnection;
-                sqlConnection.OpenWithRetry(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                using var sqlDataReader = query.SqlCommand.ExecuteReaderWithRetry(query.RetryLogicOption);
-                var typeFromHandle = typeof(TObject);
-                var objectProperties = ModelCache.GetProperties(typeFromHandle);
-
-                while (sqlDataReader.Read())
+                using (var sqlConnection = query.SqlConnection)
                 {
-                    var u = Activator.CreateInstance<TObject>();
-                    foreach (var propertyInfo in objectProperties)
+                    sqlConnection.OpenWithRetry(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataReader = query.SqlCommand.ExecuteReaderWithRetry(query.RetryLogicOption))
                     {
-                        try
+                        var typeFromHandle = typeof(TObject);
+                        var objectProperties = ModelCache.GetProperties(typeFromHandle);
+
+                        while (sqlDataReader.Read())
                         {
-                            var isEnum = propertyInfo.PropertyType.IsEnum;
-                            propertyInfo.SetValue(u,
-                                isEnum
-                                    ? Enum.ToObject(propertyInfo.PropertyType,
-                                        (int)sqlDataReader[propertyInfo.GetColumnName()])
-                                    : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
-                                        Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
-                                        propertyInfo.PropertyType), null);
-                        }
-                        catch
-                        {
-                            // ignored
+                            var u = Activator.CreateInstance<TObject>();
+                            foreach (var propertyInfo in objectProperties)
+                            {
+                                try
+                                {
+                                    var isEnum = propertyInfo.PropertyType.IsEnum;
+                                    propertyInfo.SetValue(u,
+                                        isEnum
+                                            ? Enum.ToObject(propertyInfo.PropertyType,
+                                                (int)sqlDataReader[propertyInfo.GetColumnName()])
+                                            : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
+                                                Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
+                                                propertyInfo.PropertyType), null);
+                                }
+                                catch
+                                {
+                                    // ignored
+                                }
+                            }
+                            dictionary[(TKey)sqlDataReader[keyColumnName]] = u;
                         }
                     }
-                    dictionary[(TKey)sqlDataReader[keyColumnName]] = u;
                 }
+
 
                 watch.Stop();
 
@@ -169,45 +179,49 @@ namespace NoEntityFramework.Npgsql
                 var watch = new Stopwatch();
                 watch.Start();
 
-                using var sqlConnection = query.SqlConnection;
-                sqlConnection.OpenWithRetry(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                using var sqlDataReader = query.SqlCommand.ExecuteReaderWithRetry(query.RetryLogicOption);
-                var typeFromHandle = typeof(TObject);
-                var objectProperties = ModelCache.GetProperties(typeFromHandle);
-
-                while (sqlDataReader.Read())
+                using (var sqlConnection = query.SqlConnection)
                 {
-                    var u = Activator.CreateInstance<TObject>();
-                    foreach (var propertyInfo in objectProperties)
+                    sqlConnection.OpenWithRetry(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataReader = query.SqlCommand.ExecuteReaderWithRetry(query.RetryLogicOption))
                     {
-                        try
+                        var typeFromHandle = typeof(TObject);
+                        var objectProperties = ModelCache.GetProperties(typeFromHandle);
+
+                        while (sqlDataReader.Read())
                         {
-                            var isEnum = propertyInfo.PropertyType.IsEnum;
-                            propertyInfo.SetValue(u,
-                                isEnum
-                                    ? Enum.ToObject(propertyInfo.PropertyType,
-                                        (int)sqlDataReader[propertyInfo.GetColumnName()])
-                                    : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
-                                        Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
-                                        propertyInfo.PropertyType), null);
+                            var u = Activator.CreateInstance<TObject>();
+                            foreach (var propertyInfo in objectProperties)
+                            {
+                                try
+                                {
+                                    var isEnum = propertyInfo.PropertyType.IsEnum;
+                                    propertyInfo.SetValue(u,
+                                        isEnum
+                                            ? Enum.ToObject(propertyInfo.PropertyType,
+                                                (int)sqlDataReader[propertyInfo.GetColumnName()])
+                                            : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
+                                                Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
+                                                propertyInfo.PropertyType), null);
+                                }
+                                catch
+                                {
+                                    // ignored
+                                }
+                            }
+                            if (dictionary.TryGetValue((TKey)sqlDataReader[keyColumnName], out var list2))
+                            {
+                                list2.Add(u);
+                            }
+                            else
+                            {
+                                list2 = new List<TObject>
+                                {
+                                    u
+                                };
+                                dictionary.Add((TKey)sqlDataReader[keyColumnName], list2);
+                            }
                         }
-                        catch
-                        {
-                            // ignored
-                        }
-                    }
-                    if (dictionary.TryGetValue((TKey)sqlDataReader[keyColumnName], out var list2))
-                    {
-                        list2.Add(u);
-                    }
-                    else
-                    {
-                        list2 = new List<TObject>
-                        {
-                            u
-                        };
-                        dictionary.Add((TKey)sqlDataReader[keyColumnName], list2);
                     }
                 }
 
@@ -247,47 +261,52 @@ namespace NoEntityFramework.Npgsql
                 var watch = new Stopwatch();
                 watch.Start();
 
-                using var sqlConnection = query.SqlConnection;
-                sqlConnection.OpenWithRetry(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                using var sqlDataReader = query.SqlCommand.ExecuteReaderWithRetry(query.RetryLogicOption);
-                var typeFromHandle = typeof(TObject);
-                var objectProperties = ModelCache.GetProperties(typeFromHandle);
-
-                while (sqlDataReader.Read())
+                using (var sqlConnection = query.SqlConnection)
                 {
-                    var u = Activator.CreateInstance<TObject>();
-                    foreach (var propertyInfo in objectProperties)
+                    sqlConnection.OpenWithRetry(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataReader = query.SqlCommand.ExecuteReaderWithRetry(query.RetryLogicOption))
                     {
-                        try
+                        var typeFromHandle = typeof(TObject);
+                        var objectProperties = ModelCache.GetProperties(typeFromHandle);
+
+                        while (sqlDataReader.Read())
                         {
-                            var isEnum = propertyInfo.PropertyType.IsEnum;
-                            propertyInfo.SetValue(u,
-                                isEnum
-                                    ? Enum.ToObject(propertyInfo.PropertyType,
-                                        (int)sqlDataReader[propertyInfo.GetColumnName()])
-                                    : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
-                                        Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
-                                        propertyInfo.PropertyType), null);
+                            var u = Activator.CreateInstance<TObject>();
+                            foreach (var propertyInfo in objectProperties)
+                            {
+                                try
+                                {
+                                    var isEnum = propertyInfo.PropertyType.IsEnum;
+                                    propertyInfo.SetValue(u,
+                                        isEnum
+                                            ? Enum.ToObject(propertyInfo.PropertyType,
+                                                (int)sqlDataReader[propertyInfo.GetColumnName()])
+                                            : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
+                                                Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
+                                                propertyInfo.PropertyType), null);
+                                }
+                                catch
+                                {
+                                    // ignored
+                                }
+                            }
+                            if (dictionary.TryGetValue((TKey)sqlDataReader[keyColumnIndex], out var list2))
+                            {
+                                list2.Add(u);
+                            }
+                            else
+                            {
+                                list2 = new List<TObject>
+                                {
+                                    u
+                                };
+                                dictionary.Add((TKey)sqlDataReader[keyColumnIndex], list2);
+                            }
                         }
-                        catch
-                        {
-                            // ignored
-                        }
-                    }
-                    if (dictionary.TryGetValue((TKey)sqlDataReader[keyColumnIndex], out var list2))
-                    {
-                        list2.Add(u);
-                    }
-                    else
-                    {
-                        list2 = new List<TObject>
-                        {
-                            u
-                        };
-                        dictionary.Add((TKey)sqlDataReader[keyColumnIndex], list2);
                     }
                 }
+
 
                 watch.Stop();
 
@@ -325,35 +344,40 @@ namespace NoEntityFramework.Npgsql
                 var watch = new Stopwatch();
                 watch.Start();
 
-                await using var sqlConnection = query.SqlConnection;
-                await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                await using var sqlDataReader = await query.SqlCommand.ExecuteReaderWithRetryAsync(query.RetryLogicOption);;
-                var typeFromHandle = typeof(TObject);
-                var objectProperties = ModelCache.GetProperties(typeFromHandle);
-
-                while (await sqlDataReader.ReadAsync())
+                using (var sqlConnection = query.SqlConnection)
                 {
-                    var u = Activator.CreateInstance<TObject>();
-                    foreach (var propertyInfo in objectProperties)
+                    await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataReader =
+                           await query.SqlCommand.ExecuteReaderWithRetryAsync(query.RetryLogicOption))
                     {
-                        try
+                        var typeFromHandle = typeof(TObject);
+                        var objectProperties = ModelCache.GetProperties(typeFromHandle);
+
+                        while (await sqlDataReader.ReadAsync())
                         {
-                            var isEnum = propertyInfo.PropertyType.IsEnum;
-                            propertyInfo.SetValue(u,
-                                isEnum
-                                    ? Enum.ToObject(propertyInfo.PropertyType,
-                                        (int)sqlDataReader[propertyInfo.GetColumnName()])
-                                    : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
-                                        Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
-                                        propertyInfo.PropertyType), null);
-                        }
-                        catch
-                        {
-                            // ignored
+                            var u = Activator.CreateInstance<TObject>();
+                            foreach (var propertyInfo in objectProperties)
+                            {
+                                try
+                                {
+                                    var isEnum = propertyInfo.PropertyType.IsEnum;
+                                    propertyInfo.SetValue(u,
+                                        isEnum
+                                            ? Enum.ToObject(propertyInfo.PropertyType,
+                                                (int)sqlDataReader[propertyInfo.GetColumnName()])
+                                            : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
+                                                Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
+                                                propertyInfo.PropertyType), null);
+                                }
+                                catch
+                                {
+                                    // ignored
+                                }
+                            }
+                            dictionary[(TKey)sqlDataReader[keyColumnIndex]] = u;
                         }
                     }
-                    dictionary[(TKey)sqlDataReader[keyColumnIndex]] = u;
                 }
 
                 watch.Stop();
@@ -392,35 +416,40 @@ namespace NoEntityFramework.Npgsql
                 var watch = new Stopwatch();
                 watch.Start();
 
-                await using var sqlConnection = query.SqlConnection;
-                await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                await using var sqlDataReader = await query.SqlCommand.ExecuteReaderWithRetryAsync(query.RetryLogicOption);;
-                var typeFromHandle = typeof(TObject);
-                var objectProperties = ModelCache.GetProperties(typeFromHandle);
-
-                while (await sqlDataReader.ReadAsync())
+                using (var sqlConnection = query.SqlConnection)
                 {
-                    var u = Activator.CreateInstance<TObject>();
-                    foreach (var propertyInfo in objectProperties)
+                    await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataReader =
+                           await query.SqlCommand.ExecuteReaderWithRetryAsync(query.RetryLogicOption))
                     {
-                        try
+                        var typeFromHandle = typeof(TObject);
+                        var objectProperties = ModelCache.GetProperties(typeFromHandle);
+
+                        while (await sqlDataReader.ReadAsync())
                         {
-                            var isEnum = propertyInfo.PropertyType.IsEnum;
-                            propertyInfo.SetValue(u,
-                                isEnum
-                                    ? Enum.ToObject(propertyInfo.PropertyType,
-                                        (int)sqlDataReader[propertyInfo.GetColumnName()])
-                                    : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
-                                        Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
-                                        propertyInfo.PropertyType), null);
-                        }
-                        catch
-                        {
-                            // ignored
+                            var u = Activator.CreateInstance<TObject>();
+                            foreach (var propertyInfo in objectProperties)
+                            {
+                                try
+                                {
+                                    var isEnum = propertyInfo.PropertyType.IsEnum;
+                                    propertyInfo.SetValue(u,
+                                        isEnum
+                                            ? Enum.ToObject(propertyInfo.PropertyType,
+                                                (int)sqlDataReader[propertyInfo.GetColumnName()])
+                                            : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
+                                                Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
+                                                propertyInfo.PropertyType), null);
+                                }
+                                catch
+                                {
+                                    // ignored
+                                }
+                            }
+                            dictionary[(TKey)sqlDataReader[keyColumnName]] = u;
                         }
                     }
-                    dictionary[(TKey)sqlDataReader[keyColumnName]] = u;
                 }
 
                 watch.Stop();
@@ -459,45 +488,50 @@ namespace NoEntityFramework.Npgsql
                 var watch = new Stopwatch();
                 watch.Start();
 
-                await using var sqlConnection = query.SqlConnection;
-                await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                await using var sqlDataReader = await query.SqlCommand.ExecuteReaderWithRetryAsync(query.RetryLogicOption);;
-                var typeFromHandle = typeof(TObject);
-                var objectProperties = ModelCache.GetProperties(typeFromHandle);
-
-                while (await sqlDataReader.ReadAsync())
+                using (var sqlConnection = query.SqlConnection)
                 {
-                    var u = Activator.CreateInstance<TObject>();
-                    foreach (var propertyInfo in objectProperties)
+                    await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataReader =
+                           await query.SqlCommand.ExecuteReaderWithRetryAsync(query.RetryLogicOption))
                     {
-                        try
+                        var typeFromHandle = typeof(TObject);
+                        var objectProperties = ModelCache.GetProperties(typeFromHandle);
+
+                        while (await sqlDataReader.ReadAsync())
                         {
-                            var isEnum = propertyInfo.PropertyType.IsEnum;
-                            propertyInfo.SetValue(u,
-                                isEnum
-                                    ? Enum.ToObject(propertyInfo.PropertyType,
-                                        (int)sqlDataReader[propertyInfo.GetColumnName()])
-                                    : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
-                                        Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
-                                        propertyInfo.PropertyType), null);
+                            var u = Activator.CreateInstance<TObject>();
+                            foreach (var propertyInfo in objectProperties)
+                            {
+                                try
+                                {
+                                    var isEnum = propertyInfo.PropertyType.IsEnum;
+                                    propertyInfo.SetValue(u,
+                                        isEnum
+                                            ? Enum.ToObject(propertyInfo.PropertyType,
+                                                (int)sqlDataReader[propertyInfo.GetColumnName()])
+                                            : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
+                                                Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
+                                                propertyInfo.PropertyType), null);
+                                }
+                                catch
+                                {
+                                    // ignored
+                                }
+                            }
+                            if (dictionary.TryGetValue((TKey)sqlDataReader[keyColumnName], out var list2))
+                            {
+                                list2.Add(u);
+                            }
+                            else
+                            {
+                                list2 = new List<TObject>
+                                {
+                                    u
+                                };
+                                dictionary.Add((TKey)sqlDataReader[keyColumnName], list2);
+                            }
                         }
-                        catch
-                        {
-                            // ignored
-                        }
-                    }
-                    if (dictionary.TryGetValue((TKey)sqlDataReader[keyColumnName], out var list2))
-                    {
-                        list2.Add(u);
-                    }
-                    else
-                    {
-                        list2 = new List<TObject>
-                        {
-                            u
-                        };
-                        dictionary.Add((TKey)sqlDataReader[keyColumnName], list2);
                     }
                 }
 
@@ -537,45 +571,50 @@ namespace NoEntityFramework.Npgsql
                 var watch = new Stopwatch();
                 watch.Start();
 
-                await using var sqlConnection = query.SqlConnection;
-                await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                await using var sqlDataReader = await query.SqlCommand.ExecuteReaderWithRetryAsync(query.RetryLogicOption);;
-                var typeFromHandle = typeof(TObject);
-                var objectProperties = ModelCache.GetProperties(typeFromHandle);
-
-                while (await sqlDataReader.ReadAsync())
+                using (var sqlConnection = query.SqlConnection)
                 {
-                    var u = Activator.CreateInstance<TObject>();
-                    foreach (var propertyInfo in objectProperties)
+                    await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataReader =
+                           await query.SqlCommand.ExecuteReaderWithRetryAsync(query.RetryLogicOption))
                     {
-                        try
+                        var typeFromHandle = typeof(TObject);
+                        var objectProperties = ModelCache.GetProperties(typeFromHandle);
+
+                        while (await sqlDataReader.ReadAsync())
                         {
-                            var isEnum = propertyInfo.PropertyType.IsEnum;
-                            propertyInfo.SetValue(u,
-                                isEnum
-                                    ? Enum.ToObject(propertyInfo.PropertyType,
-                                        (int)sqlDataReader[propertyInfo.GetColumnName()])
-                                    : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
-                                        Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
-                                        propertyInfo.PropertyType), null);
+                            var u = Activator.CreateInstance<TObject>();
+                            foreach (var propertyInfo in objectProperties)
+                            {
+                                try
+                                {
+                                    var isEnum = propertyInfo.PropertyType.IsEnum;
+                                    propertyInfo.SetValue(u,
+                                        isEnum
+                                            ? Enum.ToObject(propertyInfo.PropertyType,
+                                                (int)sqlDataReader[propertyInfo.GetColumnName()])
+                                            : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
+                                                Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
+                                                propertyInfo.PropertyType), null);
+                                }
+                                catch
+                                {
+                                    // ignored
+                                }
+                            }
+                            if (dictionary.TryGetValue((TKey)sqlDataReader[keyColumnIndex], out var list2))
+                            {
+                                list2.Add(u);
+                            }
+                            else
+                            {
+                                list2 = new List<TObject>
+                                {
+                                    u
+                                };
+                                dictionary.Add((TKey)sqlDataReader[keyColumnIndex], list2);
+                            }
                         }
-                        catch
-                        {
-                            // ignored
-                        }
-                    }
-                    if (dictionary.TryGetValue((TKey)sqlDataReader[keyColumnIndex], out var list2))
-                    {
-                        list2.Add(u);
-                    }
-                    else
-                    {
-                        list2 = new List<TObject>
-                        {
-                            u
-                        };
-                        dictionary.Add((TKey)sqlDataReader[keyColumnIndex], list2);
                     }
                 }
 

@@ -13,7 +13,7 @@ namespace NoEntityFramework.DataAnnotations
         /// <summary>
         ///     The name of the parameter to map.
         /// </summary>
-        public string? Name { get; set; }
+        public string Name { get; set; } = null;
 
         /// <summary>
         ///     One of the <see cref="NpgsqlDbType"/> values.
@@ -28,7 +28,7 @@ namespace NoEntityFramework.DataAnnotations
         /// <summary>
         ///     The name of the source column.
         /// </summary>
-        public string? SourceColumn { get; set; }
+        public string SourceColumn { get; set; } = null;
 
         /// <summary>
         ///     One of the <see cref="ParameterDirection"/> values.

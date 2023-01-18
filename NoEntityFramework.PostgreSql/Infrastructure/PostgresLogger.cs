@@ -19,7 +19,7 @@ namespace NoEntityFramework.Npgsql
                 .Get(typeof(TDbContext).ToString()).EnableStatistics;
         }
 
-        public void LogCritical(NpgsqlCommand sqlCommand, Exception exception, string? message = null)
+        public void LogCritical(NpgsqlCommand sqlCommand, Exception exception, string message = null)
         {
             _logger.LogCritical("{customMessage}\n\tCommand:\n\t{Command}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
                 message?? string.Empty,
@@ -29,7 +29,7 @@ namespace NoEntityFramework.Npgsql
                 );
         }
 
-        public void LogCritical(Exception exception, string? message = null)
+        public void LogCritical(Exception exception, string message = null)
         {
             _logger.LogCritical("{customMessage}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
                 message ?? string.Empty,
@@ -38,7 +38,7 @@ namespace NoEntityFramework.Npgsql
             );
         }
 
-        public void LogError(NpgsqlCommand sqlCommand, Exception exception, string? message = null)
+        public void LogError(NpgsqlCommand sqlCommand, Exception exception, string message = null)
         {
             _logger.LogError("{customMessage}\n\tCommand:\n\t{Command}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
                 message ?? string.Empty,
@@ -48,7 +48,7 @@ namespace NoEntityFramework.Npgsql
                 );
         }
 
-        public void LogError(Exception exception, string? message = null)
+        public void LogError(Exception exception, string message = null)
         {
             _logger.LogError("{customMessage}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
                 message ?? string.Empty,
@@ -57,7 +57,7 @@ namespace NoEntityFramework.Npgsql
             );
         }
 
-        public void LogInfo(NpgsqlCommand sqlCommand, long timeConsumedInMillisecond, string? message = null)
+        public void LogInfo(NpgsqlCommand sqlCommand, long timeConsumedInMillisecond, string message = null)
         {
             if (_statisticsEnabled)
             {
@@ -74,7 +74,7 @@ namespace NoEntityFramework.Npgsql
                     );
         }
 
-        public void LogWaring(NpgsqlCommand sqlCommand, Exception exception, string? message = null)
+        public void LogWaring(NpgsqlCommand sqlCommand, Exception exception, string message = null)
         {
             _logger.LogWarning("{customMessage}\n\tCommand:\n\t{Command}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
                 message ?? string.Empty,
@@ -84,7 +84,7 @@ namespace NoEntityFramework.Npgsql
                 );
         }
 
-        public void LogWaring(Exception exception, string? message = null)
+        public void LogWaring(Exception exception, string message = null)
         {
             _logger.LogWarning("{customMessage}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
                 message ?? string.Empty,

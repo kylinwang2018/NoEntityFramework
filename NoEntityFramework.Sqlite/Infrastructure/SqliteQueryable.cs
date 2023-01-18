@@ -33,7 +33,7 @@ namespace NoEntityFramework.Sqlite
 
         public SqliteConnection SqlConnection { get; }
 
-        public object? ParameterModel { get; set; }
+        public object ParameterModel { get; set; } = null;
 
         public SqliteRetryLogicOption RetryLogicOption { get; set; }
 
@@ -41,12 +41,6 @@ namespace NoEntityFramework.Sqlite
         {
             SqlCommand.Dispose();
             SqlConnection.Dispose();
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            await SqlCommand.DisposeAsync();
-            await SqlConnection.DisposeAsync();
         }
     }
 }

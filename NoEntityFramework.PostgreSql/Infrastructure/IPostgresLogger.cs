@@ -14,7 +14,7 @@ namespace NoEntityFramework.Npgsql
         /// <param name="sqlCommand">The command that executed.</param>
         /// <param name="timeConsumedInMillisecond">The total time consumed for the query.</param>
         /// <param name="message">The additional message.</param>
-        void LogInfo(NpgsqlCommand sqlCommand, long timeConsumedInMillisecond, string? message = null);
+        void LogInfo(NpgsqlCommand sqlCommand, long timeConsumedInMillisecond, string message = null);
 
         /// <summary>
         ///     Log message with ERROR level.
@@ -22,14 +22,14 @@ namespace NoEntityFramework.Npgsql
         /// <param name="sqlCommand">The command that executed.</param>
         /// <param name="exception">The exception.</param>
         /// <param name="message">The additional message.</param>
-        void LogError(NpgsqlCommand sqlCommand, Exception exception, string? message = null);
+        void LogError(NpgsqlCommand sqlCommand, Exception exception, string message = null);
 
         /// <summary>
         ///     Log message with ERROR level.
         /// </summary>
         /// <param name="exception">The exception.</param>
         /// <param name="message">The additional message.</param>
-        void LogError(Exception exception, string? message = null);
+        void LogError(Exception exception, string message = null);
 
         /// <summary>
         ///     Log message with WARING level.
@@ -37,9 +37,9 @@ namespace NoEntityFramework.Npgsql
         /// <param name="sqlCommand">The command that executed.</param>
         /// <param name="exception">The exception.</param>
         /// <param name="message">The additional message.</param>
-        void LogWaring(NpgsqlCommand sqlCommand, Exception exception, string? message = null);
+        void LogWaring(NpgsqlCommand sqlCommand, Exception exception, string message = null);
 
-        void LogWaring(Exception exception, string? message = null);
+        void LogWaring(Exception exception, string message = null);
 
         /// <summary>
         ///     Log message with CRITICAL level.
@@ -47,14 +47,14 @@ namespace NoEntityFramework.Npgsql
         /// <param name="sqlCommand">The command that executed.</param>
         /// <param name="exception">The exception.</param>
         /// <param name="message">The additional message.</param>
-        void LogCritical(NpgsqlCommand sqlCommand, Exception exception, string? message = null);
+        void LogCritical(NpgsqlCommand sqlCommand, Exception exception, string message = null);
 
         /// <summary>
         ///     Log message with CRITICAL level.
         /// </summary>
         /// <param name="exception">The exception.</param>
         /// <param name="message">The additional message.</param>
-        void LogCritical(Exception exception, string? message = null);
+        void LogCritical(Exception exception, string message = null);
     }
 
     /// <summary>

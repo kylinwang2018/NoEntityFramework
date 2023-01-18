@@ -28,31 +28,36 @@ namespace NoEntityFramework.Sqlite
                 var watch = new Stopwatch();
                 watch.Start();
 
-                using var sqlConnection = query.SqlConnection;
-                sqlConnection.OpenWithRetry(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                using var sqlDataReader = query.SqlCommand.ExecuteReaderWithRetry(query.RetryLogicOption);
-                while (sqlDataReader.Read())
+                using (var sqlConnection = query.SqlConnection)
                 {
-                    var obj = (T)Activator.CreateInstance(type);
-                    foreach (var propertyInfo in objectProperties)
+                    sqlConnection.OpenWithRetry(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataReader = query.SqlCommand.ExecuteReaderWithRetry(query.RetryLogicOption))
                     {
-                        try
+                        while (sqlDataReader.Read())
                         {
-                            propertyInfo.SetValue(obj,
-                                propertyInfo.PropertyType.IsEnum
-                                    ? Enum.ToObject(propertyInfo.PropertyType,
-                                        (int)sqlDataReader[propertyInfo.GetColumnName()])
-                                    : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
-                                        Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
-                                        propertyInfo.PropertyType), null);
-                        }
-                        catch
-                        {
-                            // ignored
+                            var obj = (T)Activator.CreateInstance(type);
+                            foreach (var propertyInfo in objectProperties)
+                            {
+                                try
+                                {
+                                    propertyInfo.SetValue(obj,
+                                        propertyInfo.PropertyType.IsEnum
+                                            ? Enum.ToObject(propertyInfo.PropertyType,
+                                                (int)sqlDataReader[propertyInfo.GetColumnName()])
+                                            : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
+                                                Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
+                                                propertyInfo.PropertyType), null);
+                                }
+                                catch
+                                {
+                                    // ignored
+                                }
+                            }
+                            list.Add(obj);
                         }
                     }
-                    list.Add(obj);
+                        
                 }
 
                 watch.Stop();
@@ -87,31 +92,36 @@ namespace NoEntityFramework.Sqlite
                 var watch = new Stopwatch();
                 watch.Start();
 
-                await using var sqlConnection = query.SqlConnection;
-                await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                await using var sqlDataReader = await query.SqlCommand.ExecuteReaderWithRetryAsync(query.RetryLogicOption);
-                while (await sqlDataReader.ReadAsync())
+                using (var sqlConnection = query.SqlConnection)
                 {
-                    var obj = (T)Activator.CreateInstance(type);
-                    foreach (var propertyInfo in objectProperties)
+                    await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataReader =
+                           await query.SqlCommand.ExecuteReaderWithRetryAsync(query.RetryLogicOption))
                     {
-                        try
+                        while (await sqlDataReader.ReadAsync())
                         {
-                            propertyInfo.SetValue(obj,
-                                propertyInfo.PropertyType.IsEnum
-                                    ? Enum.ToObject(propertyInfo.PropertyType,
-                                        (int)sqlDataReader[propertyInfo.GetColumnName()])
-                                    : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
-                                        Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
-                                        propertyInfo.PropertyType), null);
-                        }
-                        catch
-                        {
-                            // ignored
+                            var obj = (T)Activator.CreateInstance(type);
+                            foreach (var propertyInfo in objectProperties)
+                            {
+                                try
+                                {
+                                    propertyInfo.SetValue(obj,
+                                        propertyInfo.PropertyType.IsEnum
+                                            ? Enum.ToObject(propertyInfo.PropertyType,
+                                                (int)sqlDataReader[propertyInfo.GetColumnName()])
+                                            : Convert.ChangeType(sqlDataReader[propertyInfo.GetColumnName()],
+                                                Nullable.GetUnderlyingType(propertyInfo.PropertyType) ??
+                                                propertyInfo.PropertyType), null);
+                                }
+                                catch
+                                {
+                                    // ignored
+                                }
+                            }
+                            list.Add(obj);
                         }
                     }
-                    list.Add(obj);
                 }
 
                 watch.Stop();

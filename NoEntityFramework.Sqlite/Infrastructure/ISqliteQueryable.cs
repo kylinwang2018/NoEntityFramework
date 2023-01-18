@@ -9,7 +9,7 @@ namespace NoEntityFramework.Sqlite
     /// <summary>
     ///     The SQL Server query context for NoEntityFramework.Sqlite.
     /// </summary>
-    public interface ISqliteQueryable : IDisposable, IAsyncDisposable
+    public interface ISqliteQueryable : IDisposable
     {
         /// <summary>
         ///     Provide a connection factory for create <see cref="SqliteConnection"/>,
@@ -48,7 +48,7 @@ namespace NoEntityFramework.Sqlite
         ///     Only one <see cref="ParameterModel"/> can be used in single query.
         /// </para>
         /// </summary>
-        object? ParameterModel { get; set; }
+        object ParameterModel { get; set; }
 
         /// <summary>
         ///     The retry logic for the query.

@@ -27,12 +27,16 @@ namespace NoEntityFramework.Sqlite
                 var watch = new Stopwatch();
                 watch.Start();
 
-                using var sqlConnection = query.SqlConnection;
-                sqlConnection.OpenWithRetry(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                using var sqlDataAdapter = query.ConnectionFactory.CreateDataAdapter();
-                sqlDataAdapter.SelectCommand = query.SqlCommand;
-                sqlDataAdapter.Fill(dataTable);
+                using (var sqlConnection = query.SqlConnection)
+                {
+                    sqlConnection.OpenWithRetry(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataAdapter = query.ConnectionFactory.CreateDataAdapter())
+                    {
+                        sqlDataAdapter.SelectCommand = query.SqlCommand;
+                        sqlDataAdapter.Fill(dataTable);
+                    }
+                }
 
                 watch.Stop();
 
@@ -63,12 +67,16 @@ namespace NoEntityFramework.Sqlite
                 var watch = new Stopwatch();
                 watch.Start();
 
-                await using var sqlConnection = query.SqlConnection;
-                await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                using var sqlDataAdapter = query.ConnectionFactory.CreateDataAdapter();
-                sqlDataAdapter.SelectCommand = query.SqlCommand;
-                sqlDataAdapter.Fill(dataTable);
+                using (var sqlConnection = query.SqlConnection)
+                {
+                    await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataAdapter = query.ConnectionFactory.CreateDataAdapter())
+                    {
+                        sqlDataAdapter.SelectCommand = query.SqlCommand;
+                        sqlDataAdapter.Fill(dataTable);
+                    }
+                }
 
                 watch.Stop();
 
