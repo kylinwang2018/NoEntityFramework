@@ -13,8 +13,12 @@ namespace NoEntityFramework.DataAnnotations
         /// <summary>
         ///     The name of the parameter to map.
         /// </summary>
+#if NETSTANDARD2_0
+        public string Name { get; set; }
+#else
         public string? Name { get; set; }
-
+#endif
+        
         /// <summary>
         ///     One of the <see cref="NpgsqlDbType"/> values.
         /// </summary>
@@ -28,7 +32,11 @@ namespace NoEntityFramework.DataAnnotations
         /// <summary>
         ///     The name of the source column.
         /// </summary>
+#if NETSTANDARD2_0
+        public string SourceColumn { get; set; }
+#else
         public string? SourceColumn { get; set; }
+#endif
 
         /// <summary>
         ///     One of the <see cref="ParameterDirection"/> values.

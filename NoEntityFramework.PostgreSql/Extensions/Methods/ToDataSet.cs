@@ -24,12 +24,16 @@ namespace NoEntityFramework.Npgsql
                 var watch = new Stopwatch();
                 watch.Start();
 
-                using var sqlConnection = query.SqlConnection;
-                sqlConnection.OpenWithRetry(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                using var sqlDataAdapter = query.ConnectionFactory.CreateDataAdapter();
-                sqlDataAdapter.SelectCommand = query.SqlCommand;
-                sqlDataAdapter.Fill(dataTable);
+                using (var sqlConnection = query.SqlConnection)
+                {
+                    sqlConnection.OpenWithRetry(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataAdapter = query.ConnectionFactory.CreateDataAdapter())
+                    {
+                        sqlDataAdapter.SelectCommand = query.SqlCommand;
+                        sqlDataAdapter.Fill(dataTable);
+                    }
+                }
 
                 watch.Stop();
 
@@ -60,20 +64,27 @@ namespace NoEntityFramework.Npgsql
             {
                 var watch = new Stopwatch();
                 watch.Start();
-
-                await using var sqlConnection = query.SqlConnection;
-                await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                using var sqlDataAdapter = query.ConnectionFactory.CreateDataAdapter();
-                sqlDataAdapter.SelectCommand = query.SqlCommand;
-                sqlDataAdapter.Fill(dataTable);
-
+#if NETSTANDARD2_0
+                using (var sqlConnection = query.SqlConnection)
+#else
+                await using (var sqlConnection = query.SqlConnection)
+#endif
+                {
+                    await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataAdapter = query.ConnectionFactory.CreateDataAdapter())
+                    {
+                        sqlDataAdapter.SelectCommand = query.SqlCommand;
+                        sqlDataAdapter.Fill(dataTable);
+                    }
+                }
                 watch.Stop();
 
                 if (query.ParameterModel != null)
                     query.SqlCommand
                         .CopyParameterValueToModels(query.ParameterModel);
                 query.Logger.LogInfo(query.SqlCommand, watch.ElapsedMilliseconds);
+
             }
             catch (Exception ex)
             {

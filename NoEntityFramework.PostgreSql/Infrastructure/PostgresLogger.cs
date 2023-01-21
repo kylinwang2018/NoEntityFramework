@@ -19,7 +19,12 @@ namespace NoEntityFramework.Npgsql
                 .Get(typeof(TDbContext).ToString()).EnableStatistics;
         }
 
-        public void LogCritical(NpgsqlCommand sqlCommand, Exception exception, string? message = null)
+        public void LogCritical(NpgsqlCommand sqlCommand, Exception exception,
+#if NETSTANDARD2_0
+            string message = null)
+#else
+            string? message = null)
+#endif
         {
             _logger.LogCritical("{customMessage}\n\tCommand:\n\t{Command}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
                 message?? string.Empty,
@@ -29,7 +34,12 @@ namespace NoEntityFramework.Npgsql
                 );
         }
 
-        public void LogCritical(Exception exception, string? message = null)
+        public void LogCritical(Exception exception,
+#if NETSTANDARD2_0
+            string message = null)
+#else
+            string? message = null)
+#endif
         {
             _logger.LogCritical("{customMessage}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
                 message ?? string.Empty,
@@ -38,7 +48,12 @@ namespace NoEntityFramework.Npgsql
             );
         }
 
-        public void LogError(NpgsqlCommand sqlCommand, Exception exception, string? message = null)
+        public void LogError(NpgsqlCommand sqlCommand, Exception exception,
+#if NETSTANDARD2_0
+            string message = null)
+#else
+            string? message = null)
+#endif
         {
             _logger.LogError("{customMessage}\n\tCommand:\n\t{Command}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
                 message ?? string.Empty,
@@ -48,7 +63,12 @@ namespace NoEntityFramework.Npgsql
                 );
         }
 
-        public void LogError(Exception exception, string? message = null)
+        public void LogError(Exception exception,
+#if NETSTANDARD2_0
+            string message = null)
+#else
+            string? message = null)
+#endif
         {
             _logger.LogError("{customMessage}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
                 message ?? string.Empty,
@@ -57,7 +77,12 @@ namespace NoEntityFramework.Npgsql
             );
         }
 
-        public void LogInfo(NpgsqlCommand sqlCommand, long timeConsumedInMillisecond, string? message = null)
+        public void LogInfo(NpgsqlCommand sqlCommand, long timeConsumedInMillisecond,
+#if NETSTANDARD2_0
+            string message = null)
+#else
+            string? message = null)
+#endif
         {
             if (_statisticsEnabled)
             {
@@ -74,7 +99,12 @@ namespace NoEntityFramework.Npgsql
                     );
         }
 
-        public void LogWaring(NpgsqlCommand sqlCommand, Exception exception, string? message = null)
+        public void LogWaring(NpgsqlCommand sqlCommand, Exception exception,
+#if NETSTANDARD2_0
+            string message = null)
+#else
+            string? message = null)
+#endif
         {
             _logger.LogWarning("{customMessage}\n\tCommand:\n\t{Command}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
                 message ?? string.Empty,
@@ -84,7 +114,12 @@ namespace NoEntityFramework.Npgsql
                 );
         }
 
-        public void LogWaring(Exception exception, string? message = null)
+        public void LogWaring(Exception exception,
+#if NETSTANDARD2_0
+            string message = null)
+#else
+            string? message = null)
+#endif
         {
             _logger.LogWarning("{customMessage}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
                 message ?? string.Empty,

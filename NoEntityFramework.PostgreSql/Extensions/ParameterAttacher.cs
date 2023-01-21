@@ -157,7 +157,11 @@ namespace NoEntityFramework.Npgsql
         /// <exception cref="ArgumentNullException"></exception>
         public static IPostgresQueryable WithParameter(
             this IPostgresQueryable queryable,
+#if NETSTANDARD2_0
+            string paramName, NpgsqlDbType dbType, ParameterDirection parameterDirection, object value, int? size)
+#else
             string paramName, NpgsqlDbType dbType, ParameterDirection parameterDirection, object? value, int? size)
+#endif
         {
             if (queryable.SqlCommand == null)
                 throw new ArgumentNullException(nameof(queryable.SqlCommand));

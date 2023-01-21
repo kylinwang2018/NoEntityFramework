@@ -20,15 +20,19 @@ namespace NoEntityFramework.Npgsql
             {
                 var watch = new Stopwatch();
                 watch.Start();
-
-                using var sqlConnection = query.SqlConnection;
-                sqlConnection.OpenWithRetry(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                using var sqlTransaction = sqlConnection.BeginTransaction();
-                query.SqlCommand.Connection = sqlConnection;
-                query.SqlCommand.Transaction = sqlTransaction;
-                var result = query.SqlCommand.ExecuteNonQueryWithRetry(query.RetryLogicOption);
-                sqlTransaction.Commit();
+                int result;
+                using (var sqlConnection = query.SqlConnection)
+                {
+                    sqlConnection.OpenWithRetry(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlTransaction = sqlConnection.BeginTransaction())
+                    {
+                        query.SqlCommand.Connection = sqlConnection;
+                        query.SqlCommand.Transaction = sqlTransaction;
+                        result = query.SqlCommand.ExecuteNonQueryWithRetry(query.RetryLogicOption);
+                        sqlTransaction.Commit();
+                    }
+                }
 
                 watch.Stop();
 
@@ -57,15 +61,27 @@ namespace NoEntityFramework.Npgsql
             {
                 var watch = new Stopwatch();
                 watch.Start();
-
-                await using var sqlConnection = query.SqlConnection;
-                await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                await using var sqlTransaction = await sqlConnection.BeginTransactionAsync();
-                query.SqlCommand.Connection = sqlConnection;
-                query.SqlCommand.Transaction = sqlTransaction;
-                var result = await query.SqlCommand.ExecuteNonQueryWithRetryAsync(query.RetryLogicOption);
-                await sqlTransaction.CommitAsync();
+                int result;
+#if NETSTANDARD2_0
+                using (var sqlConnection = query.SqlConnection)
+#else
+                await using (var sqlConnection = query.SqlConnection)
+#endif
+                {
+                    await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+#if NETSTANDARD2_0
+                    using (var sqlTransaction = sqlConnection.BeginTransaction())
+#else
+                    await using (var sqlTransaction = await sqlConnection.BeginTransactionAsync())
+#endif
+                    {
+                        query.SqlCommand.Connection = sqlConnection;
+                        query.SqlCommand.Transaction = sqlTransaction;
+                        result = await query.SqlCommand.ExecuteNonQueryWithRetryAsync(query.RetryLogicOption);
+                        await sqlTransaction.CommitAsync();
+                    }
+                }
 
                 watch.Stop();
 

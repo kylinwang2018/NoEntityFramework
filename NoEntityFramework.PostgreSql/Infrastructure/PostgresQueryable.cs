@@ -33,7 +33,11 @@ namespace NoEntityFramework.Npgsql
 
         public NpgsqlConnection SqlConnection { get; }
 
+#if NETSTANDARD2_0
+        public object ParameterModel { get; set; }
+#else
         public object? ParameterModel { get; set; }
+#endif
 
         public NpgsqlRetryLogicOption RetryLogicOption { get; set; }
 
@@ -43,10 +47,13 @@ namespace NoEntityFramework.Npgsql
             SqlConnection.Dispose();
         }
 
+#if NETSTANDARD2_1
         public async ValueTask DisposeAsync()
         {
             await SqlCommand.DisposeAsync();
             await SqlConnection.DisposeAsync();
         }
+#endif
+
     }
 }
