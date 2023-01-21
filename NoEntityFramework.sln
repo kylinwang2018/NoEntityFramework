@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqliteDemo", "demos\SqliteD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgresDemo", "demos\PostgresDemo\PostgresDemo.csproj", "{9B730BEF-C790-48B1-95C2-BADBA07239F1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySqlDemo", "demos\MySqlDemo\MySqlDemo.csproj", "{EC674398-92C1-4F84-8006-0ECD373E7301}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{9B730BEF-C790-48B1-95C2-BADBA07239F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B730BEF-C790-48B1-95C2-BADBA07239F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B730BEF-C790-48B1-95C2-BADBA07239F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC674398-92C1-4F84-8006-0ECD373E7301}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC674398-92C1-4F84-8006-0ECD373E7301}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC674398-92C1-4F84-8006-0ECD373E7301}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC674398-92C1-4F84-8006-0ECD373E7301}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +87,7 @@ Global
 		{7EBD572B-CEFE-4737-B3E0-F85403460D91} = {BB5C1C60-5964-4EE0-A62E-E48100958842}
 		{59445D24-E1F5-43B1-8D27-6C5BED85FA4B} = {BB5C1C60-5964-4EE0-A62E-E48100958842}
 		{9B730BEF-C790-48B1-95C2-BADBA07239F1} = {BB5C1C60-5964-4EE0-A62E-E48100958842}
+		{EC674398-92C1-4F84-8006-0ECD373E7301} = {BB5C1C60-5964-4EE0-A62E-E48100958842}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7EC705EE-E63F-4136-AEED-209960BADD7A}
