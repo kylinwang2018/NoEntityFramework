@@ -28,15 +28,33 @@ namespace NoEntityFramework.Sqlite
             services.AddOptions();
             services.Configure(typeof(TDbContext).ToString(), setupAction);
 
+            var options = new RelationalDbOptions();
+            setupAction(options);
+
             // register dbProvider in service collection
-            services.TryAddSingleton(typeof(TDbContext));
+            var contextType = typeof(TDbContext);
+            services.TryAdd(new ServiceDescriptor(contextType,
+                contextType,
+                options.ContextLifetime));
 
             // register sql factory for create connection, command and dataAdapter
-            services.TryAddSingleton<ISqliteConnectionFactory<TDbContext,RelationalDbOptions>, SqliteConnectionFactory<TDbContext,RelationalDbOptions>>();
+            services.TryAdd(
+                new ServiceDescriptor(
+                    typeof(ISqliteConnectionFactory<TDbContext, RelationalDbOptions>),
+                    typeof(SqliteConnectionFactory<TDbContext, RelationalDbOptions>),
+                    options.ContextLifetime));
 
-            services.TryAddSingleton<ISqliteOptions<TDbContext>, SqliteOptions<TDbContext>>();
+            services.TryAdd(
+                new ServiceDescriptor(
+                    typeof(ISqliteOptions<TDbContext>),
+                    typeof(SqliteOptions<TDbContext>),
+                    options.ContextLifetime));
 
-            services.TryAddSingleton<ISqliteLogger<TDbContext>, SqliteLogger<TDbContext>>();
+            services.TryAdd(
+                new ServiceDescriptor(
+                    typeof(ISqliteLogger<TDbContext>),
+                    typeof(SqliteLogger<TDbContext>),
+                    options.ContextLifetime));
 
             return new DbContext<TDbContext> 
             {

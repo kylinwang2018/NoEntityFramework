@@ -29,15 +29,33 @@ namespace NoEntityFramework
             services.AddOptions();
             services.Configure(typeof(TDbContext).ToString(), setupAction);
 
+            var options = new RelationalDbOptions();
+            setupAction(options);
+
             // register dbProvider in service collection
-            services.TryAddSingleton(typeof(TDbContext));
+            var contextType = typeof(TDbContext);
+            services.TryAdd(new ServiceDescriptor(contextType,
+                contextType,
+                options.ContextLifetime));
 
             // register sql factory for create connection, command and dataAdapter
-            services.TryAddSingleton<IPostgresConnectionFactory<TDbContext,RelationalDbOptions>, PostgresConnectionFactory<TDbContext,RelationalDbOptions>>();
+            services.TryAdd(
+                new ServiceDescriptor(
+                    typeof(IPostgresConnectionFactory<TDbContext, RelationalDbOptions>),
+                    typeof(PostgresConnectionFactory<TDbContext, RelationalDbOptions>),
+                    options.ContextLifetime));
 
-            services.TryAddSingleton<IPostgresOptions<TDbContext>, PostgresOptions<TDbContext>>();
+            services.TryAdd(
+                new ServiceDescriptor(
+                    typeof(IPostgresOptions<TDbContext>),
+                    typeof(PostgresOptions<TDbContext>),
+                    options.ContextLifetime));
 
-            services.TryAddSingleton<IPostgresLogger<TDbContext>, PostgresLogger<TDbContext>>();
+            services.TryAdd(
+                new ServiceDescriptor(
+                    typeof(IPostgresLogger<TDbContext>),
+                    typeof(PostgresLogger<TDbContext>),
+                    options.ContextLifetime));
 
             return new DbContext<TDbContext> 
             {

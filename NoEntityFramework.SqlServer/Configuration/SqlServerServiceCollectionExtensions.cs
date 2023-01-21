@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using NoEntityFramework.SqlServer;
 using NoEntityFramework.Utilities;
 using System;
@@ -29,15 +30,33 @@ namespace NoEntityFramework
             services.AddOptions();
             services.Configure(typeof(TDbContext).ToString(), setupAction);
 
+            var options = new RelationalDbOptions();
+            setupAction(options);
+
             // register dbProvider in service collection
-            services.TryAddSingleton(typeof(TDbContext));
+            var contextType = typeof(TDbContext);
+            services.TryAdd(new ServiceDescriptor(contextType,
+                contextType,
+                options.ContextLifetime));
 
             // register sql factory for create connection, command and dataAdapter
-            services.TryAddSingleton<ISqlConnectionFactory<TDbContext,RelationalDbOptions>, SqlConnectionFactory<TDbContext,RelationalDbOptions>>();
+            services.TryAdd(
+                new ServiceDescriptor(
+                    typeof(ISqlConnectionFactory<TDbContext, RelationalDbOptions>),
+                    typeof(SqlConnectionFactory<TDbContext, RelationalDbOptions>),
+                    options.ContextLifetime));
 
-            services.TryAddSingleton<ISqlServerOptions<TDbContext>, SqlServerOptions<TDbContext>>();
+            services.TryAdd(
+                new ServiceDescriptor(
+                    typeof(ISqlServerOptions<TDbContext>),
+                    typeof(SqlServerOptions<TDbContext>),
+                    options.ContextLifetime));
 
-            services.TryAddSingleton<ISqlServerLogger<TDbContext>, SqlServerLogger<TDbContext>>();
+            services.TryAdd(
+                new ServiceDescriptor(
+                    typeof(ISqlServerLogger<TDbContext>),
+                    typeof(SqlServerLogger<TDbContext>),
+                    options.ContextLifetime));
 
             return new DbContext<TDbContext> 
             {

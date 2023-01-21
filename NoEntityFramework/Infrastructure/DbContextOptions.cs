@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace NoEntityFramework
 {
@@ -48,6 +49,11 @@ namespace NoEntityFramework
         /// Log database execution time and network travel time
         /// </summary>
         public bool EnableStatistics { get; set;}
+
+        /// <summary>
+        /// The <see cref="ServiceLifetime"/> of the Database Context.
+        /// </summary>
+        public ServiceLifetime ContextLifetime { get; set; } = ServiceLifetime.Singleton;
 
         private bool _isConnectionStringInitialized = false;
         private string _connectionString = string.Empty;

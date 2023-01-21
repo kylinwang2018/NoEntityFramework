@@ -29,15 +29,33 @@ namespace NoEntityFramework
             services.AddOptions();
             services.Configure(typeof(TDbContext).ToString(), setupAction);
 
+            var options = new RelationalDbOptions();
+            setupAction(options);
+
             // register dbProvider in service collection
-            services.TryAddSingleton(typeof(TDbContext));
+            var contextType = typeof(TDbContext);
+            services.TryAdd(new ServiceDescriptor(contextType,
+                contextType,
+                options.ContextLifetime));
 
             // register sql factory for create connection, command and dataAdapter
-            services.TryAddSingleton<IMySqlConnectionFactory<TDbContext,RelationalDbOptions>, MySqlConnectionFactory<TDbContext,RelationalDbOptions>>();
+            services.TryAdd(
+                new ServiceDescriptor(
+                    typeof(IMySqlConnectionFactory<TDbContext, RelationalDbOptions>),
+                    typeof(MySqlConnectionFactory<TDbContext, RelationalDbOptions>),
+                    options.ContextLifetime));
 
-            services.TryAddSingleton<IMySqlOptions<TDbContext>, MySqlOptions<TDbContext>>();
+            services.TryAdd(
+                new ServiceDescriptor(
+                    typeof(IMySqlOptions<TDbContext>),
+                    typeof(MySqlOptions<TDbContext>),
+                    options.ContextLifetime));
 
-            services.TryAddSingleton<IMySqlLogger<TDbContext>, MySqlLogger<TDbContext>>();
+            services.TryAdd(
+                new ServiceDescriptor(
+                    typeof(IMySqlLogger<TDbContext>),
+                    typeof(MySqlLogger<TDbContext>),
+                    options.ContextLifetime));
 
             return new DbContext<TDbContext> 
             {

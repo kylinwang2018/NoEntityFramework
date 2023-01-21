@@ -31,13 +31,27 @@ namespace NoEntityFramework
             services.AddOptions();
             services.Configure(typeof(TDbContext).ToString(), setupAction);
 
+            var options = new MongoDbContextOptions();
+            setupAction(options);
+
             // register dbProvider in service collection
-            services.TryAddSingleton(typeof(TDbContext));
+            var contextType = typeof(TDbContext);
+            services.TryAdd(new ServiceDescriptor(contextType, 
+                contextType,
+                options.ContextLifetime));
 
             // register sql factory for create connection, command and dataAdapter
-            services.TryAddSingleton<IMongoDbConnectionFactory<TDbContext, MongoDbContextOptions>, MongoDbConnectionFactory<TDbContext, MongoDbContextOptions>>();
+            services.TryAdd(
+                new ServiceDescriptor(
+                    typeof(IMongoDbConnectionFactory<TDbContext, MongoDbContextOptions>),
+                    typeof(MongoDbConnectionFactory<TDbContext, MongoDbContextOptions>), 
+                    options.ContextLifetime));
 
-            services.TryAddSingleton<IMongoDbOptions<TDbContext>, MongoDbOptions<TDbContext>>();
+            services.TryAdd(
+                new ServiceDescriptor(
+                    typeof(IMongoDbOptions<TDbContext>),
+                    typeof(MongoDbOptions<TDbContext>),
+                    options.ContextLifetime));
 
             return new DbContext<TDbContext>
             {

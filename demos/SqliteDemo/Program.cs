@@ -18,6 +18,7 @@ builder.Services.AddSqliteDbContext<ApplicationDbContext>(
         options.MaxTimeInterval = 5;
         options.DbCommandTimeout = 20;
         options.EnableStatistics = true;
+        options.ContextLifetime = ServiceLifetime.Scoped;
     }
 );
 
