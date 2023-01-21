@@ -19,14 +19,14 @@ namespace NoEntityFramework.MongoDb
             get => _databaseName;
             set
             {
-                if (isDatabaseNameInitialized)
+                if (_isDatabaseNameInitialized)
                     throw new FieldAccessException("DatabaseName cannot be modified after initialized.");
                 _databaseName = value;
-                isDatabaseNameInitialized = true;
+                _isDatabaseNameInitialized = true;
             }
         }
 
         private string _databaseName = string.Empty;
-        private bool isDatabaseNameInitialized = false;
+        private bool _isDatabaseNameInitialized = false;
     }
 }

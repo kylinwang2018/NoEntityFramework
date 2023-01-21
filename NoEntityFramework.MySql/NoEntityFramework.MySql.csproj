@@ -15,7 +15,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MySql.Data" Version="8.0.31" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
+    <PackageReference Include="MySql.Data" Version="8.0.32" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NoEntityFramework\NoEntityFramework.csproj" />
   </ItemGroup>
 
 </Project>
