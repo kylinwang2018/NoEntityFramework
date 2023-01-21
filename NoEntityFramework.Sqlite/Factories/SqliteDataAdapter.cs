@@ -8,10 +8,16 @@ namespace NoEntityFramework.Sqlite
     public delegate void SqliteRowUpdatingEventHandler(object sender, SqliteRowUpdatingEventArgs e);
     public sealed class SqliteDataAdapter : DbDataAdapter
     {
+#if NETSTANDARD2_0
+        public event SqliteRowUpdatedEventHandler RowUpdated;
+
+        public event SqliteRowUpdatingEventHandler RowUpdating;
+#else
         public event SqliteRowUpdatedEventHandler? RowUpdated;
 
         public event SqliteRowUpdatingEventHandler? RowUpdating;
-
+#endif
+        
         public SqliteDataAdapter() { }
 
         public SqliteDataAdapter(SqliteCommand selectCommand)

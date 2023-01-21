@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 using NoEntityFramework.Sqlite.Models;
+using System;
+using System.Threading.Tasks;
 
 namespace NoEntityFramework.Sqlite
 {
@@ -33,7 +32,11 @@ namespace NoEntityFramework.Sqlite
 
         public SqliteConnection SqlConnection { get; }
 
+#if NETSTANDARD2_0
+        public object ParameterModel { get; set; } = null;
+#else
         public object? ParameterModel { get; set; }
+#endif
 
         public SqliteRetryLogicOption RetryLogicOption { get; set; }
 
@@ -42,11 +45,12 @@ namespace NoEntityFramework.Sqlite
             SqlCommand.Dispose();
             SqlConnection.Dispose();
         }
-
+#if NETSTANDARD2_1
         public async ValueTask DisposeAsync()
         {
             await SqlCommand.DisposeAsync();
             await SqlConnection.DisposeAsync();
         }
+#endif
     }
 }

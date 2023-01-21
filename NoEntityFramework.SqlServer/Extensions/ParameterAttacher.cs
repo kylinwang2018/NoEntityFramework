@@ -162,7 +162,13 @@ namespace NoEntityFramework.SqlServer
         /// <exception cref="ArgumentNullException"></exception>
         public static ISqlServerQueryable WithParameter(
             this ISqlServerQueryable queryable,
-            string paramName, SqlDbType dbType, ParameterDirection parameterDirection, object? value, int? size)
+            string paramName, SqlDbType dbType, ParameterDirection parameterDirection,
+#if NETSTANDARD2_0
+            object value,
+#else
+            object? value, 
+#endif
+            int? size)
         {
             if (queryable.SqlCommand == null)
                 throw new ArgumentNullException(nameof(queryable.SqlCommand));

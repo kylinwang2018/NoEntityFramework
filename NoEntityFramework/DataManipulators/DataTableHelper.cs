@@ -261,12 +261,20 @@ namespace NoEntityFramework.DataManipulators
             return "<table><thead><tr><th>" + string.Join("</th><th>", array2) + "</th></tr></thead><tbody>" + string.Join("", array) + "</tbody></table>";
         }
 
+#if NETSTANDARD2_0
+        public static string DataTableToHTMLTableString(DataTable data, string dateFormat)
+#else
         public static string DataTableToHTMLTableString(DataTable data, string? dateFormat)
+#endif
         {
             return DataTableToHTMLTableString(data, dateFormat, null);
         }
 
+#if NETSTANDARD2_0
+        public static string DataTableToHTMLTableString(DataTable data, string dateFormat, string tableClass)
+#else
         public static string DataTableToHTMLTableString(DataTable data, string? dateFormat, string? tableClass)
+#endif
         {
             var array = new string[data.Rows.Count];
             var array2 = new string[data.Columns.Count];
@@ -706,7 +714,11 @@ namespace NoEntityFramework.DataManipulators
             }
         }
 
+#if NETSTANDARD2_0
+        public static List<string> DataTableToListString(DataTable dt, int columnNumber = 0)
+#else
         public static List<string> DataTableToListString(DataTable? dt, int columnNumber = 0)
+#endif
         {
             if (columnNumber < 0 || columnNumber > dt.Columns.Count - 1)
             {

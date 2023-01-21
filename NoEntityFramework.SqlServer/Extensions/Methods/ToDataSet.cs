@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Data;
 using System.Threading.Tasks;
 
@@ -12,28 +13,32 @@ namespace NoEntityFramework.SqlServer
         /// <summary>
         ///     Execute the command than cast the result to a <see cref="DataSet"/>.
         /// </summary>
-        /// <param name="sqlServerQueryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
         /// <returns>A <see cref="DataSet"/> object contains the query result.</returns>
         public static DataSet AsDataSet(
-            this ISqlServerQueryable sqlServerQueryable)
+            this ISqlServerQueryable query)
         {
             var dataTable = new DataSet();
             try
             {
-                using var sqlConnection = sqlServerQueryable.SqlConnection;
-                sqlConnection.Open();
-                sqlServerQueryable.SqlCommand.Connection = sqlConnection;
-                using var sqlDataAdapter = sqlServerQueryable.ConnectionFactory.CreateDataAdapter();
-                sqlDataAdapter.SelectCommand = sqlServerQueryable.SqlCommand;
-                sqlDataAdapter.Fill(dataTable);
-                if (sqlServerQueryable.ParameterModel != null)
-                    sqlServerQueryable.SqlCommand
-                        .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
-                sqlServerQueryable.Logger.LogInfo(sqlServerQueryable.SqlCommand, sqlConnection);
+                using (var sqlConnection = query.SqlConnection)
+                {
+                    sqlConnection.Open();
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataAdapter = query.ConnectionFactory.CreateDataAdapter())
+                    {
+                        sqlDataAdapter.SelectCommand = query.SqlCommand;
+                        sqlDataAdapter.Fill(dataTable);
+                        if (query.ParameterModel != null)
+                            query.SqlCommand
+                                .CopyParameterValueToModels(query.ParameterModel);
+                        query.Logger.LogInfo(query.SqlCommand, sqlConnection);
+                    }
+                }
             }
             catch (Exception ex)
             {
-                sqlServerQueryable.Logger.LogError(sqlServerQueryable.SqlCommand, ex);
+                query.Logger.LogError(query.SqlCommand, ex);
                 throw;
             }
             return dataTable;
@@ -42,28 +47,36 @@ namespace NoEntityFramework.SqlServer
         /// <summary>
         ///     Execute the command than cast the result to a <see cref="DataSet"/>.
         /// </summary>
-        /// <param name="sqlServerQueryable">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <param name="query">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
         /// <returns>A <see cref="DataSet"/> object contains the query result.</returns>
         public static async Task<DataSet> AsDataSetAsync(
-            this ISqlServerQueryable sqlServerQueryable)
+            this ISqlServerQueryable query)
         {
             var dataTable = new DataSet();
             try
             {
-                await using var sqlConnection = sqlServerQueryable.SqlConnection;
-                await sqlConnection.OpenAsync();
-                sqlServerQueryable.SqlCommand.Connection = sqlConnection;
-                using var sqlDataAdapter = sqlServerQueryable.ConnectionFactory.CreateDataAdapter();
-                sqlDataAdapter.SelectCommand = sqlServerQueryable.SqlCommand;
-                sqlDataAdapter.Fill(dataTable);
-                if (sqlServerQueryable.ParameterModel != null)
-                    sqlServerQueryable.SqlCommand
-                        .CopyParameterValueToModels(sqlServerQueryable.ParameterModel);
-                sqlServerQueryable.Logger.LogInfo(sqlServerQueryable.SqlCommand, sqlConnection);
+#if NETSTANDARD2_0
+                using (var sqlConnection = query.SqlConnection)
+#else
+                await using (var sqlConnection = query.SqlConnection)
+#endif
+                {
+                    await sqlConnection.OpenAsync();
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlDataAdapter = query.ConnectionFactory.CreateDataAdapter())
+                    {
+                        sqlDataAdapter.SelectCommand = query.SqlCommand;
+                        sqlDataAdapter.Fill(dataTable);
+                        if (query.ParameterModel != null)
+                            query.SqlCommand
+                                .CopyParameterValueToModels(query.ParameterModel);
+                        query.Logger.LogInfo(query.SqlCommand, sqlConnection);
+                    }
+                }
             }
             catch (Exception ex)
             {
-                sqlServerQueryable.Logger.LogError(sqlServerQueryable.SqlCommand, ex);
+                query.Logger.LogError(query.SqlCommand, ex);
                 throw;
             }
             return dataTable;

@@ -157,7 +157,11 @@ namespace NoEntityFramework.Sqlite
         /// <exception cref="ArgumentNullException"></exception>
         public static ISqliteQueryable WithParameter(
             this ISqliteQueryable queryable,
-            string paramName, SqliteType dbType, ParameterDirection parameterDirection, object? value, int? size)
+#if NETSTANDARD2_0
+                string paramName, SqliteType dbType, ParameterDirection parameterDirection, object value, int? size)
+#else
+                string paramName, SqliteType dbType, ParameterDirection parameterDirection, object? value, int? size)
+#endif
         {
             if (queryable.SqlCommand == null)
                 throw new ArgumentNullException(nameof(queryable.SqlCommand));

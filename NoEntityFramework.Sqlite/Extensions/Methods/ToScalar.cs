@@ -22,15 +22,20 @@ namespace NoEntityFramework.Sqlite
             {
                 var watch = new Stopwatch();
                 watch.Start();
+                object result;
 
-                using var sqlConnection = query.SqlConnection;
-                sqlConnection.OpenWithRetry(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                using var sqlTransaction = sqlConnection.BeginTransaction();
-                query.SqlCommand.Connection = sqlConnection;
-                query.SqlCommand.Transaction = sqlTransaction;
-                var result = query.SqlCommand.ExecuteScalarWithRetry(query.RetryLogicOption);
-                sqlTransaction.Commit();
+                using (var sqlConnection = query.SqlConnection)
+                {
+                    sqlConnection.OpenWithRetry(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlTransaction = sqlConnection.BeginTransaction())
+                    {
+                        query.SqlCommand.Connection = sqlConnection;
+                        query.SqlCommand.Transaction = sqlTransaction;
+                        result = query.SqlCommand.ExecuteScalarWithRetry(query.RetryLogicOption);
+                        sqlTransaction.Commit();
+                    }
+                }
 
                 watch.Stop();
 
@@ -61,15 +66,23 @@ namespace NoEntityFramework.Sqlite
             {
                 var watch = new Stopwatch();
                 watch.Start();
-
-                await using var sqlConnection = query.SqlConnection;
-                await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
-                query.SqlCommand.Connection = sqlConnection;
-                await using var sqlTransaction = sqlConnection.BeginTransaction();
-                query.SqlCommand.Connection = sqlConnection;
-                query.SqlCommand.Transaction = sqlTransaction;
-                var result = await query.SqlCommand.ExecuteScalarWithRetryAsync(query.RetryLogicOption);
-                sqlTransaction.Commit();
+                object result;
+#if NETSTANDARD2_0
+                using (var sqlConnection = query.SqlConnection)
+#else
+                await using (var sqlConnection = query.SqlConnection)
+#endif
+                {
+                    await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlTransaction = sqlConnection.BeginTransaction())
+                    {
+                        query.SqlCommand.Connection = sqlConnection;
+                        query.SqlCommand.Transaction = sqlTransaction;
+                        result = await query.SqlCommand.ExecuteScalarWithRetryAsync(query.RetryLogicOption);
+                        sqlTransaction.Commit();
+                    }
+                }
 
                 watch.Stop();
 

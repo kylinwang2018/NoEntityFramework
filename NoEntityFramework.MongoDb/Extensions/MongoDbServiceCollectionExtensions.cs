@@ -77,10 +77,10 @@ namespace NoEntityFramework
             var types = allAssembly
                 .SelectMany(t =>
                 t.GetTypes())
-                .Where(t => !t.IsInterface && t is { IsSealed: false, IsAbstract: false })
+                .Where(t => !t.IsInterface && !t.IsSealed && !t.IsAbstract)
                     .Where(t =>
                         t.GetCustomAttributes(typeof(MongoDbRepoAttribute), false).Length > 0 &&
-                        t is { IsClass: true, IsAbstract: false }).ToList();
+                        t.IsClass && !t.IsAbstract).ToList();
             foreach (var type in types)
             {
                 var serviceLifetime = type.GetCustomAttribute<MongoDbRepoAttribute>().Lifetime;

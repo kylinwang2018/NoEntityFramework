@@ -19,7 +19,13 @@ namespace NoEntityFramework.Sqlite
                 .Get(typeof(TDbContext).ToString()).EnableStatistics;
         }
 
-        public void LogCritical(SqliteCommand sqlCommand, Exception exception, string? message = null)
+        public void LogCritical(SqliteCommand sqlCommand, Exception exception,
+#if NETSTANDARD2_0
+            string message = null)
+#else
+            string? message = null)
+#endif
+
         {
             _logger.LogCritical("{customMessage}\n\tCommand:\n\t{Command}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
                 message?? string.Empty,
@@ -29,7 +35,12 @@ namespace NoEntityFramework.Sqlite
                 );
         }
 
-        public void LogCritical(Exception exception, string? message = null)
+        public void LogCritical(Exception exception,
+#if NETSTANDARD2_0
+            string message = null)
+#else
+            string? message = null)
+#endif
         {
             _logger.LogCritical("{customMessage}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
                 message ?? string.Empty,
@@ -38,7 +49,12 @@ namespace NoEntityFramework.Sqlite
             );
         }
 
-        public void LogError(SqliteCommand sqlCommand, Exception exception, string? message = null)
+        public void LogError(SqliteCommand sqlCommand, Exception exception,
+#if NETSTANDARD2_0
+            string message = null)
+#else
+            string? message = null)
+#endif
         {
             _logger.LogError("{customMessage}\n\tCommand:\n\t{Command}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
                 message ?? string.Empty,
@@ -48,7 +64,12 @@ namespace NoEntityFramework.Sqlite
                 );
         }
 
-        public void LogError(Exception exception, string? message = null)
+        public void LogError(Exception exception,
+#if NETSTANDARD2_0
+            string message = null)
+#else
+            string? message = null)
+#endif
         {
             _logger.LogError("{customMessage}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
                 message ?? string.Empty,
@@ -57,7 +78,12 @@ namespace NoEntityFramework.Sqlite
             );
         }
 
-        public void LogInfo(SqliteCommand sqlCommand, long timeConsumedInMillisecond, string? message = null)
+        public void LogInfo(SqliteCommand sqlCommand, long timeConsumedInMillisecond,
+#if NETSTANDARD2_0
+            string message = null)
+#else
+            string? message = null)
+#endif
         {
             if (_statisticsEnabled)
             {
@@ -74,7 +100,12 @@ namespace NoEntityFramework.Sqlite
                     );
         }
 
-        public void LogWaring(SqliteCommand sqlCommand, Exception exception, string? message = null)
+        public void LogWaring(SqliteCommand sqlCommand, Exception exception,
+#if NETSTANDARD2_0
+            string message = null)
+#else
+            string? message = null)
+#endif
         {
             _logger.LogWarning("{customMessage}\n\tCommand:\n\t{Command}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
                 message ?? string.Empty,
@@ -84,7 +115,12 @@ namespace NoEntityFramework.Sqlite
                 );
         }
 
-        public void LogWaring(Exception exception, string? message = null)
+        public void LogWaring(Exception exception,
+#if NETSTANDARD2_0
+            string message = null)
+#else
+            string? message = null)
+#endif
         {
             _logger.LogWarning("{customMessage}\nException Message:\n\t{Message},\nException Stack:\n\t{Stack}",
                 message ?? string.Empty,

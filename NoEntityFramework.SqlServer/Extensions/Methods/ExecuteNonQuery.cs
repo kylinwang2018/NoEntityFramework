@@ -17,21 +17,26 @@ namespace NoEntityFramework.SqlServer
         {
             try
             {
-                using var sqlConnection = query.SqlConnection;
-                sqlConnection.Open();
-                query.SqlCommand.Connection = sqlConnection;
-                using var sqlTransaction = sqlConnection.BeginTransaction();
-                query.SqlCommand.Connection = sqlConnection;
-                query.SqlCommand.Transaction = sqlTransaction;
-                var result = query.SqlCommand.ExecuteNonQuery();
-                sqlTransaction.Commit();
+                using (var sqlConnection = query.SqlConnection)
+                {
+                    sqlConnection.Open();
+                    query.SqlCommand.Connection = sqlConnection;
+                    using (var sqlTransaction = sqlConnection.BeginTransaction())
+                    {
+                        query.SqlCommand.Connection = sqlConnection;
+                        query.SqlCommand.Transaction = sqlTransaction;
+                        var result = query.SqlCommand.ExecuteNonQuery();
+                        sqlTransaction.Commit();
 
-                if (query.ParameterModel != null)
-                    query.SqlCommand
-                        .CopyParameterValueToModels(query.ParameterModel);
-                query.Logger.LogInfo(query.SqlCommand, sqlConnection);
+                        if (query.ParameterModel != null)
+                            query.SqlCommand
+                                .CopyParameterValueToModels(query.ParameterModel);
+                        query.Logger.LogInfo(query.SqlCommand, sqlConnection);
 
-                return result;
+                        return result;
+                    }
+                }
+
             }
             catch (Exception ex)
             {
@@ -49,21 +54,37 @@ namespace NoEntityFramework.SqlServer
         {
             try
             {
-                await using var sqlConnection = query.SqlConnection;
-                await sqlConnection.OpenAsync();
-                query.SqlCommand.Connection = sqlConnection;
-                await using var sqlTransaction = sqlConnection.BeginTransaction();
-                query.SqlCommand.Connection = sqlConnection;
-                query.SqlCommand.Transaction = sqlTransaction;
-                var result = await query.SqlCommand.ExecuteNonQueryAsync();
-                sqlTransaction.Commit();
+#if NETSTANDARD2_0
+        using (var sqlConnection = query.SqlConnection)
+#else
+                await using (var sqlConnection = query.SqlConnection)
+#endif
 
-                if (query.ParameterModel != null)
-                    query.SqlCommand
-                        .CopyParameterValueToModels(query.ParameterModel);
-                query.Logger.LogInfo(query.SqlCommand, sqlConnection);
+                {
+                    await sqlConnection.OpenAsync();
+                    query.SqlCommand.Connection = sqlConnection;
+#if NETSTANDARD2_0
+                    using (var sqlTransaction = sqlConnection.BeginTransaction())
+#else
+                    await using (var sqlTransaction = sqlConnection.BeginTransaction())
+#endif
+                    {
+                        query.SqlCommand.Connection = sqlConnection;
+                        query.SqlCommand.Transaction = sqlTransaction;
+                        var result = await query.SqlCommand.ExecuteNonQueryAsync();
+#if NETSTANDARD2_0
+                        sqlTransaction.Commit();
+#else
+                        await sqlTransaction.CommitAsync();
+#endif
+                        if (query.ParameterModel != null)
+                            query.SqlCommand
+                                .CopyParameterValueToModels(query.ParameterModel);
+                        query.Logger.LogInfo(query.SqlCommand, sqlConnection);
 
-                return result;
+                        return result;
+                    }
+                }
             }
             catch (Exception ex)
             {

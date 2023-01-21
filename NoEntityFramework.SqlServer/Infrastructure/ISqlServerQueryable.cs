@@ -8,7 +8,10 @@ namespace NoEntityFramework.SqlServer
     /// <summary>
     ///     The SQL Server query context for NoEntityFramework.SqlServer.
     /// </summary>
-    public interface ISqlServerQueryable : IDisposable, IAsyncDisposable
+    public interface ISqlServerQueryable : IDisposable
+#if NETSTANDARD2_1
+        , IAsyncDisposable
+#endif
     {
         /// <summary>
         ///     Provide a connection factory for create <see cref="Microsoft.Data.SqlClient.SqlConnection"/>,
@@ -47,6 +50,10 @@ namespace NoEntityFramework.SqlServer
         ///     Only one <see cref="ParameterModel"/> can be used in single query.
         /// </para>
         /// </summary>
+#if NETSTANDARD2_0
+        object ParameterModel { get; set; }
+#else
         object? ParameterModel { get; set; }
+#endif
     }
 }

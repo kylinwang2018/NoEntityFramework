@@ -73,7 +73,11 @@ namespace NoEntityFramework.Sqlite
             {
                 try
                 {
+#if NETSTANDARD2_0
+                    connection.Close();
+#else
                     await connection.CloseAsync();
+#endif
                     return connection;
                 }
                 catch (Exception ex)
