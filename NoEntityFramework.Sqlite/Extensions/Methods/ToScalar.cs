@@ -18,12 +18,39 @@ namespace NoEntityFramework.Sqlite
         public static T As<T>(this ISqliteQueryable query)
             where T : struct
         {
+            var obj = query.AsScalar();
+            if (obj == null)
+                return default;
+            else
+                return (T)obj;
+        }
+
+        /// <summary>
+        ///     Execute the command and get a single string from the query.
+        /// </summary>
+        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <returns>The value for the query.</returns>
+        public static string AsString(this ISqliteQueryable query)
+        {
+            var obj = query.AsScalar();
+            if (obj == null)
+                return string.Empty;
+            else
+                return (string)obj;
+        }
+
+        /// <summary>
+        ///     Execute the command and get a single value from the query.
+        /// </summary>
+        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <returns>The value for the query.</returns>
+        public static object AsScalar(this ISqliteQueryable query)
+        {
             try
             {
                 var watch = new Stopwatch();
                 watch.Start();
                 object result;
-
                 using (var sqlConnection = query.SqlConnection)
                 {
                     sqlConnection.OpenWithRetry(query.RetryLogicOption);
@@ -44,7 +71,7 @@ namespace NoEntityFramework.Sqlite
                         .CopyParameterValueToModels(query.ParameterModel);
                 query.Logger.LogInfo(query.SqlCommand, watch.ElapsedMilliseconds);
 
-                return (T)result;
+                return result;
             }
             catch (Exception ex)
             {
@@ -62,6 +89,34 @@ namespace NoEntityFramework.Sqlite
         public static async Task<T> AsAsync<T>(this ISqliteQueryable query)
             where T : struct
         {
+            var obj = await query.AsScalarAsync();
+            if (obj == null)
+                return default;
+            else
+                return (T)obj;
+        }
+
+        /// <summary>
+        ///     Execute the command and get a single string from the query.
+        /// </summary>
+        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <returns>The value for the query.</returns>
+        public static async Task<string> AsStringAsync(this ISqliteQueryable query)
+        {
+            var obj = await query.AsScalarAsync();
+            if (obj == null)
+                return string.Empty;
+            else
+                return (string)obj;
+        }
+
+        /// <summary>
+        ///     Execute the command and get a single value from the query.
+        /// </summary>
+        /// <param name="query">The <see cref="ISqliteQueryable"/> that represent the query.</param>
+        /// <returns>The value for the query.</returns>
+        public static async Task<object> AsScalarAsync(this ISqliteQueryable query)
+        {
             try
             {
                 var watch = new Stopwatch();
@@ -75,12 +130,20 @@ namespace NoEntityFramework.Sqlite
                 {
                     await sqlConnection.OpenWithRetryAsync(query.RetryLogicOption);
                     query.SqlCommand.Connection = sqlConnection;
+#if NETSTANDARD2_0
                     using (var sqlTransaction = sqlConnection.BeginTransaction())
+#else
+                    await using (var sqlTransaction = sqlConnection.BeginTransaction())
+#endif
                     {
                         query.SqlCommand.Connection = sqlConnection;
                         query.SqlCommand.Transaction = sqlTransaction;
                         result = await query.SqlCommand.ExecuteScalarWithRetryAsync(query.RetryLogicOption);
+#if NETSTANDARD2_0
                         sqlTransaction.Commit();
+#else
+                        await sqlTransaction.CommitAsync();
+#endif
                     }
                 }
 
@@ -91,7 +154,7 @@ namespace NoEntityFramework.Sqlite
                         .CopyParameterValueToModels(query.ParameterModel);
                 query.Logger.LogInfo(query.SqlCommand, watch.ElapsedMilliseconds);
 
-                return (T)result;
+                return result;
             }
             catch (Exception ex)
             {

@@ -18,6 +18,34 @@ namespace NoEntityFramework.MySql
         public static T As<T>(this IMySqlQueryable query)
             where T : struct
         {
+            var obj = query.AsScalar();
+            if (obj == null)
+                return default;
+            else
+                return (T)obj;
+        }
+
+        /// <summary>
+        ///     Execute the command and get a single string from the query.
+        /// </summary>
+        /// <param name="query">The <see cref="IMySqlQueryable"/> that represent the query.</param>
+        /// <returns>The value for the query.</returns>
+        public static string AsString(this IMySqlQueryable query)
+        {
+            var obj = query.AsScalar();
+            if (obj == null)
+                return string.Empty;
+            else
+                return (string)obj;
+        }
+
+        /// <summary>
+        ///     Execute the command and get a single value from the query.
+        /// </summary>
+        /// <param name="query">The <see cref="IMySqlQueryable"/> that represent the query.</param>
+        /// <returns>The value for the query.</returns>
+        public static object AsScalar(this IMySqlQueryable query)
+        {
             try
             {
                 var watch = new Stopwatch();
@@ -43,7 +71,7 @@ namespace NoEntityFramework.MySql
                         .CopyParameterValueToModels(query.ParameterModel);
                 query.Logger.LogInfo(query.SqlCommand, watch.ElapsedMilliseconds);
 
-                return (T)result;
+                return result;
             }
             catch (Exception ex)
             {
@@ -60,6 +88,34 @@ namespace NoEntityFramework.MySql
         /// <returns>The value for the query.</returns>
         public static async Task<T> AsAsync<T>(this IMySqlQueryable query)
             where T : struct
+        {
+            var obj = await query.AsScalarAsync();
+            if (obj == null)
+                return default;
+            else
+                return (T)obj;
+        }
+
+        /// <summary>
+        ///     Execute the command and get a single string from the query.
+        /// </summary>
+        /// <param name="query">The <see cref="IMySqlQueryable"/> that represent the query.</param>
+        /// <returns>The value for the query.</returns>
+        public static async Task<string> AsStringAsync(this IMySqlQueryable query)
+        {
+            var obj = await query.AsScalarAsync();
+            if (obj == null)
+                return string.Empty;
+            else
+                return (string)obj;
+        }
+
+        /// <summary>
+        ///     Execute the command and get a single value from the query.
+        /// </summary>
+        /// <param name="query">The <see cref="IMySqlQueryable"/> that represent the query.</param>
+        /// <returns>The value for the query.</returns>
+        public static async Task<object> AsScalarAsync(this IMySqlQueryable query)
         {
             try
             {
@@ -98,7 +154,7 @@ namespace NoEntityFramework.MySql
                         .CopyParameterValueToModels(query.ParameterModel);
                 query.Logger.LogInfo(query.SqlCommand, watch.ElapsedMilliseconds);
 
-                return (T)result;
+                return result;
             }
             catch (Exception ex)
             {

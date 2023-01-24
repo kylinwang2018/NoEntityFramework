@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace NoEntityFramework.SqlServer
@@ -16,6 +17,34 @@ namespace NoEntityFramework.SqlServer
         /// <returns>The value for the query.</returns>
         public static T As<T>(this ISqlServerQueryable query)
             where T : struct
+        {
+            var obj = query.AsScalar();
+            if (obj == null)
+                return default;
+            else
+                return (T)obj;
+        }
+
+        /// <summary>
+        ///     Execute the command and get a single string from the query.
+        /// </summary>
+        /// <param name="query">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <returns>The value for the query.</returns>
+        public static string AsString(this ISqlServerQueryable query)
+        {
+            var obj = query.AsScalar();
+            if (obj == null)
+                return string.Empty;
+            else
+                return (string)obj;
+        }
+
+        /// <summary>
+        ///     Execute the command and get a single value from the query.
+        /// </summary>
+        /// <param name="query">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <returns>The value for the query.</returns>
+        public static object AsScalar(this ISqlServerQueryable query)
         {
             try
             {
@@ -35,9 +64,7 @@ namespace NoEntityFramework.SqlServer
                                 .CopyParameterValueToModels(query.ParameterModel);
                         query.Logger.LogInfo(query.SqlCommand, sqlConnection);
 
-                        if (result == null)
-                            return default;
-                        return (T)result;
+                        return result;
                     }
                 }
             }
@@ -56,6 +83,34 @@ namespace NoEntityFramework.SqlServer
         /// <returns>The value for the query.</returns>
         public static async Task<T> AsAsync<T>(this ISqlServerQueryable query)
             where T : struct
+        {
+            var obj = await query.AsScalarAsync();
+            if (obj == null)
+                return default;
+            else
+                return (T)obj;
+        }
+
+        /// <summary>
+        ///     Execute the command and get a single string from the query.
+        /// </summary>
+        /// <param name="query">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <returns>The value for the query.</returns>
+        public static async Task<string> AsStringAsync(this ISqlServerQueryable query)
+        {
+            var obj = await query.AsScalarAsync();
+            if (obj == null)
+                return string.Empty;
+            else
+                return (string)obj;
+        }
+
+        /// <summary>
+        ///     Execute the command and get a single value from the query.
+        /// </summary>
+        /// <param name="query">The <see cref="ISqlServerQueryable"/> that represent the query.</param>
+        /// <returns>The value for the query.</returns>
+        public static async Task<object> AsScalarAsync(this ISqlServerQueryable query)
         {
             try
             {
@@ -83,9 +138,7 @@ namespace NoEntityFramework.SqlServer
                                 .CopyParameterValueToModels(query.ParameterModel);
                         query.Logger.LogInfo(query.SqlCommand, sqlConnection);
 
-                        if (result == null)
-                            return default;
-                        return (T)result;
+                        return result;
                     }
                 }
             }

@@ -18,6 +18,34 @@ namespace NoEntityFramework.Npgsql
         public static T As<T>(this IPostgresQueryable query)
             where T : struct
         {
+            var obj = query.AsScalar();
+            if (obj == null)
+                return default;
+            else
+                return (T)obj;
+        }
+
+        /// <summary>
+        ///     Execute the command and get a single string from the query.
+        /// </summary>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
+        /// <returns>The value for the query.</returns>
+        public static string AsString(this IPostgresQueryable query)
+        {
+            var obj = query.AsScalar();
+            if (obj == null)
+                return string.Empty;
+            else
+                return (string)obj;
+        }
+
+        /// <summary>
+        ///     Execute the command and get a single value from the query.
+        /// </summary>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
+        /// <returns>The value for the query.</returns>
+        public static object AsScalar(this IPostgresQueryable query)
+        {
             try
             {
                 var watch = new Stopwatch();
@@ -43,7 +71,7 @@ namespace NoEntityFramework.Npgsql
                         .CopyParameterValueToModels(query.ParameterModel);
                 query.Logger.LogInfo(query.SqlCommand, watch.ElapsedMilliseconds);
 
-                return (T)result;
+                return result;
             }
             catch (Exception ex)
             {
@@ -60,6 +88,34 @@ namespace NoEntityFramework.Npgsql
         /// <returns>The value for the query.</returns>
         public static async Task<T> AsAsync<T>(this IPostgresQueryable query)
             where T : struct
+        {
+            var obj = await query.AsScalarAsync();
+            if (obj == null)
+                return default;
+            else
+                return (T)obj;
+        }
+
+        /// <summary>
+        ///     Execute the command and get a single string from the query.
+        /// </summary>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
+        /// <returns>The value for the query.</returns>
+        public static async Task<string> AsStringAsync(this IPostgresQueryable query)
+        {
+            var obj = await query.AsScalarAsync();
+            if (obj == null)
+                return string.Empty;
+            else
+                return (string)obj;
+        }
+
+        /// <summary>
+        ///     Execute the command and get a single value from the query.
+        /// </summary>
+        /// <param name="query">The <see cref="IPostgresQueryable"/> that represent the query.</param>
+        /// <returns>The value for the query.</returns>
+        public static async Task<object> AsScalarAsync(this IPostgresQueryable query)
         {
             try
             {
@@ -83,7 +139,11 @@ namespace NoEntityFramework.Npgsql
                         query.SqlCommand.Connection = sqlConnection;
                         query.SqlCommand.Transaction = sqlTransaction;
                         result = await query.SqlCommand.ExecuteScalarWithRetryAsync(query.RetryLogicOption);
+#if NETSTANDARD2_0
+                        sqlTransaction.Commit();
+#else
                         await sqlTransaction.CommitAsync();
+#endif
                     }
                 }
 
@@ -94,7 +154,7 @@ namespace NoEntityFramework.Npgsql
                         .CopyParameterValueToModels(query.ParameterModel);
                 query.Logger.LogInfo(query.SqlCommand, watch.ElapsedMilliseconds);
 
-                return (T)result;
+                return result;
             }
             catch (Exception ex)
             {
