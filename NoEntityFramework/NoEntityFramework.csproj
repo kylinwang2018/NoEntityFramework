@@ -8,7 +8,7 @@
 		<Version>0.1.0</Version>
 		<Authors>Ben Wang</Authors>
 		<Company>HashcodeStudio</Company>
-		<Copyright>Copyright Ben Wang 2022</Copyright>
+		<Copyright>Copyright Ben Wang 2023</Copyright>
 		<PackageTags>Database;SqlServer;Postgre</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Description>Database Aniki is a C# library that do Sql manipulation like Entity framework but still use queries</Description>

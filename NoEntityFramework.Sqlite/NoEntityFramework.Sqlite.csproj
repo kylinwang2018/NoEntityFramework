@@ -8,7 +8,7 @@
 	  <Version>0.1.2</Version>
 	  <Authors>Ben Wang</Authors>
 	  <Company>HashcodeStudio</Company>
-	  <Copyright>Copyright Ben Wang 2022</Copyright>
+	  <Copyright>Copyright Ben Wang 2023</Copyright>
 	  <PackageTags>Database;Sqlite</PackageTags>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
 	  <Description>NoEntityFramework's Sqlite support library</Description>
