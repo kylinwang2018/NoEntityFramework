@@ -5,7 +5,7 @@
 		<Nullable Condition="'$(TargetFramework)' == 'netstandard2.1'">enable</Nullable>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<Version>0.1.0</Version>
+		<Version>0.1.3</Version>
 		<Authors>Ben Wang</Authors>
 		<Company>HashcodeStudio</Company>
 		<Copyright>Copyright Ben Wang 2023</Copyright>
